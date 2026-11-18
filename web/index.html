@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>grandfuscate</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root{
+    --bg:#e8e8e8; --panel:#ffffff; --bar:#f4f4f4; --tab:#d8d8d8;
+    --line:#000000; --text:#000000; --bevel:#808080; --disabled:#c0c0c0;
+    --ui:"Segoe UI",Tahoma,Arial,sans-serif;
+    --mono:Consolas,"Lucida Console","Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:12px/1.4 var(--ui)}
+  .app{max-width:1440px;margin:0 auto;padding:8px}
+
+  .options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+    gap:6px 10px;
+    background:var(--bar);
+    border:1px solid var(--line);
+    padding:8px;
+    margin:0 0 8px 0;
+  }
+  .opt{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .opt > label{font-weight:600}
+  .checks{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 16px;padding:2px 0}
+  .checks label{display:inline-flex;align-items:center;gap:4px}
+
+  input[type=text],select,button,.btn{
+    font:12px var(--ui);
+    color:var(--text);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:0;
+    box-shadow:inset 1px 1px #ffffff,inset -1px -1px var(--bevel);
+    padding:3px 6px;
+    height:24px;
+    min-width:0;
+  }
+  input[type=text],select{width:100%}
+  input[type=checkbox]{accent-color:var(--line);width:13px;height:13px;margin:0}
+  button,.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    white-space:nowrap;
+    user-select:none;
+    padding:0 10px;
+  }
+  button:hover,.btn:hover{background:#e0e0e0}
+  button:active,.btn:active{background:var(--line);color:#ffffff;box-shadow:inset 1px 1px var(--bevel)}
+  button:disabled{background:var(--disabled);color:#606060;cursor:default;box-shadow:inset 1px 1px #ffffff,inset -1px -1px var(--bevel)}
+  button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:1px dotted var(--line);outline-offset:-3px;
+  }
+  .primary{grid-column:1/-1;height:28px;font-weight:600;background:var(--line);color:#ffffff;box-shadow:inset 1px 1px var(--bevel)}
+  .primary:hover{background:#303030}
+  .primary:active{background:#000000}
+  .primary:disabled{background:var(--disabled);color:#606060}
+  input[type=file]{display:none}
+
+  .panes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .pane{display:flex;flex-direction:column;min-height:520px;background:var(--panel);border:1px solid var(--line);overflow:hidden}
+  .tab{background:var(--tab);border-bottom:1px solid var(--line);padding:5px 8px;font-weight:600}
+  .toolbar{display:flex;gap:6px;padding:6px;background:var(--bar);border-bottom:1px solid var(--line)}
+  textarea{
+    flex:1;width:100%;
+    border:0;outline:0;resize:none;
+    padding:8px;
+    background:var(--panel);color:var(--text);
+    font:12px/1.45 var(--mono);
+    tab-size:3;
+  }
+  #error{min-height:18px;margin-top:6px;font-weight:600}
+
+  @media(max-width:900px){.panes{grid-template-columns:1fr}.pane{min-height:360px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <form id="options" class="options" autocomplete="off">
+    <div class="opt">
+      <label for="preset">Preset</label>
+      <select id="preset">
+        <option value="light">Light</option>
+        <option value="medium" selected>Medium</option>
+        <option value="heavy">Heavy</option>
+      </select>
+    </div>
+    <div class="opt">
+      <label for="seed">Seed</label>
+      <input type="text" id="seed" inputmode="numeric">
+    </div>
+    <div class="opt">
+      <label for="placeId">Place ID</label>
+      <input type="text" id="placeId" inputmode="numeric">
+    </div>
+    <div class="opt">
+      <label for="gameId">Game ID</label>
+      <input type="text" id="gameId" inputmode="numeric">
+    </div>
+    <div class="opt">
+      <label for="apiKey">API key</label>
+      <input type="text" id="apiKey">
+    </div>
+
+    <div class="checks">
+      <label><input type="checkbox" id="verify" checked>Verify</label>
+    </div>
+
+    <button type="submit" id="run" class="primary">Obfuscate</button>
+  </form>
+
+  <div class="panes">
+    <section class="pane">
+      <div class="tab">Input</div>
+      <div class="toolbar">
+        <label class="btn" for="srcFile">Upload file</label>
+        <input type="file" id="srcFile" accept=".luau,.lua,.txt">
+      </div>
+      <textarea id="src" spellcheck="false" wrap="off"></textarea>
+    </section>
+
+    <section class="pane">
+      <div class="tab">Output</div>
+      <div class="toolbar">
+        <button type="button" id="copy">Copy output</button>
+        <button type="button" id="download">Download output</button>
+      </div>
+      <textarea id="out" readonly spellcheck="false" wrap="off"></textarea>
+    </section>
+  </div>
+
+  <div id="error"></div>
+</div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+
+$("srcFile").addEventListener("change", async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  $("src").value = await f.text();
+  $("error").textContent = "";
+  e.target.value = "";
+});
+
+function authHeaders() {
+  const h = {};
+  const k = $("apiKey").value.trim();
+  if (k) h["X-API-Key"] = k;
+  return h;
+}
+
+function num(id) {
+  const v = $(id).value.trim();
+  return v === "" ? undefined : v;
+}
+
+function collect() {
+  return {
+    source: $("src").value,
+    preset: $("preset").value,
+    seed: num("seed"),
+    place_id: num("placeId"),
+    game_id: num("gameId"),
+    verify: $("verify").checked
+  };
+}
+
+$("options").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("run");
+  const err = $("error");
+  err.textContent = "";
+  if (!$("src").value.trim()) { err.textContent = "Input is empty."; return; }
+  btn.disabled = true;
+  try {
+    const r = await fetch("/api/obfuscate", {
+      method: "POST",
+      headers: Object.assign({}, authHeaders(), { "Content-Type": "application/json" }),
+      body: JSON.stringify(collect())
+    });
+    let j;
+    try { j = await r.json(); }
+    catch (_) { throw new Error("API returned a non-JSON response (" + r.status + ")"); }
+    if (!r.ok || j.ok === false) throw new Error(j.error || ("HTTP " + r.status));
+    $("out").value = j.output;
+  } catch (ex) {
+    err.textContent = "Error: " + ex.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch (_) {
+    const ta = document.createElement("textarea");
+    ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.append(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (_) {}
+    ta.remove(); return ok;
+  }
+}
+
+$("copy").onclick = async () => {
+  const ok = await copyText($("out").value);
+  $("error").textContent = ok ? "" : "Copy failed.";
+};
+
+$("download").onclick = () => {
+  const t = $("out").value;
+  if (!t) { $("error").textContent = "Output is empty."; return; }
+  $("error").textContent = "";
+  const blob = new Blob([t], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "protected.luau";
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+};
+</script>
+</body>
+</html>

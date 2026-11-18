@@ -1,0 +1,29 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Single-VM app with light / medium / heavy presets; medium is the default.
+# Randomised return-based output (final-return/IIFE), no top-level locals, no loadstring.
+# Push this repo to GitHub, then: Render Dashboard -> New -> Blueprint -> pick repo.
+services:
+  - type: web
+    name: luau-obf
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: "pip install -r requirements.txt && python3 obf/fetch_tools.py"
+    startCommand: "python3 -m obf.web"
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: OBF_TIMEOUT
+        value: "60"
+      - key: OBF_MAX_SOURCE
+        value: "262144"
+      - key: OBF_MAX_BODY
+        value: "16777216"
+      - key: OBF_RATE_LIMIT
+        value: "24"
+      - key: OBF_ALLOWED_ORIGIN
+        value: "*"
+      # Optional shared secret. Set a value in the Render dashboard to require
+      # an X-API-Key header; leave blank to keep the instance open.
+      - key: OBF_API_KEY
+        sync: false

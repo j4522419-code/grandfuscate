@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+.obf_cache/
+obf_fail_*.luau
+
+# The build step downloads these (python3 obf/fetch_tools.py). Keeping them out
+# of git keeps the repo small; delete this line if you prefer vendoring binaries.
+tools/
+
+# Never commit private build keys. Bundled example keys are intentionally
+# included so the generated examples can be verified with --identify.
+keys.json
+*.keys.json
+!examples/keys*.json

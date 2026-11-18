@@ -1,0 +1,2271 @@
+{
+  "builds": [
+    {
+      "behaviour": {
+        "rc": 0,
+        "same_as_original": true,
+        "stderr": "",
+        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+      },
+      "bytes": 263889,
+      "control_flow": {
+        "node_order_shuffled": true
+      },
+      "file": "tests/builds/build_01.luau",
+      "layout": {
+        "bank_count": 3,
+        "boot_layout": 0,
+        "byte_groups": 5,
+        "chunk_assembly": "sbyte",
+        "const_bias": 2,
+        "const_span": 2,
+        "constant_groups": 4,
+        "dispatch_style": "split",
+        "entry_layout": 2,
+        "handler_groups": 5,
+        "node_groups": 3,
+        "node_style": "nested",
+        "operand_mode": "reverse",
+        "per_node_c": 617735,
+        "per_node_d": 735671,
+        "router_style": "split",
+        "slot_base": 78310,
+        "stream_order": "offset_suffix",
+        "structural_digest": "0c0015615376d9e2394ba6072ac462f280bb0f02f14f361886d471af8a94e922",
+        "vm_profile": "relay",
+        "word_groups": 3,
+        "word_order": "len_op"
+      },
+      "opcodes_sha256": "337fbb134bf98da9",
+      "payload_digest_sha256": "24f705026b323d9e",
+      "pool_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "e00a96de8b5762b3b66b31298e2f28491d12cc5c7758b6143e9a0b8a32683b3a",
+            "key_a": 8,
+            "key_b": 0,
+            "key_base": 43948,
+            "keys": [
+              43948,
+              43950,
+              43949
+            ],
+            "sizes": [
+              674,
+              651,
+              636
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "dc41153e9770eeba8760808e28f7ce6c88a64b00793ba1f476ca5e89abab697f",
+            "key_a": 7,
+            "key_b": 2,
+            "key_base": 14052,
+            "keys": [
+              14054,
+              14052,
+              14053
+            ],
+            "sizes": [
+              1,
+              19,
+              6
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 1
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "11abbf53d2fc7716f07113f87e36493d5e033c9861838f2f7bec206458d581b6",
+            "key_a": 5,
+            "key_b": 1,
+            "key_base": 51647,
+            "keys": [
+              51648,
+              51647,
+              51649
+            ],
+            "sizes": [
+              544,
+              541,
+              545
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0,
+              3
+            ],
+            "count": 4,
+            "digest": "3b0b1c2c298c48bbe59b99407e9a4d5134f4ccbab61b75f0c53e700e018a7233",
+            "key_a": 9,
+            "key_b": 0,
+            "key_base": 50646,
+            "keys": [
+              50646,
+              50647,
+              50648,
+              50649
+            ],
+            "sizes": [
+              5,
+              5,
+              5,
+              2
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 2
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              3,
+              0,
+              1,
+              2
+            ],
+            "count": 4,
+            "digest": "d9283509c0731e49c3585ee4896349253e54757fa8cb1ab241a9bfcd79920a8f",
+            "key_a": 7,
+            "key_b": 1,
+            "key_base": 84265,
+            "keys": [
+              84266,
+              84265,
+              84268,
+              84267
+            ],
+            "sizes": [
+              272,
+              240,
+              299,
+              247
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "658c8ab3844c137e3efe870e3525728f4ba1a9c64c5eae95b3b499d7ed0b0fd1",
+            "key_a": 2,
+            "key_b": 1,
+            "key_base": 25289,
+            "keys": [
+              25290,
+              25289,
+              25291
+            ],
+            "sizes": [
+              3,
+              4,
+              1
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 3
+        }
+      ],
+      "preset": "medium",
+      "protection_level": "balanced",
+      "scanner_findings": [],
+      "seed": 1,
+      "sha256": "ad4fce456f088098020ecc3a3903a244efbef675b9e4c1fb57658bbccbc44327",
+      "structural_digest": "0c0015615376d9e2394ba6072ac462f280bb0f02f14f361886d471af8a94e922",
+      "syntax": true,
+      "token_stats": {
+        "largest_string_token": 2089,
+        "string_tokens": 293,
+        "token_count": 69805,
+        "token_prefix_sha256": "99b74a910cd9e3b5"
+      },
+      "vm_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "b164d95bd013d8ba30db5021c40bcb59d50b47cc441777aae4fe17b166cc10ed",
+            "key_a": 4,
+            "key_b": 2,
+            "key_base": 89198,
+            "keys": [
+              89200,
+              89198,
+              89199
+            ],
+            "sizes": [
+              696,
+              723,
+              677
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 1,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "d4568049b5348f3e9fb2a907cf2e11f295b4f3999d7cd2a23a05bdafb1a5c29d",
+            "key_a": 10,
+            "key_b": 0,
+            "key_base": 94798,
+            "keys": [
+              94798,
+              94799,
+              94800
+            ],
+            "sizes": [
+              4,
+              4,
+              14
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              1,
+              3
+            ],
+            "count": 4,
+            "digest": "419c1fe70956a5a69399a183ac3e53b1365180de203452d3f8a8bbd22216d0b0",
+            "key_a": 11,
+            "key_b": 0,
+            "key_base": 30148,
+            "keys": [
+              30148,
+              30151,
+              30150,
+              30149
+            ],
+            "sizes": [
+              515,
+              527,
+              528,
+              526
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 2,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "fac824bf53b512ccfd313904efa22eee41a563b527d830cd915a4fab92cc067b",
+            "key_a": 5,
+            "key_b": 1,
+            "key_base": 62630,
+            "keys": [
+              62631,
+              62630,
+              62632
+            ],
+            "sizes": [
+              8,
+              2,
+              1
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              3,
+              1
+            ],
+            "count": 4,
+            "digest": "983d6282c20449081158dc1e13813d107a91b5aa9dd6ace0f305fbb4b96f8594",
+            "key_a": 13,
+            "key_b": 1,
+            "key_base": 55392,
+            "keys": [
+              55393,
+              55394,
+              55395,
+              55392
+            ],
+            "sizes": [
+              462,
+              557,
+              551,
+              526
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 3,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "26077bcdfb08e5a51126e45303bf7682a14816cef5217f41d572d6373ea3c309",
+            "key_a": 7,
+            "key_b": 1,
+            "key_base": 92482,
+            "keys": [
+              92483,
+              92484,
+              92482
+            ],
+            "sizes": [
+              10,
+              8,
+              1
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              3,
+              0,
+              1
+            ],
+            "count": 4,
+            "digest": "a369e6d483c1c5fdb112384f57de120d1548a8bcbdfb1f4eb318248acb6a09fb",
+            "key_a": 13,
+            "key_b": 2,
+            "key_base": 77792,
+            "keys": [
+              77794,
+              77795,
+              77792,
+              77793
+            ],
+            "sizes": [
+              525,
+              463,
+              581,
+              515
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 4,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "b440cf7912ccdfefde2e83dc04f2f84b42af952d50c330cab1a9472a8eca36b1",
+            "key_a": 5,
+            "key_b": 2,
+            "key_base": 76879,
+            "keys": [
+              76881,
+              76880,
+              76879
+            ],
+            "sizes": [
+              10,
+              3,
+              6
+            ],
+            "strategy": "balanced"
+          }
+        }
+      ]
+    },
+    {
+      "behaviour": {
+        "rc": 0,
+        "same_as_original": true,
+        "stderr": "",
+        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+      },
+      "bytes": 230767,
+      "control_flow": {
+        "node_order_shuffled": true
+      },
+      "file": "tests/builds/build_02.luau",
+      "layout": {
+        "bank_count": 2,
+        "boot_layout": 1,
+        "byte_groups": 4,
+        "chunk_assembly": "concat",
+        "const_bias": 1,
+        "const_span": 3,
+        "constant_groups": 5,
+        "dispatch_style": "split",
+        "entry_layout": 1,
+        "handler_groups": 4,
+        "node_groups": 4,
+        "node_style": "cursor",
+        "operand_mode": "affine",
+        "per_node_c": 994908,
+        "per_node_d": 815953,
+        "router_style": "chain",
+        "slot_base": 11653,
+        "stream_order": "offset_prefix",
+        "structural_digest": "874d1e544480e0061756902e24fd1929e82222c585f9548ab69e86225d223ca4",
+        "vm_profile": "inline",
+        "word_groups": 5,
+        "word_order": "op_len"
+      },
+      "opcodes_sha256": "dc476b3267899c21",
+      "payload_digest_sha256": "d048fedb2d1153d9",
+      "pool_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "6a8a030dd98218e286dcd85eeb90b4c55e1d000030b145590125c78feb165037",
+            "key_a": 4,
+            "key_b": 1,
+            "key_base": 42953,
+            "keys": [
+              42954,
+              42955,
+              42953
+            ],
+            "sizes": [
+              493,
+              545,
+              512
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "c005dc99dbd9965be27843434312e97d6b71f5a14654c6de1e8745637aa39433",
+            "key_a": 7,
+            "key_b": 0,
+            "key_base": 26145,
+            "keys": [
+              26145,
+              26146,
+              26147
+            ],
+            "sizes": [
+              7,
+              7,
+              3
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 1
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              3,
+              0,
+              4
+            ],
+            "count": 5,
+            "digest": "96a6bfddb8b01d234c2fb94dadff3ca9572daddde295e82087eea216e34f55be",
+            "key_a": 7,
+            "key_b": 2,
+            "key_base": 89405,
+            "keys": [
+              89407,
+              89409,
+              89406,
+              89408,
+              89405
+            ],
+            "sizes": [
+              253,
+              318,
+              260,
+              288,
+              285
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "a24f82321c51e3296a8efd7b5990422e421a55b0d56e1bd2ab713c9aa11a8642",
+            "key_a": 11,
+            "key_b": 2,
+            "key_base": 36538,
+            "keys": [
+              36540,
+              36539,
+              36538
+            ],
+            "sizes": [
+              15,
+              1,
+              8
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 2
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "8c6b46b35fc8e2471d2c825284efc61894c0e5877045cddd31d1228f8fea31ba",
+            "key_a": 11,
+            "key_b": 0,
+            "key_base": 68488,
+            "keys": [
+              68488,
+              68490,
+              68489
+            ],
+            "sizes": [
+              527,
+              544,
+              561
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "9dd241724809143daae3ea16d0883519157981894b54907e9e77484dd83fc9b2",
+            "key_a": 2,
+            "key_b": 0,
+            "key_base": 82149,
+            "keys": [
+              82149,
+              82151,
+              82150
+            ],
+            "sizes": [
+              9,
+              7,
+              12
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 3
+        }
+      ],
+      "preset": "medium",
+      "protection_level": "balanced",
+      "scanner_findings": [],
+      "seed": 94,
+      "sha256": "c1496669700af1f7046caca91ecdcb9d0b0cdc116f747a2d4917d5a663438b5f",
+      "structural_digest": "874d1e544480e0061756902e24fd1929e82222c585f9548ab69e86225d223ca4",
+      "syntax": true,
+      "token_stats": {
+        "largest_string_token": 2068,
+        "string_tokens": 236,
+        "token_count": 59232,
+        "token_prefix_sha256": "1d564b87a63d50fc"
+      },
+      "vm_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2,
+              5,
+              3,
+              4
+            ],
+            "count": 6,
+            "digest": "5479f26558881fc9b5a97456e9980fd65c39d48ac6dc31b186542569a65b0772",
+            "key_a": 7,
+            "key_b": 4,
+            "key_base": 18297,
+            "keys": [
+              18301,
+              18302,
+              18297,
+              18298,
+              18299,
+              18300
+            ],
+            "sizes": [
+              333,
+              313,
+              371,
+              336,
+              408,
+              343
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 1,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              5,
+              4,
+              1,
+              0,
+              3
+            ],
+            "count": 6,
+            "digest": "6cde634108d5cb468e714b2639ce613506d549870a83df3430e4fa62e6d34d21",
+            "key_a": 11,
+            "key_b": 5,
+            "key_base": 82711,
+            "keys": [
+              82716,
+              82715,
+              82714,
+              82713,
+              82712,
+              82711
+            ],
+            "sizes": [
+              4,
+              2,
+              1,
+              2,
+              13,
+              1
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "7ecfe7d03d27a01cd09353e4725e1469ff21dbda96b85762f289388425a7425c",
+            "key_a": 10,
+            "key_b": 0,
+            "key_base": 56723,
+            "keys": [
+              56723,
+              56724,
+              56725
+            ],
+            "sizes": [
+              724,
+              694,
+              686
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 2,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              5,
+              0,
+              3,
+              4,
+              2,
+              1
+            ],
+            "count": 6,
+            "digest": "a9af339db85cf820d1625e2b873bb2e45423050e256848050e753ca80519d45a",
+            "key_a": 7,
+            "key_b": 4,
+            "key_base": 77377,
+            "keys": [
+              77381,
+              77382,
+              77377,
+              77378,
+              77379,
+              77380
+            ],
+            "sizes": [
+              6,
+              5,
+              5,
+              2,
+              2,
+              1
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              3,
+              2,
+              4,
+              0
+            ],
+            "count": 5,
+            "digest": "b554d647cd22dde3d9c4951a7e02d24c52aa4f5958a9777c208a3fe2d8310b6a",
+            "key_a": 7,
+            "key_b": 4,
+            "key_base": 47326,
+            "keys": [
+              47330,
+              47327,
+              47329,
+              47326,
+              47328
+            ],
+            "sizes": [
+              411,
+              430,
+              430,
+              429,
+              404
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 3,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              3,
+              1,
+              0,
+              4
+            ],
+            "count": 5,
+            "digest": "655dfc9a552bcf509a394ca01b1735fa112d5655e83454693c1b6be0f05c93a6",
+            "key_a": 17,
+            "key_b": 3,
+            "key_base": 25342,
+            "keys": [
+              25345,
+              25342,
+              25344,
+              25346,
+              25343
+            ],
+            "sizes": [
+              3,
+              4,
+              5,
+              9,
+              1
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              0,
+              3,
+              2
+            ],
+            "count": 4,
+            "digest": "8542cdc6b9ef3dafe07228c5f174c5b747baa4d8eb130f493b8dd107d1595f89",
+            "key_a": 3,
+            "key_b": 2,
+            "key_base": 60990,
+            "keys": [
+              60992,
+              60991,
+              60990,
+              60993
+            ],
+            "sizes": [
+              508,
+              526,
+              533,
+              525
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 4,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "8b71e60e0260efce2cb0df95e381241697341a8ad436d4eb411b8a9cb91bb8f6",
+            "key_a": 1,
+            "key_b": 1,
+            "key_base": 42079,
+            "keys": [
+              42080,
+              42081,
+              42079
+            ],
+            "sizes": [
+              13,
+              5,
+              2
+            ],
+            "strategy": "jitter"
+          }
+        }
+      ]
+    },
+    {
+      "behaviour": {
+        "rc": 0,
+        "same_as_original": true,
+        "stderr": "",
+        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+      },
+      "bytes": 434672,
+      "control_flow": {
+        "node_order_shuffled": true
+      },
+      "file": "tests/builds/build_03.luau",
+      "layout": {
+        "bank_count": 4,
+        "boot_layout": 0,
+        "byte_groups": 4,
+        "chunk_assembly": "sbyte",
+        "const_bias": 3,
+        "const_span": 2,
+        "constant_groups": 3,
+        "dispatch_style": "direct",
+        "entry_layout": 3,
+        "handler_groups": 6,
+        "node_groups": 5,
+        "node_style": "sparse",
+        "operand_mode": "xor",
+        "per_node_c": 117007,
+        "per_node_d": 582739,
+        "router_style": "chain",
+        "slot_base": 67817,
+        "stream_order": "offset_suffix",
+        "structural_digest": "cfb5b0dae4b34d1bbf9111774da26eb35e814add942dc86d007602a14e622600",
+        "vm_profile": "mirror",
+        "word_groups": 4,
+        "word_order": "op_len"
+      },
+      "opcodes_sha256": "090a017099f07060",
+      "payload_digest_sha256": "b5ac864feb7cdd2e",
+      "pool_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "201a11d6dfe35a37205c546895817807898540617492d184def360674936abcf",
+            "key_a": 2,
+            "key_b": 1,
+            "key_base": 81691,
+            "keys": [
+              81692,
+              81691,
+              81693
+            ],
+            "sizes": [
+              418,
+              400,
+              383
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "4e052e62177e422dac90dca864fc5be21d2f00af8c80db01c3c704c862e3d3b3",
+            "key_a": 8,
+            "key_b": 2,
+            "key_base": 12011,
+            "keys": [
+              12013,
+              12012,
+              12011
+            ],
+            "sizes": [
+              2,
+              1,
+              5
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 1
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "8058f441cd4a1099957b9613b8ddbcfd0d80dc94651a87f9cb220b7cc5b26264",
+            "key_a": 1,
+            "key_b": 1,
+            "key_base": 85940,
+            "keys": [
+              85941,
+              85942,
+              85940
+            ],
+            "sizes": [
+              596,
+              590,
+              580
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "5d7cc51acfc7d4c6c010c574f3f833540c3961d5cadfbaa0ac0891bb65f81848",
+            "key_a": 10,
+            "key_b": 0,
+            "key_base": 18633,
+            "keys": [
+              18633,
+              18634,
+              18635
+            ],
+            "sizes": [
+              10,
+              7,
+              1
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 2
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "b5f080359a401555eefe33822d848a6060ba5c00a351c4ee995bfd1be792f22b",
+            "key_a": 5,
+            "key_b": 1,
+            "key_base": 29808,
+            "keys": [
+              29809,
+              29808,
+              29810
+            ],
+            "sizes": [
+              551,
+              556,
+              561
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "bdf4a6d43c51835995cb0aca4e365b6ae100736e41c4a853297942ed9d094833",
+            "key_a": 4,
+            "key_b": 2,
+            "key_base": 41691,
+            "keys": [
+              41693,
+              41691,
+              41692
+            ],
+            "sizes": [
+              2,
+              15,
+              2
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 3
+        }
+      ],
+      "preset": "medium",
+      "protection_level": "balanced",
+      "scanner_findings": [],
+      "seed": 14,
+      "sha256": "54b64b2ffd2675085f425bfb04b5e57fe0384d2407719e8b85b3407f395a4041",
+      "structural_digest": "cfb5b0dae4b34d1bbf9111774da26eb35e814add942dc86d007602a14e622600",
+      "syntax": true,
+      "token_stats": {
+        "largest_string_token": 2176,
+        "string_tokens": 346,
+        "token_count": 127620,
+        "token_prefix_sha256": "524be81108b19fbf"
+      },
+      "vm_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              0,
+              2,
+              1
+            ],
+            "count": 3,
+            "digest": "4f878d8e1d3ae531dbbbab1789b4eb69c0f1cec0f2180a3afdcefe8d7d9c868a",
+            "key_a": 10,
+            "key_b": 1,
+            "key_base": 17494,
+            "keys": [
+              17495,
+              17496,
+              17494
+            ],
+            "sizes": [
+              731,
+              669,
+              692
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 1,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "46191c42c9bf09dc009895c0c38b8e6493b101bbdb1f3ab42626b11e0f297896",
+            "key_a": 2,
+            "key_b": 0,
+            "key_base": 94026,
+            "keys": [
+              94026,
+              94028,
+              94027
+            ],
+            "sizes": [
+              4,
+              3,
+              3
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "5716ce6f68cae8e8d1443f3cea6cc57004c44ff3d0a90d7523ce2b1d7d97b2b9",
+            "key_a": 8,
+            "key_b": 1,
+            "key_base": 69349,
+            "keys": [
+              69350,
+              69349,
+              69351
+            ],
+            "sizes": [
+              710,
+              691,
+              691
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 2,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "60027b21656cf3121be0685af807b4f3688ac0f7531d7f620a0c2ba250213560",
+            "key_a": 10,
+            "key_b": 2,
+            "key_base": 32034,
+            "keys": [
+              32036,
+              32034,
+              32035
+            ],
+            "sizes": [
+              1,
+              12,
+              6
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "cd37743cff27738aa1e50761bee72e92f7e28ebcad54c27c44384f93b0fea55c",
+            "key_a": 7,
+            "key_b": 1,
+            "key_base": 18297,
+            "keys": [
+              18298,
+              18299,
+              18297
+            ],
+            "sizes": [
+              682,
+              694,
+              716
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 3,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "9592128bce6ce9dd8ae3e2aa9fa3739707dede2020a5af268cc9e95c972b0f0d",
+            "key_a": 8,
+            "key_b": 0,
+            "key_base": 77409,
+            "keys": [
+              77409,
+              77411,
+              77410
+            ],
+            "sizes": [
+              1,
+              9,
+              1
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "count": 4,
+            "digest": "36c83369bb1cd4913517c892aa22ba4f6fee7d7b0da5e2a3f68f39fc8edcbcd3",
+            "key_a": 3,
+            "key_b": 2,
+            "key_base": 77188,
+            "keys": [
+              77190,
+              77189,
+              77188,
+              77191
+            ],
+            "sizes": [
+              523,
+              509,
+              522,
+              538
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 4,
+          "key": {
+            "assembly": "sbyte",
+            "assignment_order": [
+              1,
+              2,
+              0,
+              3
+            ],
+            "count": 4,
+            "digest": "1511239eab179d619eaa9f222871be02eb5c308151e3811ba209d02533c9a20c",
+            "key_a": 1,
+            "key_b": 1,
+            "key_base": 88777,
+            "keys": [
+              88778,
+              88779,
+              88780,
+              88777
+            ],
+            "sizes": [
+              5,
+              5,
+              10,
+              3
+            ],
+            "strategy": "balanced"
+          }
+        }
+      ]
+    },
+    {
+      "behaviour": {
+        "rc": 0,
+        "same_as_original": true,
+        "stderr": "",
+        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+      },
+      "bytes": 217523,
+      "control_flow": {
+        "node_order_shuffled": true
+      },
+      "file": "tests/builds/build_04.luau",
+      "layout": {
+        "bank_count": 2,
+        "boot_layout": 3,
+        "byte_groups": 3,
+        "chunk_assembly": "concat",
+        "const_bias": 0,
+        "const_span": 3,
+        "constant_groups": 5,
+        "dispatch_style": "bucket",
+        "entry_layout": 0,
+        "handler_groups": 3,
+        "node_groups": 4,
+        "node_style": "nested",
+        "operand_mode": "xor",
+        "per_node_c": 575994,
+        "per_node_d": 717715,
+        "router_style": "direct",
+        "slot_base": 66858,
+        "stream_order": "offset_prefix",
+        "structural_digest": "a444426edbd0f0737dbb1b5d37883f60bc30378289496b5c4d29b1cf54baf573",
+        "vm_profile": "inline",
+        "word_groups": 4,
+        "word_order": "op_len"
+      },
+      "opcodes_sha256": "e372760456d4b97d",
+      "payload_digest_sha256": "5c7f1355b023ed09",
+      "pool_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              3,
+              2,
+              1,
+              4,
+              0
+            ],
+            "count": 5,
+            "digest": "31df09a3306cfc4377f4bb0c6a5d77114a4f2c91e21632621a2d7fc5d6240d7e",
+            "key_a": 19,
+            "key_b": 2,
+            "key_base": 30359,
+            "keys": [
+              30361,
+              30360,
+              30359,
+              30363,
+              30362
+            ],
+            "sizes": [
+              180,
+              210,
+              184,
+              221,
+              179
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              3,
+              4,
+              0,
+              5,
+              2,
+              1
+            ],
+            "count": 6,
+            "digest": "4397cfd3dc81d6863ef86f00e00ba90fe0ce1a1b54faf1a5bc084167402eb0c6",
+            "key_a": 19,
+            "key_b": 1,
+            "key_base": 86608,
+            "keys": [
+              86609,
+              86610,
+              86611,
+              86612,
+              86613,
+              86608
+            ],
+            "sizes": [
+              1,
+              1,
+              3,
+              1,
+              7,
+              3
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 1
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "c00f79f7d6d36d7df1e02bf11f2544bf85276e25a54fe8175c7cc8e41a437c5c",
+            "key_a": 5,
+            "key_b": 2,
+            "key_base": 16732,
+            "keys": [
+              16734,
+              16733,
+              16732
+            ],
+            "sizes": [
+              514,
+              612,
+              551
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              2,
+              0
+            ],
+            "count": 3,
+            "digest": "726bb880694a0737e690865860d12f394dbde122ff81b18ec0b2afb8395e58cf",
+            "key_a": 10,
+            "key_b": 2,
+            "key_base": 77471,
+            "keys": [
+              77473,
+              77471,
+              77472
+            ],
+            "sizes": [
+              12,
+              10,
+              5
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 2
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "2ca09fca50c69333fdb6f51064da7df03da1ec996ebda9a22c089c3f7a7165ab",
+            "key_a": 11,
+            "key_b": 2,
+            "key_base": 73876,
+            "keys": [
+              73878,
+              73877,
+              73876
+            ],
+            "sizes": [
+              693,
+              661,
+              665
+            ],
+            "strategy": "jitter"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "201c6468b6278bee4c5e62ba32266a96b37986d46c8022aae30f43b61c95ba63",
+            "key_a": 11,
+            "key_b": 1,
+            "key_base": 96698,
+            "keys": [
+              96699,
+              96698,
+              96700
+            ],
+            "sizes": [
+              8,
+              13,
+              1
+            ],
+            "strategy": "jitter"
+          },
+          "slice": 3
+        }
+      ],
+      "preset": "medium",
+      "protection_level": "balanced",
+      "scanner_findings": [],
+      "seed": 122,
+      "sha256": "0e6dc086f0d5b8165d0733a1a48bdec08c3fc115288671d39a034febd498c0a8",
+      "structural_digest": "a444426edbd0f0737dbb1b5d37883f60bc30378289496b5c4d29b1cf54baf573",
+      "syntax": true,
+      "token_stats": {
+        "largest_string_token": 2110,
+        "string_tokens": 228,
+        "token_count": 55534,
+        "token_prefix_sha256": "b73b522a8e4b6408"
+      },
+      "vm_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              2,
+              1
+            ],
+            "count": 3,
+            "digest": "516bc69713b3715bb941ea1aef293c30311a4030d9aa6ef23b4adcb1e12e8514",
+            "key_a": 8,
+            "key_b": 2,
+            "key_base": 75721,
+            "keys": [
+              75723,
+              75722,
+              75721
+            ],
+            "sizes": [
+              672,
+              683,
+              701
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 1,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "a90860bb197eb9217f4c572b74359c4d1a6262308316936ae6d76f35065805e1",
+            "key_a": 1,
+            "key_b": 1,
+            "key_base": 58042,
+            "keys": [
+              58043,
+              58044,
+              58042
+            ],
+            "sizes": [
+              8,
+              6,
+              1
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "f0e8c3e02d2f8bd8b4a0014bfe050b8aa37fa8a8306f09222f84374d1b411c0f",
+            "key_a": 1,
+            "key_b": 2,
+            "key_base": 26312,
+            "keys": [
+              26314,
+              26312,
+              26313
+            ],
+            "sizes": [
+              694,
+              695,
+              667
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 2,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              5,
+              3,
+              1,
+              4
+            ],
+            "count": 6,
+            "digest": "3e0285ce9b2b5b00d2ab0aa7263abfd3d452a5c29e5996679ae70d67e6e3cf95",
+            "key_a": 23,
+            "key_b": 5,
+            "key_base": 20099,
+            "keys": [
+              20104,
+              20103,
+              20102,
+              20101,
+              20100,
+              20099
+            ],
+            "sizes": [
+              3,
+              2,
+              1,
+              2,
+              2,
+              1
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              3,
+              2,
+              0,
+              1
+            ],
+            "count": 4,
+            "digest": "c0e4b6378b556e300a698725f81a0b928aafc351a0c181e9ba75ecbf2c7af62c",
+            "key_a": 7,
+            "key_b": 2,
+            "key_base": 89133,
+            "keys": [
+              89135,
+              89134,
+              89133,
+              89136
+            ],
+            "sizes": [
+              514,
+              518,
+              505,
+              519
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 3,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "1a542c9f93e8d689e85ec80551d4b149742b99d4919d050b98c04632c158a7b8",
+            "key_a": 2,
+            "key_b": 2,
+            "key_base": 62685,
+            "keys": [
+              62687,
+              62686,
+              62685
+            ],
+            "sizes": [
+              4,
+              3,
+              3
+            ],
+            "strategy": "jitter"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "622af9ad310ec84986701c93575043640e0c91ada3bedcc91c44c519e2a4811c",
+            "key_a": 5,
+            "key_b": 0,
+            "key_base": 19347,
+            "keys": [
+              19347,
+              19349,
+              19348
+            ],
+            "sizes": [
+              663,
+              722,
+              663
+            ],
+            "strategy": "jitter"
+          },
+          "fragment": 4,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "1a6c4093248bdd965aabc52a0a9352172c129df52430ed123a47fac11dabe666",
+            "key_a": 5,
+            "key_b": 2,
+            "key_base": 19978,
+            "keys": [
+              19980,
+              19979,
+              19978
+            ],
+            "sizes": [
+              1,
+              9,
+              3
+            ],
+            "strategy": "jitter"
+          }
+        }
+      ]
+    },
+    {
+      "behaviour": {
+        "rc": 0,
+        "same_as_original": true,
+        "stderr": "",
+        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+      },
+      "bytes": 377039,
+      "control_flow": {
+        "node_order_shuffled": true
+      },
+      "file": "tests/builds/build_05.luau",
+      "layout": {
+        "bank_count": 4,
+        "boot_layout": 2,
+        "byte_groups": 3,
+        "chunk_assembly": "concat",
+        "const_bias": 4,
+        "const_span": 3,
+        "constant_groups": 4,
+        "dispatch_style": "split",
+        "entry_layout": 0,
+        "handler_groups": 5,
+        "node_groups": 4,
+        "node_style": "nested",
+        "operand_mode": "xor",
+        "per_node_c": 579242,
+        "per_node_d": 702691,
+        "router_style": "direct",
+        "slot_base": 67610,
+        "stream_order": "offset_suffix",
+        "structural_digest": "e80cef41d0e3dcd4b905c50222c91183e52718f689bf62189e6390c76fe6f388",
+        "vm_profile": "mirror",
+        "word_groups": 4,
+        "word_order": "op_len"
+      },
+      "opcodes_sha256": "2017f255f3500ef9",
+      "payload_digest_sha256": "096db4113c32c613",
+      "pool_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "fbe12afd3d075143af9e21b4fb8765312ef909f003484b2d2057ea4aab400c59",
+            "key_a": 5,
+            "key_b": 0,
+            "key_base": 52895,
+            "keys": [
+              52895,
+              52897,
+              52896
+            ],
+            "sizes": [
+              548,
+              526,
+              576
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "2f6afd2da8551963c10e935a52065b28d4cb14218aadb1b464a47297b6949e11",
+            "key_a": 4,
+            "key_b": 1,
+            "key_base": 42277,
+            "keys": [
+              42278,
+              42279,
+              42277
+            ],
+            "sizes": [
+              8,
+              5,
+              1
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 1
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "2b669b66d0e552093002b98563bc17d2d3d3512d9689a2074d72441420d536e6",
+            "key_a": 8,
+            "key_b": 1,
+            "key_base": 74027,
+            "keys": [
+              74028,
+              74027,
+              74029
+            ],
+            "sizes": [
+              462,
+              451,
+              444
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              0,
+              2
+            ],
+            "count": 3,
+            "digest": "34b5c544bc1ca1e9c3b32e400b5b83a29d89b1e331e6a2cb2bf70bb618bd508f",
+            "key_a": 11,
+            "key_b": 1,
+            "key_base": 33784,
+            "keys": [
+              33785,
+              33784,
+              33786
+            ],
+            "sizes": [
+              4,
+              3,
+              3
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 2
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "80e4c11491cf59a6ef088555f62bc4be4989d71d2d81cfbc70d8effa9cf45346",
+            "key_a": 10,
+            "key_b": 2,
+            "key_base": 78728,
+            "keys": [
+              78730,
+              78728,
+              78729
+            ],
+            "sizes": [
+              542,
+              524,
+              558
+            ],
+            "strategy": "balanced"
+          },
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              1,
+              2
+            ],
+            "count": 3,
+            "digest": "4304c2fc1ef1d6d70ebdfe182cdd93e592544dd595a2341cd47382ca27b40ad0",
+            "key_a": 5,
+            "key_b": 0,
+            "key_base": 77400,
+            "keys": [
+              77400,
+              77402,
+              77401
+            ],
+            "sizes": [
+              1,
+              13,
+              1
+            ],
+            "strategy": "balanced"
+          },
+          "slice": 3
+        }
+      ],
+      "preset": "medium",
+      "protection_level": "balanced",
+      "scanner_findings": [],
+      "seed": 3,
+      "sha256": "f4741bbb4577277b92770cc03724e4675632af61f50082dc661262a872ec9839",
+      "structural_digest": "e80cef41d0e3dcd4b905c50222c91183e52718f689bf62189e6390c76fe6f388",
+      "syntax": true,
+      "token_stats": {
+        "largest_string_token": 2089,
+        "string_tokens": 330,
+        "token_count": 106967,
+        "token_prefix_sha256": "4c6cd36bb643519a"
+      },
+      "vm_chunk_plans": [
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "5ccce773b153f94749740193695fb7d088c6c49ec898ba8eddfa4093d5c07274",
+            "key_a": 8,
+            "key_b": 1,
+            "key_base": 15635,
+            "keys": [
+              15636,
+              15635,
+              15637
+            ],
+            "sizes": [
+              657,
+              676,
+              691
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 1,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "ef6ef2b5944206b3af1a017923ba9b5732b578499dd05c9e26399da19b3fca24",
+            "key_a": 5,
+            "key_b": 2,
+            "key_base": 73345,
+            "keys": [
+              73347,
+              73346,
+              73345
+            ],
+            "sizes": [
+              3,
+              6,
+              2
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0
+            ],
+            "count": 3,
+            "digest": "28c77d70ef7e746f595fabeb5396fae70abfbc530fcf58088cbe17f0565ef92d",
+            "key_a": 7,
+            "key_b": 0,
+            "key_base": 40819,
+            "keys": [
+              40819,
+              40820,
+              40821
+            ],
+            "sizes": [
+              686,
+              692,
+              646
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 2,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              1,
+              0,
+              2,
+              3
+            ],
+            "count": 4,
+            "digest": "43bdb2280fb1e06f25d5e077d99262d7d74c6fafc1b428594220725dfb37a537",
+            "key_a": 1,
+            "key_b": 3,
+            "key_base": 41066,
+            "keys": [
+              41069,
+              41066,
+              41067,
+              41068
+            ],
+            "sizes": [
+              6,
+              8,
+              3,
+              1
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              0,
+              2,
+              1
+            ],
+            "count": 3,
+            "digest": "3e909c7d80f70367d41a66c17b5cbb6459150a9a8a32d9e37de64ce7839d8d7d",
+            "key_a": 11,
+            "key_b": 1,
+            "key_base": 91940,
+            "keys": [
+              91941,
+              91940,
+              91942
+            ],
+            "sizes": [
+              660,
+              682,
+              682
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 3,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              3,
+              0,
+              2,
+              1
+            ],
+            "count": 4,
+            "digest": "690c22bc026f34534571c5f41f29353b36b0fa072bd193e9498824133a59f5d5",
+            "key_a": 9,
+            "key_b": 2,
+            "key_base": 79394,
+            "keys": [
+              79396,
+              79397,
+              79394,
+              79395
+            ],
+            "sizes": [
+              6,
+              1,
+              7,
+              7
+            ],
+            "strategy": "balanced"
+          }
+        },
+        {
+          "blob": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              1,
+              0,
+              3
+            ],
+            "count": 4,
+            "digest": "2b21e66d1475e05a1616a2825108bfdda43737bc61ee29ca4b5e571e0ae7fe11",
+            "key_a": 9,
+            "key_b": 0,
+            "key_base": 83901,
+            "keys": [
+              83901,
+              83902,
+              83903,
+              83904
+            ],
+            "sizes": [
+              523,
+              508,
+              497,
+              496
+            ],
+            "strategy": "balanced"
+          },
+          "fragment": 4,
+          "key": {
+            "assembly": "concat",
+            "assignment_order": [
+              2,
+              0,
+              1
+            ],
+            "count": 3,
+            "digest": "c30340aeb5acd3549b22e6efa9a23e67503f342681836bc5bce731a180f92b7c",
+            "key_a": 11,
+            "key_b": 1,
+            "key_base": 30924,
+            "keys": [
+              30925,
+              30924,
+              30926
+            ],
+            "sizes": [
+              8,
+              9,
+              1
+            ],
+            "strategy": "balanced"
+          }
+        }
+      ]
+    }
+  ],
+  "created": "2026-11-18T05:35:35.494440+00:00",
+  "diversity": {
+    "bank_counts": [
+      2,
+      3,
+      4
+    ],
+    "boot_layouts": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "chunk_assemblies": [
+      "concat",
+      "sbyte"
+    ],
+    "const_biases": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "const_spans": [
+      2,
+      3
+    ],
+    "dispatch_styles": [
+      "bucket",
+      "direct",
+      "split"
+    ],
+    "entry_layouts": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "group_signatures": 5,
+    "node_styles": [
+      "cursor",
+      "nested",
+      "sparse"
+    ],
+    "opcode_maps": 5,
+    "operand_modes": [
+      "affine",
+      "reverse",
+      "xor"
+    ],
+    "outputs": 5,
+    "payload_digests": 5,
+    "router_styles": [
+      "chain",
+      "direct",
+      "split"
+    ],
+    "slot_bases": [
+      11653,
+      66858,
+      67610,
+      67817,
+      78310
+    ],
+    "stream_orders": [
+      "offset_prefix",
+      "offset_suffix"
+    ],
+    "structural_digests": 5,
+    "token_prefixes": 5,
+    "vm_profiles": [
+      "inline",
+      "mirror",
+      "relay"
+    ],
+    "word_orders": [
+      "len_op",
+      "op_len"
+    ]
+  },
+  "marker": "GRANDFUSCATE_FIVE_BUILD_DIVERSITY_V2",
+  "original_behaviour": {
+    "rc": 0,
+    "stderr": "",
+    "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+  },
+  "preset": "medium",
+  "seeds": [
+    1,
+    94,
+    14,
+    122,
+    3
+  ],
+  "source": "tests/cases/print67.luau",
+  "source_sha256": "b36ac94b2d172e2d76b71b0cf044b5575f22ec278c667a9eec4f24f2dff99ef5"
+}

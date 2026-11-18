@@ -1,0 +1,247 @@
+{
+  "baseline": "tests/baseline (frozen pre-second-pass engine)",
+  "created": "2026-11-18T05:35:58.061483+00:00",
+  "performance": {
+    "measures": {
+      "new_runtime": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 1.231875753001077,
+        "seconds_min": 1.1916893320012605
+      },
+      "new_startup": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 0.01603054099905421,
+        "seconds_min": 0.01568363899787073
+      },
+      "old_runtime": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 0.4248784949995752,
+        "seconds_min": 0.41483109399996465
+      },
+      "old_startup": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 0.006432666999899084,
+        "seconds_min": 0.006311492001259467
+      },
+      "original_runtime": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 0.002802461000101175,
+        "seconds_min": 0.002081507002003491
+      },
+      "original_startup": {
+        "rss_kib_max": 118048,
+        "rss_kib_median": 118048,
+        "seconds_median": 0.0021005560010962654,
+        "seconds_min": 0.002007724997383775
+      }
+    },
+    "overhead_median": {
+      "new": 439.5692760600785,
+      "old": 151.6090660973466
+    },
+    "startup_median_ms": {
+      "new": 16.03054099905421,
+      "old": 6.432666999899084,
+      "original": 2.1005560010962654
+    },
+    "startup_source": "local x = 1",
+    "workload": "tests/bench_runtime.luau (5,000 loop iterations)"
+  },
+  "seed": 20261118,
+  "signatures": {
+    "print67": {
+      "new": {
+        "behaviour": {
+          "matches_original": true,
+          "original_rc": 0,
+          "original_stderr": "",
+          "original_stdout": "67\n",
+          "rc": 0,
+          "stderr": "",
+          "stdout": "67\n"
+        },
+        "brand_bytes": false,
+        "central_dispatch_chains": {},
+        "comments": 0,
+        "fixed_checksum_constants": [],
+        "output_bytes": 198717,
+        "output_sha256": "37e6f092ec28feb9",
+        "runtime_probe": {
+          "all_source_hits": 0,
+          "captured_stdout": [
+            "67"
+          ],
+          "char_calls": 10,
+          "chunk_ok": "true",
+          "clean_ir": "false",
+          "distinct_blobs": 15,
+          "global_dispatcher_candidates": 0,
+          "harness_stderr": "",
+          "startup_source_hits": 0
+        },
+        "sequential_small_opcode_array": false,
+        "small_handler_tables": 0,
+        "stable_field_count": {},
+        "stable_fields": [],
+        "starts_with_return": true
+      },
+      "old": {
+        "behaviour": {
+          "matches_original": true,
+          "original_rc": 0,
+          "original_stderr": "",
+          "original_stdout": "67\n",
+          "rc": 0,
+          "stderr": "",
+          "stdout": "67\n"
+        },
+        "brand_bytes": true,
+        "central_dispatch_chains": {},
+        "comments": 1,
+        "fixed_checksum_constants": [
+          "2166136261",
+          "16777619",
+          "4294967295"
+        ],
+        "output_bytes": 67594,
+        "output_sha256": "c7b51335a50f5b8c",
+        "runtime_probe": {
+          "all_source_hits": 2,
+          "captured_stdout": [
+            "67"
+          ],
+          "char_calls": 10,
+          "chunk_ok": "true",
+          "clean_ir": "false",
+          "distinct_blobs": 15,
+          "global_dispatcher_candidates": 0,
+          "harness_stderr": "",
+          "startup_source_hits": 2
+        },
+        "sequential_small_opcode_array": false,
+        "small_handler_tables": 1,
+        "stable_field_count": {
+          "l_25t2j0": 4,
+          "lfLTl77Si": 3
+        },
+        "stable_fields": [
+          "UP",
+          "V",
+          "VA",
+          "n",
+          "proto",
+          "up",
+          "v"
+        ],
+        "starts_with_return": false
+      }
+    },
+    "scan_fixture": {
+      "new": {
+        "behaviour": {
+          "matches_original": true,
+          "original_rc": 0,
+          "original_stderr": "",
+          "original_stdout": "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45\n",
+          "rc": 0,
+          "stderr": "",
+          "stdout": "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45\n"
+        },
+        "brand_bytes": false,
+        "central_dispatch_chains": {},
+        "comments": 0,
+        "fixed_checksum_constants": [],
+        "output_bytes": 196415,
+        "output_sha256": "9fc51b17e537f92c",
+        "runtime_probe": {
+          "all_source_hits": 0,
+          "captured_stdout": [
+            "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45"
+          ],
+          "char_calls": 95,
+          "chunk_ok": "true",
+          "clean_ir": "false",
+          "distinct_blobs": 12,
+          "global_dispatcher_candidates": 0,
+          "harness_stderr": "",
+          "startup_source_hits": 0
+        },
+        "sequential_small_opcode_array": false,
+        "small_handler_tables": 0,
+        "stable_field_count": {},
+        "stable_fields": [],
+        "starts_with_return": true
+      },
+      "old": {
+        "behaviour": {
+          "matches_original": true,
+          "original_rc": 0,
+          "original_stderr": "",
+          "original_stdout": "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45\n",
+          "rc": 0,
+          "stderr": "",
+          "stdout": "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45\n"
+        },
+        "brand_bytes": true,
+        "central_dispatch_chains": {},
+        "comments": 1,
+        "fixed_checksum_constants": [
+          "2166136261",
+          "16777619",
+          "4294967295"
+        ],
+        "output_bytes": 70471,
+        "output_sha256": "be9b633d3365bb97",
+        "runtime_probe": {
+          "all_source_hits": 4,
+          "captured_stdout": [
+            "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45"
+          ],
+          "char_calls": 95,
+          "chunk_ok": "true",
+          "clean_ir": "false",
+          "distinct_blobs": 15,
+          "global_dispatcher_candidates": 0,
+          "harness_stderr": "",
+          "startup_source_hits": 4
+        },
+        "sequential_small_opcode_array": false,
+        "small_handler_tables": 1,
+        "stable_field_count": {
+          "Oj8l5i": 3,
+          "SB5ZI_oI0t": 4
+        },
+        "stable_fields": [
+          "UP",
+          "V",
+          "VA",
+          "n",
+          "proto",
+          "up",
+          "v"
+        ],
+        "starts_with_return": false
+      }
+    }
+  },
+  "sizes": {
+    "fixture_medium": {
+      "new": 196415,
+      "old": 70471
+    },
+    "startup_medium": {
+      "new": 195196,
+      "old": 66926
+    },
+    "workload_heavy": {
+      "new": 609425,
+      "old": 452152
+    }
+  },
+  "toolchain": "official Luau 0.747 (tools/luau)"
+}

@@ -1,0 +1,778 @@
+{
+  "marker": "__GRANDFUSCATE_PRIVATE_SOURCE_MAP_V3__",
+  "format": 3,
+  "build_id": "a3bde5f7c6e35a1b",
+  "preset": "light",
+  "protection_level": "light",
+  "seed": 20261118,
+  "input_sha256": "617ebbcecdb3d8a654b9402881c1a66094842dac6178414ccd8a400ac3f07bb3",
+  "input_bytes": 85,
+  "nodes": [
+    {
+      "index": 1,
+      "op": "CONST",
+      "opcode": 3324694771,
+      "operands": [
+        2
+      ],
+      "span": [
+        14,
+        15
+      ],
+      "excerpt": "0"
+    },
+    {
+      "index": 2,
+      "op": "LOCAL",
+      "opcode": 3861317847,
+      "operands": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "span": [
+        0,
+        15
+      ],
+      "excerpt": "local total = 0"
+    },
+    {
+      "index": 3,
+      "op": "CONST",
+      "opcode": 3324694771,
+      "operands": [
+        3
+      ],
+      "span": [
+        24,
+        25
+      ],
+      "excerpt": "1"
+    },
+    {
+      "index": 4,
+      "op": "CONST",
+      "opcode": 3324694771,
+      "operands": [
+        4
+      ],
+      "span": [
+        27,
+        28
+      ],
+      "excerpt": "5"
+    },
+    {
+      "index": 5,
+      "op": "VAR",
+      "opcode": 1536934568,
+      "operands": [
+        1
+      ],
+      "span": [
+        34,
+        39
+      ],
+      "excerpt": "total"
+    },
+    {
+      "index": 6,
+      "op": "VAR",
+      "opcode": 1536934568,
+      "operands": [
+        1
+      ],
+      "span": [
+        42,
+        47
+      ],
+      "excerpt": "total"
+    },
+    {
+      "index": 7,
+      "op": "VAR",
+      "opcode": 1536934568,
+      "operands": [
+        2
+      ],
+      "span": [
+        50,
+        51
+      ],
+      "excerpt": "i"
+    },
+    {
+      "index": 8,
+      "op": "BIN",
+      "opcode": 271117556,
+      "operands": [
+        3305061563,
+        6,
+        7
+      ],
+      "span": [
+        42,
+        51
+      ],
+      "excerpt": "total + i"
+    },
+    {
+      "index": 9,
+      "op": "ASSIGN",
+      "opcode": 775341457,
+      "operands": [
+        1,
+        5,
+        1,
+        8
+      ],
+      "span": [
+        34,
+        51
+      ],
+      "excerpt": "total = total + i"
+    },
+    {
+      "index": 10,
+      "op": "BLOCK",
+      "opcode": 220165879,
+      "operands": [
+        1,
+        9
+      ],
+      "span": [
+        16,
+        55
+      ],
+      "excerpt": "for i = 1, 5 do\n  total = total + i\nend"
+    },
+    {
+      "index": 11,
+      "op": "FOR",
+      "opcode": 3980025867,
+      "operands": [
+        2,
+        3,
+        4,
+        0,
+        10
+      ],
+      "span": [
+        16,
+        55
+      ],
+      "excerpt": "for i = 1, 5 do\n  total = total + i\nend"
+    },
+    {
+      "index": 12,
+      "op": "CONST",
+      "opcode": 3324694771,
+      "operands": [
+        5
+      ],
+      "span": [
+        62,
+        76
+      ],
+      "excerpt": "\"grandfuscate\""
+    },
+    {
+      "index": 13,
+      "op": "VAR",
+      "opcode": 1536934568,
+      "operands": [
+        1
+      ],
+      "span": [
+        78,
+        83
+      ],
+      "excerpt": "total"
+    },
+    {
+      "index": 14,
+      "op": "GLOBAL",
+      "opcode": 246674445,
+      "operands": [
+        6
+      ],
+      "span": [
+        56,
+        61
+      ],
+      "excerpt": "print"
+    },
+    {
+      "index": 15,
+      "op": "CALL",
+      "opcode": 1469986813,
+      "operands": [
+        14,
+        2,
+        12,
+        13
+      ],
+      "span": [
+        56,
+        84
+      ],
+      "excerpt": "print(\"grandfuscate\", total)"
+    },
+    {
+      "index": 16,
+      "op": "EXPR",
+      "opcode": 3521961113,
+      "operands": [
+        15
+      ],
+      "span": [
+        56,
+        84
+      ],
+      "excerpt": "print(\"grandfuscate\", total)"
+    },
+    {
+      "index": 17,
+      "op": "BLOCK",
+      "opcode": 220165879,
+      "operands": [
+        3,
+        2,
+        11,
+        16
+      ],
+      "span": [
+        0,
+        85
+      ],
+      "excerpt": "local total = 0\nfor i = 1, 5 do\n  total = total + i\nend\nprint(\"grandfuscate\", total)\n"
+    }
+  ],
+  "constants": [
+    {
+      "index": 1,
+      "tag": 1,
+      "payload_hex": "af26170973c3a1fdd8546f01751bbd036a8db6316ac7496d7636fcda6e",
+      "text": null
+    },
+    {
+      "index": 2,
+      "tag": 2,
+      "payload_hex": "302e30",
+      "text": "0.0"
+    },
+    {
+      "index": 3,
+      "tag": 2,
+      "payload_hex": "312e30",
+      "text": "1.0"
+    },
+    {
+      "index": 4,
+      "tag": 2,
+      "payload_hex": "352e30",
+      "text": "5.0"
+    },
+    {
+      "index": 5,
+      "tag": 1,
+      "payload_hex": "6772616e6466757363617465",
+      "text": "grandfuscate"
+    },
+    {
+      "index": 6,
+      "tag": 1,
+      "payload_hex": "7072696e74",
+      "text": "print"
+    },
+    {
+      "index": 7,
+      "tag": 1,
+      "payload_hex": "285b5e3b5d2b29",
+      "text": "([^;]+)"
+    },
+    {
+      "index": 8,
+      "tag": 1,
+      "payload_hex": "2825642b292c2825642b292c2825642b29",
+      "text": "(%d+),(%d+),(%d+)"
+    },
+    {
+      "index": 9,
+      "tag": 1,
+      "payload_hex": "31",
+      "text": "1"
+    },
+    {
+      "index": 10,
+      "tag": 1,
+      "payload_hex": "6b",
+      "text": "k"
+    },
+    {
+      "index": 11,
+      "tag": 1,
+      "payload_hex": "27666f72272073746570206973207a65726f",
+      "text": "'for' step is zero"
+    }
+  ],
+  "declarations": [
+    {
+      "location": "0,6 - 0,11",
+      "renamed": "jSOfO5BJLOili5"
+    },
+    {
+      "location": "1,4 - 1,5",
+      "renamed": "JSISJ00I7tStiB"
+    }
+  ],
+  "opcodes": {
+    "BLOCK": 220165879,
+    "NOP": 3683589100,
+    "LOCAL": 3861317847,
+    "LOCALFUNC": 1996618766,
+    "ASSIGN": 775341457,
+    "COMPOUND": 4204378902,
+    "EXPR": 3521961113,
+    "IF": 4117013752,
+    "WHILE": 2405725107,
+    "REPEAT": 1097129172,
+    "FOR": 3980025867,
+    "FORIN": 2669610363,
+    "RETURN": 658131233,
+    "BREAK": 3601547275,
+    "CONTINUE": 1724828766,
+    "FUNCSTMT": 3703879964,
+    "PROTO": 1614123773,
+    "CONST": 3324694771,
+    "NIL": 3090169803,
+    "VAR": 1536934568,
+    "GLOBAL": 246674445,
+    "BIN": 271117556,
+    "UN": 3091292020,
+    "AND": 3847336374,
+    "OR": 1270320239,
+    "CALL": 1469986813,
+    "SELFCALL": 2562060603,
+    "INDEX": 3787397994,
+    "INDEXNAME": 2918442176,
+    "TABLE": 2563836879,
+    "FUNCTION": 1618201386,
+    "VARARGS": 2766597870,
+    "INTERP": 2852397969,
+    "IFELSE": 669155565
+  },
+  "binmap": {
+    "Add": 3305061563,
+    "Sub": 4219442158,
+    "Mul": 475864525,
+    "Div": 3160645516,
+    "FloorDiv": 843665275,
+    "Mod": 3463281965,
+    "Pow": 2422677392,
+    "Concat": 1185373941,
+    "CompareEq": 3594679299,
+    "CompareNe": 4084028640,
+    "CompareLt": 1864065674,
+    "CompareLe": 2025445851,
+    "CompareGt": 3774069509,
+    "CompareGe": 4083399097
+  },
+  "unmap": {
+    "Not": 2690938663,
+    "Minus": 634638785,
+    "Len": 2407747608
+  },
+  "operand": {
+    "op_key": 39913,
+    "len_key": 15838,
+    "arg_key": 24772,
+    "mode": "affine",
+    "a": 11,
+    "b": 397210,
+    "expression": "per_node(affine, c=1025999, d=318738, m)",
+    "word_order": "len_op",
+    "stream_order": "offset_suffix",
+    "offset_base": 1147,
+    "offset_count": 23,
+    "offset_stride": 12,
+    "offset_shift": 1,
+    "words_per_fragment": 585,
+    "fragment_count": 2,
+    "node_style": "sparse",
+    "node_outer_key": 30563,
+    "node_op_selector": 27131,
+    "node_len_selector": 35055,
+    "node_arg_selector": 1882,
+    "physical_node_order": [
+      10,
+      4,
+      12,
+      5,
+      14,
+      9,
+      16,
+      3,
+      0,
+      11,
+      7,
+      1,
+      6,
+      2,
+      8,
+      13,
+      15
+    ],
+    "per_node_operands": {
+      "mode": "affine",
+      "c": 1025999,
+      "d": 318738,
+      "m_prime_or_power_of_two": true
+    }
+  },
+  "fragments": 2,
+  "entry_layout": 3,
+  "boot_layout": 0,
+  "alias_count": 25,
+  "decoy_count": 11,
+  "runtime_layout": {
+    "node_style": "sparse",
+    "dispatch_style": "bucket",
+    "router_style": "split",
+    "chunk_assembly": "concat",
+    "chunk_strategy": "jitter",
+    "dispatch_n": 6,
+    "dispatch_b": 1,
+    "slot_base": 56419,
+    "const_span": 2,
+    "const_bias": 1,
+    "vm_profile": "inline",
+    "bank_count": 2,
+    "bank_a": 494289,
+    "bank_b": 215467,
+    "handler_groups": 3,
+    "handler_a": 458459,
+    "handler_b": 601423,
+    "word_groups": 4,
+    "word_a": 840403,
+    "word_b": 491974,
+    "constant_groups": 3,
+    "constant_a": 363175,
+    "constant_b": 215936,
+    "node_groups": 3,
+    "node_a": 657332,
+    "node_b": 124828,
+    "byte_groups": 4,
+    "byte_a": 991175,
+    "byte_b": 625069,
+    "per_node_operand_c": 1025999,
+    "per_node_operand_d": 318738,
+    "slice_stride": 1,
+    "slice_shift": 0,
+    "source_spread": {
+      "source_constant_indices": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "bank_coverage": 2,
+      "constant_group_coverage": 3,
+      "byte_group_coverage": 4,
+      "word_group_coverage": 4,
+      "node_group_coverage": 3,
+      "handler_group_coverage": 3,
+      "pool_slice_coverage": 2
+    },
+    "field_keys": {
+      "V": 64341811,
+      "UP": 410362834,
+      "VA": 66606712,
+      "n": 295498333,
+      "v": 413111372,
+      "proto": 18274240,
+      "up": 922148959,
+      "NODE_N": 242346265
+    },
+    "chunk_settings": {
+      "max_chunk_bytes": 1500,
+      "min_chunks": 2,
+      "max_extra": 2,
+      "hard_cap": 512
+    }
+  },
+  "field_keys": {
+    "V": 64341811,
+    "UP": 410362834,
+    "VA": 66606712,
+    "n": 295498333,
+    "v": 413111372,
+    "proto": 18274240,
+    "up": 922148959,
+    "NODE_N": 242346265
+  },
+  "pool_chunk_plans": [
+    {
+      "slice": 1,
+      "blob": {
+        "count": 4,
+        "sizes": [
+          64,
+          65,
+          39,
+          37
+        ],
+        "key_base": 70381,
+        "key_a": 7,
+        "key_b": 0,
+        "keys": [
+          70381,
+          70384,
+          70383,
+          70382
+        ],
+        "assignment_order": [
+          2,
+          3,
+          0,
+          1
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "60741d49ad2d9db256ebc024fc2d0c038f4b9364022fd87fa6313c6753ad91bf"
+      },
+      "key": {
+        "count": 4,
+        "sizes": [
+          2,
+          11,
+          6,
+          2
+        ],
+        "key_base": 97638,
+        "key_a": 15,
+        "key_b": 2,
+        "keys": [
+          97640,
+          97639,
+          97638,
+          97641
+        ],
+        "assignment_order": [
+          1,
+          0,
+          2,
+          3
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "420d3a9ebf11ccc255f8a613dad9b6655d89cf2daccd045f3851734ded6d7f4e"
+      }
+    },
+    {
+      "slice": 2,
+      "blob": {
+        "count": 2,
+        "sizes": [
+          41,
+          108
+        ],
+        "key_base": 60142,
+        "key_a": 5,
+        "key_b": 1,
+        "keys": [
+          60143,
+          60142
+        ],
+        "assignment_order": [
+          0,
+          1
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "f7d1b6f96309f1479003befdce55607378bfd9abd885b20e83fd8f3b87daba16"
+      },
+      "key": {
+        "count": 3,
+        "sizes": [
+          1,
+          6,
+          14
+        ],
+        "key_base": 65796,
+        "key_a": 8,
+        "key_b": 1,
+        "keys": [
+          65797,
+          65796,
+          65798
+        ],
+        "assignment_order": [
+          1,
+          0,
+          2
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "e9c5fafaba28fd4495242e50b110b235f748a3a4e1394528fd0eb0eea80e810e"
+      }
+    }
+  ],
+  "vm_chunk_plans": [
+    {
+      "fragment": 1,
+      "blob": {
+        "count": 5,
+        "sizes": [
+          465,
+          469,
+          481,
+          459,
+          466
+        ],
+        "key_base": 36867,
+        "key_a": 1,
+        "key_b": 2,
+        "keys": [
+          36869,
+          36870,
+          36871,
+          36867,
+          36868
+        ],
+        "assignment_order": [
+          1,
+          3,
+          0,
+          4,
+          2
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "1eebee2cb221f7abad752375747c9ac0aa6188923cb41541339fa9a1489a8cbd"
+      },
+      "key": {
+        "count": 2,
+        "sizes": [
+          11,
+          5
+        ],
+        "key_base": 59439,
+        "key_a": 7,
+        "key_b": 0,
+        "keys": [
+          59439,
+          59440
+        ],
+        "assignment_order": [
+          0,
+          1
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "d6ce0b35e6081361a2ccf180b962ae7420381971cd6eefc88e9c7ac0fd9be55f"
+      }
+    },
+    {
+      "fragment": 2,
+      "blob": {
+        "count": 2,
+        "sizes": [
+          1172,
+          1168
+        ],
+        "key_base": 89334,
+        "key_a": 1,
+        "key_b": 0,
+        "keys": [
+          89334,
+          89335
+        ],
+        "assignment_order": [
+          0,
+          1
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "428b6bde005560902d4fb5f67cc794b7b0f46a422d2fc53b4dfcd997d4309713"
+      },
+      "key": {
+        "count": 5,
+        "sizes": [
+          3,
+          3,
+          2,
+          2,
+          2
+        ],
+        "key_base": 61961,
+        "key_a": 9,
+        "key_b": 2,
+        "keys": [
+          61963,
+          61962,
+          61961,
+          61965,
+          61964
+        ],
+        "assignment_order": [
+          1,
+          0,
+          2,
+          3,
+          4
+        ],
+        "assembly": "concat",
+        "strategy": "jitter",
+        "digest": "9b1c4af3bb31cd78ec5032173a46dd050cf9196d8a9f3684ab8adcadfdeb2f2a"
+      }
+    }
+  ],
+  "control_flow": {
+    "node_order_shuffled": true
+  },
+  "compile_notes": [],
+  "pool_slices": 2,
+  "slice_stride": 1,
+  "slice_shift": 0,
+  "runtime_consts": {
+    "split": 7,
+    "rec": 8,
+    "true": 9,
+    "weak_k": 10,
+    "for_error": 11
+  },
+  "third_pass": {
+    "vm_profile": "inline",
+    "bank_count": 2,
+    "handler_groups": 3,
+    "constant_groups": 3,
+    "byte_groups": 4,
+    "word_groups": 4,
+    "node_groups": 3,
+    "per_node_operands": {
+      "mode": "affine",
+      "c": 1025999,
+      "d": 318738
+    },
+    "source_spread": {
+      "source_constant_indices": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "bank_coverage": 2,
+      "constant_group_coverage": 3,
+      "byte_group_coverage": 4,
+      "word_group_coverage": 4,
+      "node_group_coverage": 3,
+      "handler_group_coverage": 3,
+      "pool_slice_coverage": 2
+    },
+    "structural_digest": "bd5ffab4c705ce7ad9a63b5584d46cff335065fd5fb2a770d25f580071381f2b"
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "attempts": {
+    "clean_ir_reconstruction": "failed",
+    "instruction_table_identification": "failed",
+    "main_dispatcher_identification": "failed",
+    "print67_exact_recovery": "failed",
+    "simple_runtime_string_dump": "failed",
+    "single_decode_function_hook": "failed",
+    "single_execute_function_hook": "portable debug hook unavailable",
+    "startup_constant_dump": "failed"
+  },
+  "created": "2026-11-18T05:32:21.378818+00:00",
+  "failures": [],
+  "output_bytes": {
+    "print67": 198717,
+    "scan_fixture": 196415
+  },
+  "preset": "medium",
+  "probes": [
+    {
+      "captured_stdout_lines": [
+        "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45"
+      ],
+      "failures": [],
+      "harness_stderr": "",
+      "label": "scan_fixture",
+      "needles": [
+        "ANOTHER_SECRET_STRING",
+        "GRANDFUSCATE_SECRET_ARG",
+        "GRANDFUSCATE_SECRET_ID",
+        "GRANDFUSCATE_SECRET_RESULT",
+        "GRANDFUSCATE_SECRET_TABLE",
+        "SECRET_HELPER",
+        "SECRET_RECORD_KEY",
+        "SOURCE_COMMENT_NEVER_SHIP",
+        "SOURCE_STRING_NEVER_SHIP",
+        "plain_output_marker"
+      ],
+      "original_stdout_lines": [
+        "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45"
+      ],
+      "output_bytes": 196415,
+      "runtime_diagnostics": {
+        "all_source_hits": "0",
+        "band_calls": "66",
+        "bxor_calls": "7113",
+        "byte_calls": "9561",
+        "call_samples": "0",
+        "char_calls": "95",
+        "chunk_error": "",
+        "chunk_ok": "true",
+        "clean_ir": "false",
+        "concat_calls": "8",
+        "debug_getinfo": "false",
+        "debug_getupvalue": "false",
+        "debug_sethook": "false",
+        "debug_traceback": "true",
+        "distinct_blobs": "12",
+        "global_dispatcher_candidates": "0",
+        "hook_available": "false",
+        "hook_installed": "false",
+        "ir_marker_hits": "0",
+        "longest_small_word_run": "0",
+        "pack_calls": "17",
+        "prints": "1",
+        "small_word_hits": "0",
+        "small_word_ratio": "0",
+        "startup_blobs": "12",
+        "startup_source_hits": "0",
+        "total_words": "23",
+        "unpack_calls": "2"
+      },
+      "scanner_findings": [],
+      "source": "-- SOURCE_COMMENT_NEVER_SHIP\nlocal GRANDFUSCATE_SECRET_ID = \"SOURCE_STRING_NEVER_SHIP\"\nlocal function SECRET_HELPER(GRANDFUSCATE_SECRET_ARG)\n  local GRANDFUSCATE_SECRET_TABLE = {\n    SECRET_RECORD_KEY = \"ANOTHER_SECRET_STRING\",\n  }\n  return GRANDFUSCATE_SECRET_TABLE.SECRET_RECORD_KEY .. tostring(GRANDFUSCATE_SECRET_ARG)\nend\nlocal GRANDFUSCATE_SECRET_RESULT = SECRET_HELPER(GRANDFUSCATE_SECRET_ID)\nprint(\"plain_output_marker\", GRANDFUSCATE_SECRET_RESULT, #GRANDFUSCATE_SECRET_RESULT)\n",
+      "static_attempts": {
+        "central_numeric_dispatch_chains": {},
+        "comments": 0,
+        "first_code_token": "return",
+        "fixed_checksum_constants": [],
+        "sequential_small_opcode_array": false,
+        "small_handler_groups": {},
+        "small_keyed_handler_tables": 0
+      },
+      "success": true
+    },
+    {
+      "captured_stdout_lines": [
+        "67"
+      ],
+      "failures": [],
+      "harness_stderr": "",
+      "label": "print67",
+      "needles": [
+        "print",
+        "67",
+        "print(67)"
+      ],
+      "original_stdout_lines": [
+        "67"
+      ],
+      "output_bytes": 198717,
+      "runtime_diagnostics": {
+        "all_source_hits": "0",
+        "band_calls": "0",
+        "bxor_calls": "8834",
+        "byte_calls": "9822",
+        "call_samples": "0",
+        "char_calls": "10",
+        "chunk_error": "",
+        "chunk_ok": "true",
+        "clean_ir": "false",
+        "concat_calls": "10",
+        "debug_getinfo": "false",
+        "debug_getupvalue": "false",
+        "debug_sethook": "false",
+        "debug_traceback": "true",
+        "distinct_blobs": "15",
+        "global_dispatcher_candidates": "0",
+        "hook_available": "false",
+        "hook_installed": "false",
+        "ir_marker_hits": "0",
+        "longest_small_word_run": "0",
+        "pack_calls": "3",
+        "prints": "1",
+        "small_word_hits": "0",
+        "small_word_ratio": "0",
+        "startup_blobs": "15",
+        "startup_source_hits": "0",
+        "total_words": "2",
+        "unpack_calls": "1"
+      },
+      "scanner_findings": [],
+      "source": "print(67)\n",
+      "static_attempts": {
+        "central_numeric_dispatch_chains": {},
+        "comments": 0,
+        "first_code_token": "return",
+        "fixed_checksum_constants": [],
+        "sequential_small_opcode_array": false,
+        "small_handler_groups": {},
+        "small_keyed_handler_tables": 0
+      },
+      "success": true
+    }
+  ],
+  "runtime_diagnostics": {
+    "all_source_hits": "0",
+    "band_calls": "66",
+    "bxor_calls": "7113",
+    "byte_calls": "9561",
+    "call_samples": "0",
+    "char_calls": "95",
+    "chunk_error": "",
+    "chunk_ok": "true",
+    "clean_ir": "false",
+    "concat_calls": "8",
+    "debug_getinfo": "false",
+    "debug_getupvalue": "false",
+    "debug_sethook": "false",
+    "debug_traceback": "true",
+    "distinct_blobs": "12",
+    "global_dispatcher_candidates": "0",
+    "hook_available": "false",
+    "hook_installed": "false",
+    "ir_marker_hits": "0",
+    "longest_small_word_run": "0",
+    "pack_calls": "17",
+    "prints": "1",
+    "small_word_hits": "0",
+    "small_word_ratio": "0",
+    "startup_blobs": "12",
+    "startup_source_hits": "0",
+    "total_words": "23",
+    "unpack_calls": "2"
+  },
+  "scanner_findings": [
+    [],
+    []
+  ],
+  "seed": 20261118,
+  "static_attempts": {
+    "central_numeric_dispatch_chains": {},
+    "comments": 0,
+    "first_code_token": "return",
+    "fixed_checksum_constants": [],
+    "sequential_small_opcode_array": false,
+    "small_handler_groups": {},
+    "small_keyed_handler_tables": 0
+  },
+  "success": true
+}

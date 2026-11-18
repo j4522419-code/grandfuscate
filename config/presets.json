@@ -1,0 +1,26 @@
+{
+  "light": {
+    "source": "PASTE_YOUR_LUAU_HERE",
+    "preset": "light",
+    "seed": "",
+    "place_id": "",
+    "game_id": "",
+    "verify": true
+  },
+  "medium": {
+    "source": "PASTE_YOUR_LUAU_HERE",
+    "preset": "medium",
+    "seed": "",
+    "place_id": "",
+    "game_id": "",
+    "verify": true
+  },
+  "heavy": {
+    "source": "PASTE_YOUR_LUAU_HERE",
+    "preset": "heavy",
+    "seed": "",
+    "place_id": "",
+    "game_id": "",
+    "verify": true
+  }
+}

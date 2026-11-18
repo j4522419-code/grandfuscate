@@ -1,0 +1,3 @@
+# luau-obf has no third-party Python dependencies.
+# The web service uses only the standard library (http.server, urllib, zipfile...).
+# The Luau binaries are fetched at build time by `python3 obf/fetch_tools.py`.

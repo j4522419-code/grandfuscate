@@ -1,0 +1,372 @@
+{
+  "attempts": {
+    "clean_ir_reconstruction": "failed",
+    "one_obvious_decoder": "failed",
+    "one_obvious_dispatcher": "failed",
+    "one_obvious_instruction_table": "failed",
+    "runtime_print_observation": "succeeded (unavoidable)",
+    "simple_runtime_dump": "failed",
+    "startup_dump": "failed",
+    "table_pack_hook_observation": "succeeded (unavoidable library call)"
+  },
+  "checks": 67,
+  "created": "2026-11-18T06:15:00.099574+00:00",
+  "failures": [],
+  "five_build_diversity": {
+    "bank_counts": [
+      2,
+      3,
+      4
+    ],
+    "boot_layouts": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "chunk_assemblies": [
+      "concat",
+      "sbyte"
+    ],
+    "const_biases": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "const_spans": [
+      2,
+      3
+    ],
+    "dispatch_styles": [
+      "bucket",
+      "direct",
+      "split"
+    ],
+    "entry_layouts": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "group_signatures": 5,
+    "node_styles": [
+      "cursor",
+      "nested",
+      "sparse"
+    ],
+    "opcode_maps": 5,
+    "operand_modes": [
+      "affine",
+      "reverse",
+      "xor"
+    ],
+    "outputs": 5,
+    "payload_digests": 5,
+    "router_styles": [
+      "chain",
+      "direct",
+      "split"
+    ],
+    "slot_bases": [
+      11653,
+      66858,
+      67610,
+      67817,
+      78310
+    ],
+    "stream_orders": [
+      "offset_prefix",
+      "offset_suffix"
+    ],
+    "structural_digests": 5,
+    "token_prefixes": 5,
+    "vm_profiles": [
+      "inline",
+      "mirror",
+      "relay"
+    ],
+    "word_orders": [
+      "len_op",
+      "op_len"
+    ]
+  },
+  "five_build_seeds": [
+    1,
+    94,
+    14,
+    122,
+    3
+  ],
+  "fixture": "tests/cases/hello_world.luau",
+  "fixture_bytes": "print(\"Hello World!\")\n",
+  "levels": [
+    {
+      "level": "light",
+      "preset": "light"
+    },
+    {
+      "level": "balanced",
+      "preset": "medium"
+    },
+    {
+      "level": "aggressive",
+      "preset": "heavy"
+    }
+  ],
+  "needles": [
+    "Hello World!",
+    "Hello",
+    "World",
+    "print",
+    "print(\"Hello World!\")"
+  ],
+  "probes": [
+    {
+      "captures": [
+        "Hello World!"
+      ],
+      "failures": [],
+      "harness_stderr": "",
+      "level": "light",
+      "output_bytes": 154402,
+      "output_sha256": "37bc5ddcebc660b5a76e5715f1902be0d6edd5d52f09b45a174d5a1138401fda",
+      "preset": "light",
+      "runtime_diagnostics": {
+        "all_source_hits": "0",
+        "band_calls": "96",
+        "bxor_calls": "4678",
+        "byte_calls": "5314",
+        "captured_stdout": "Hello World!",
+        "char_calls": "114",
+        "chunk_error": "",
+        "chunk_ok": "true",
+        "clean_ir": "false",
+        "concat_calls": "104",
+        "debug_getupvalue": "false",
+        "debug_traceback": "true",
+        "distinct_blobs": "108",
+        "function_probe_count": "207",
+        "global_dispatcher_candidates": "0",
+        "hook_available": "false",
+        "hook_installed": "false",
+        "ir_marker_hits": "0",
+        "longest_small_word_run": "0",
+        "max_function_needles": "0",
+        "max_table_needles": "3",
+        "obvious_instruction_tables": "0",
+        "pack_calls": "99",
+        "pack_dump_bytes": "13",
+        "pack_dump_hits": "3",
+        "prints": "1",
+        "small_word_hits": "0",
+        "small_word_ratio": "0",
+        "startup_blobs": "12",
+        "startup_source_hits": "0",
+        "table_probe_count": "27",
+        "tonumber_calls": "96",
+        "tostring_calls": "96",
+        "total_words": "4",
+        "whole_payload_functions": "0",
+        "whole_payload_tables": "0"
+      },
+      "scanner_findings": [],
+      "static_attempts": {
+        "central_lookup_decoders": 0,
+        "central_numeric_dispatch_chains": {},
+        "comments": 0,
+        "dynamic_loader_names": [],
+        "first_code_token": "return",
+        "fixed_checksum_constants": [],
+        "provenance_markers": 0,
+        "recognizable_vm_names": [],
+        "sequential_small_opcode_array": false,
+        "small_handler_groups": {},
+        "small_keyed_handler_tables": 0,
+        "source_map_url_markers": 0
+      },
+      "success": true
+    },
+    {
+      "captures": [
+        "Hello World!"
+      ],
+      "failures": [],
+      "harness_stderr": "",
+      "level": "balanced",
+      "output_bytes": 198810,
+      "output_sha256": "2e8b1caae20477f8c34702ea2e26f6b919afb3b1dd004dc79c4efe4339c4641d",
+      "preset": "medium",
+      "runtime_diagnostics": {
+        "all_source_hits": "0",
+        "band_calls": "96",
+        "bxor_calls": "8938",
+        "byte_calls": "9942",
+        "captured_stdout": "Hello World!",
+        "char_calls": "114",
+        "chunk_error": "",
+        "chunk_ok": "true",
+        "clean_ir": "false",
+        "concat_calls": "106",
+        "debug_getupvalue": "false",
+        "debug_traceback": "true",
+        "distinct_blobs": "111",
+        "function_probe_count": "207",
+        "global_dispatcher_candidates": "0",
+        "hook_available": "false",
+        "hook_installed": "false",
+        "ir_marker_hits": "0",
+        "longest_small_word_run": "0",
+        "max_function_needles": "0",
+        "max_table_needles": "3",
+        "obvious_instruction_tables": "0",
+        "pack_calls": "99",
+        "pack_dump_bytes": "13",
+        "pack_dump_hits": "3",
+        "prints": "1",
+        "small_word_hits": "0",
+        "small_word_ratio": "0",
+        "startup_blobs": "15",
+        "startup_source_hits": "0",
+        "table_probe_count": "29",
+        "tonumber_calls": "96",
+        "tostring_calls": "96",
+        "total_words": "4",
+        "whole_payload_functions": "0",
+        "whole_payload_tables": "0"
+      },
+      "scanner_findings": [],
+      "static_attempts": {
+        "central_lookup_decoders": 0,
+        "central_numeric_dispatch_chains": {},
+        "comments": 0,
+        "dynamic_loader_names": [],
+        "first_code_token": "return",
+        "fixed_checksum_constants": [],
+        "provenance_markers": 0,
+        "recognizable_vm_names": [],
+        "sequential_small_opcode_array": false,
+        "small_handler_groups": {},
+        "small_keyed_handler_tables": 0,
+        "source_map_url_markers": 0
+      },
+      "success": true
+    },
+    {
+      "captures": [
+        "Hello World!"
+      ],
+      "failures": [],
+      "harness_stderr": "",
+      "level": "aggressive",
+      "output_bytes": 607349,
+      "output_sha256": "aa90b0dc6f5efd5efa017472b3ae427f9bcbf0aae27a0284d84bd1b0e996722c",
+      "preset": "heavy",
+      "runtime_diagnostics": {
+        "all_source_hits": "0",
+        "band_calls": "96",
+        "bxor_calls": "48981",
+        "byte_calls": "51417",
+        "captured_stdout": "Hello World!",
+        "char_calls": "114",
+        "chunk_error": "",
+        "chunk_ok": "true",
+        "clean_ir": "false",
+        "concat_calls": "104",
+        "debug_getupvalue": "false",
+        "debug_traceback": "true",
+        "distinct_blobs": "108",
+        "function_probe_count": "207",
+        "global_dispatcher_candidates": "0",
+        "hook_available": "false",
+        "hook_installed": "false",
+        "ir_marker_hits": "0",
+        "longest_small_word_run": "0",
+        "max_function_needles": "0",
+        "max_table_needles": "3",
+        "obvious_instruction_tables": "0",
+        "pack_calls": "99",
+        "pack_dump_bytes": "13",
+        "pack_dump_hits": "3",
+        "prints": "1",
+        "small_word_hits": "0",
+        "small_word_ratio": "0",
+        "startup_blobs": "12",
+        "startup_source_hits": "0",
+        "table_probe_count": "27",
+        "tonumber_calls": "96",
+        "tostring_calls": "96",
+        "total_words": "4",
+        "whole_payload_functions": "0",
+        "whole_payload_tables": "0"
+      },
+      "scanner_findings": [],
+      "static_attempts": {
+        "central_lookup_decoders": 0,
+        "central_numeric_dispatch_chains": {},
+        "comments": 0,
+        "dynamic_loader_names": [],
+        "first_code_token": "return",
+        "fixed_checksum_constants": [],
+        "provenance_markers": 0,
+        "recognizable_vm_names": [],
+        "sequential_small_opcode_array": false,
+        "small_handler_groups": {},
+        "small_keyed_handler_tables": 0,
+        "source_map_url_markers": 0
+      },
+      "success": true
+    }
+  ],
+  "production_files": [
+    {
+      "bytes": 154402,
+      "comments": 0,
+      "file": "/home/user/luau-obf/examples/protected_hello_light.luau",
+      "first_token": "return",
+      "keys": "/home/user/luau-obf/examples/keys_hello_light.json",
+      "level": "light",
+      "newlines": 1,
+      "preset": "light",
+      "scanner_findings": [],
+      "sha256": "37bc5ddcebc660b5a76e5715f1902be0d6edd5d52f09b45a174d5a1138401fda",
+      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_light.json"
+    },
+    {
+      "bytes": 198810,
+      "comments": 0,
+      "file": "/home/user/luau-obf/examples/protected_hello_balanced.luau",
+      "first_token": "return",
+      "keys": "/home/user/luau-obf/examples/keys_hello_balanced.json",
+      "level": "balanced",
+      "newlines": 1,
+      "preset": "medium",
+      "scanner_findings": [],
+      "sha256": "2e8b1caae20477f8c34702ea2e26f6b919afb3b1dd004dc79c4efe4339c4641d",
+      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_balanced.json"
+    },
+    {
+      "bytes": 607349,
+      "comments": 0,
+      "file": "/home/user/luau-obf/examples/protected_hello_aggressive.luau",
+      "first_token": "return",
+      "keys": "/home/user/luau-obf/examples/keys_hello_aggressive.json",
+      "level": "aggressive",
+      "newlines": 1,
+      "preset": "heavy",
+      "scanner_findings": [],
+      "sha256": "aa90b0dc6f5efd5efa017472b3ae427f9bcbf0aae27a0284d84bd1b0e996722c",
+      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_aggressive.json"
+    }
+  ],
+  "seed": 20261118,
+  "seeded_determinism": {
+    "different_seed_output": true,
+    "different_seed_structure": true,
+    "same_output": true,
+    "same_private_map": true,
+    "same_public_keys": true
+  },
+  "success": true
+}
