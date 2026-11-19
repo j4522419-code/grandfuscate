@@ -1,13 +1,13 @@
 # Runtime-analysis probe
 
-Measured 2026-11-19T02:54:56.771492+00:00 with official Luau 0.747, medium preset and seed 20261118.
+Measured 2026-11-19T07:34:41.111124+00:00 with official Luau 0.747, medium preset and seed 20261118.
 
 The protected scripts still produce their original output. This probe attempts the restricted-runtime shortcuts that recovered `print(67)` from the previous build. A capable executor-specific debugger can observe more; this is not a security proof or a commercial comparison.
 
 | Probe | Output | Original stdout needles | Startup dump needles | All simple dump needles | Result |
 |---|---:|---:|---:|---:|---|
-| `scan_fixture` | 196,415 B | 10 | 0 | 0 | PASS |
-| `print67` | 198,717 B | 3 | 0 | 0 | PASS |
+| `scan_fixture` | 211,588 B | 10 | 0 | 0 | PASS |
+| `print67` | 209,050 B | 3 | 0 | 0 | PASS |
 
 ## Attempts on both probes
 
@@ -15,8 +15,8 @@ The protected scripts still produce their original output. This probe attempts t
 |---|---|---|
 | Identify a readable instruction table | failed | 0 small numbered handler groups; sequential small array: False |
 | Identify a main numeric dispatcher | failed | {} |
-| Dump startup constants | failed | 0 needles in startup dump; 12/12 encoded blobs touched before first print |
-| Hook one decode function | failed | 12 distinct byte-source blobs, 9561 byte reads |
+| Dump startup constants | failed | 0 needles in startup dump; 19/19 encoded blobs touched before first print |
+| Hook one decode function | failed | 19 distinct byte-source blobs, 10233 byte reads |
 | Hook one execute function | no single global candidate | portable `debug.sethook`: false; candidate globals: 0 |
 | Reconstruct clean IR | failed | IR markers: 0, longest small-word run: 0, small-word ratio: 0 |
 | Recover exact `print(67)` source needles | failed | startup hits: 0; all simple dump hits: 0 |
@@ -27,14 +27,14 @@ The protected scripts still produce their original output. This probe attempts t
 |---|---:|---:|
 | `chunk_ok` | true | true |
 | `prints` | 1 | 1 |
-| `byte_calls` | 9561 | 9822 |
-| `distinct_blobs` | 12 | 15 |
-| `startup_blobs` | 12 | 15 |
+| `byte_calls` | 10233 | 10494 |
+| `distinct_blobs` | 19 | 22 |
+| `startup_blobs` | 19 | 22 |
 | `char_calls` | 95 | 10 |
 | `concat_calls` | 8 | 10 |
 | `pack_calls` | 17 | 3 |
 | `unpack_calls` | 2 | 1 |
-| `bxor_calls` | 7113 | 8834 |
+| `bxor_calls` | 7785 | 9506 |
 | `band_calls` | 66 | 0 |
 | `startup_source_hits` | 0 | 0 |
 | `all_source_hits` | 0 | 0 |

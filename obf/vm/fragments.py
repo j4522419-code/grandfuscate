@@ -27,7 +27,7 @@ def init_dispatch(add, ns: Names, table: str, layout: Layout) -> None:
         add(line)
 
 
-def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layout) -> None:
+def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layout, *, v4=None) -> None:
     """Emit sharded fragment getters and ticketed byte-decoder matrices."""
     program.chunk_plans = []
     vb = ns.group_tables["vm_byte"]
@@ -126,3 +126,6 @@ def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layou
     ]
     for line in emit_group_integrity_lines(ns, integrity_names, ok_byte):
         add(line)
+    if v4 is not None:
+        for line in v4.emit_verify_lines(["byte", "fragment"], ok_byte):
+            add(line)

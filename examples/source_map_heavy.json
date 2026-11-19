@@ -1170,11 +1170,11 @@
   "declarations": [
     {
       "location": "0,6 - 0,11",
-      "renamed": "jSOfO5BJLOili5"
+      "renamed": "sl"
     },
     {
       "location": "1,4 - 1,5",
-      "renamed": "JSISJ00I7tStiB"
+      "renamed": "Hm"
     }
   ],
   "opcodes": {
@@ -1353,7 +1353,8 @@
       "min_chunks": 4,
       "max_extra": 4,
       "hard_cap": 1536
-    }
+    },
+    "integrity_salt": 385331085
   },
   "field_keys": {
     "V": 64341811,
@@ -2250,6 +2251,6 @@
       "handler_group_coverage": 3,
       "pool_slice_coverage": 5
     },
-    "structural_digest": "1286962f280af98bc052f48c443c4b949f6db6be439a5459b10c8864d204a163"
+    "structural_digest": "9979e0ba77a566a86bb6df2de02d04f48f00cd582c56c71cde7c3a2ac1ff1dc4"
   }
 }

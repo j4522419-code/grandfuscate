@@ -326,8 +326,10 @@ def build_entry(raw: str, ctx) -> tuple[str, FormatInfo]:
     """Wrap a generated chunk in a random return-based entry with no top-level locals."""
     rng = random.Random(ctx.opts.seed ^ 0xF0A7C3)
     names = ctx.names
-    env = names.fresh_runtime("Env")
-    alias = names.fresh_runtime("N")
+    # Reserved boot locals must be long/distinctive so compact generated names
+    # and hard-coded short locals can never shadow the captured alias table.
+    env = names.fresh_boot("Env")
+    alias = names.fresh_boot("N")
 
     used_keys: set[str] = set()
     keymap = {semantic: _key(rng, used_keys) for semantic in ALIAS_PATHS}

@@ -1,0 +1,181 @@
+# V4 full test suite output
+# Generated 2026-11-19T07:55:27Z; source: /tmp/suite_v4_final.txt
+# python3 -u tests/run_tests.py -> ALL GREEN, 0 failure(s)
+
+case             preset     seed     syntax   behaviour      size
+--------------------------------------------------------------------
+advanced.luau    light      11       OK       OK           168469
+advanced.luau    light      24301    OK       OK           168522
+advanced.luau    medium     11       OK       OK           211661
+advanced.luau    medium     24301    OK       OK           211680
+advanced.luau    heavy      11       OK       OK           659712
+advanced.luau    heavy      24301    OK       OK           659706
+arith.luau       light      11       OK       OK           161627
+arith.luau       light      24301    OK       OK           168502
+arith.luau       medium     11       OK       OK           211664
+arith.luau       medium     24301    OK       OK           211705
+arith.luau       heavy      11       OK       OK           659725
+arith.luau       heavy      24301    OK       OK           659666
+bench.luau       light      11       OK       OK           147382
+bench.luau       light      24301    OK       OK           167641
+bench.luau       medium     11       OK       OK           209990
+bench.luau       medium     24301    OK       OK           211692
+bench.luau       heavy      11       OK       OK           656466
+bench.luau       heavy      24301    OK       OK           659695
+closures.luau    light      11       OK       OK           154551
+closures.luau    light      24301    OK       OK           168494
+closures.luau    medium     11       OK       OK           211671
+closures.luau    medium     24301    OK       OK           211691
+closures.luau    heavy      11       OK       OK           659683
+closures.luau    heavy      24301    OK       OK           659701
+complex_roblox_v3.luau light      11       OK       OK           168477
+complex_roblox_v3.luau light      24301    OK       OK           169370
+complex_roblox_v3.luau medium     11       OK       OK           211720
+complex_roblox_v3.luau medium     24301    OK       OK           215734
+complex_roblox_v3.luau heavy      11       OK       OK           659710
+complex_roblox_v3.luau heavy      24301    OK       OK           659717
+complex_semantics_v3.luau light      11       OK       OK           168486
+complex_semantics_v3.luau light      24301    OK       OK           173294
+complex_semantics_v3.luau medium     11       OK       OK           211698
+complex_semantics_v3.luau medium     24301    OK       OK           214006
+complex_semantics_v3.luau heavy      11       OK       OK           659723
+complex_semantics_v3.luau heavy      24301    OK       OK           659678
+control.luau     light      11       OK       OK           162157
+control.luau     light      24301    OK       OK           168496
+control.luau     medium     11       OK       OK           211668
+control.luau     medium     24301    OK       OK           211701
+control.luau     heavy      11       OK       OK           659720
+control.luau     heavy      24301    OK       OK           659681
+globals.luau     light      11       OK       OK           150959
+globals.luau     light      24301    OK       OK           168533
+globals.luau     medium     11       OK       OK           211715
+globals.luau     medium     24301    OK       OK           211730
+globals.luau     heavy      11       OK       OK           659461
+globals.luau     heavy      24301    OK       OK           659678
+hello_world.luau light      11       OK       OK           145150
+hello_world.luau light      24301    OK       OK           165494
+hello_world.luau medium     11       OK       OK           207901
+hello_world.luau medium     24301    OK       OK           211667
+hello_world.luau heavy      11       OK       OK           653833
+hello_world.luau heavy      24301    OK       OK           659690
+metatables.luau  light      11       OK       OK           151245
+metatables.luau  light      24301    OK       OK           168530
+metatables.luau  medium     11       OK       OK           211711
+metatables.luau  medium     24301    OK       OK           211702
+metatables.luau  heavy      11       OK       OK           659703
+metatables.luau  heavy      24301    OK       OK           659652
+methods.luau     light      11       OK       OK           156776
+methods.luau     light      24301    OK       OK           168492
+methods.luau     medium     11       OK       OK           211729
+methods.luau     medium     24301    OK       OK           211688
+methods.luau     heavy      11       OK       OK           659744
+methods.luau     heavy      24301    OK       OK           659705
+print67.luau     light      11       OK       OK           145607
+print67.luau     light      24301    OK       OK           166349
+print67.luau     medium     11       OK       OK           208499
+print67.luau     medium     24301    OK       OK           211666
+print67.luau     heavy      11       OK       OK           655671
+print67.luau     heavy      24301    OK       OK           659654
+semantics_matrix.luau light      11       OK       OK           168473
+semantics_matrix.luau light      24301    OK       OK           174122
+semantics_matrix.luau medium     11       OK       OK           211701
+semantics_matrix.luau medium     24301    OK       OK           213420
+semantics_matrix.luau heavy      11       OK       OK           659753
+semantics_matrix.luau heavy      24301    OK       OK           659674
+strings.luau     light      11       OK       OK           151725
+strings.luau     light      24301    OK       OK           168529
+strings.luau     medium     11       OK       OK           211716
+strings.luau     medium     24301    OK       OK           211712
+strings.luau     heavy      11       OK       OK           659725
+strings.luau     heavy      24301    OK       OK           659686
+types.luau       light      11       OK       OK           149281
+types.luau       light      24301    OK       OK           168474
+types.luau       medium     11       OK       OK           211707
+types.luau       medium     24301    OK       OK           211669
+types.luau       heavy      11       OK       OK           658467
+types.luau       heavy      24301    OK       OK           659665
+varargs.luau     light      11       OK       OK           155853
+varargs.luau     light      24301    OK       OK           168499
+varargs.luau     medium     11       OK       OK           211703
+varargs.luau     medium     24301    OK       OK           211699
+varargs.luau     heavy      11       OK       OK           659766
+varargs.luau     heavy      24301    OK       OK           659689
+
+VM layer (single runtime, shuffled opcodes, encoded stream)
+--------------------------------------------------------------------
+advanced.luau    seed=11     OK       VM         211661
+advanced.luau    seed=24301  OK       VM         211680
+arith.luau       seed=11     OK       VM         211664
+arith.luau       seed=24301  OK       VM         211705
+bench.luau       seed=11     OK       VM         209990
+bench.luau       seed=24301  OK       VM         211692
+closures.luau    seed=11     OK       VM         211671
+closures.luau    seed=24301  OK       VM         211691
+complex_roblox_v3.luau seed=11     OK       VM         211720
+complex_roblox_v3.luau seed=24301  OK       VM         215734
+complex_semantics_v3.luau seed=11     OK       VM         211698
+complex_semantics_v3.luau seed=24301  OK       VM         214006
+control.luau     seed=11     OK       VM         211668
+control.luau     seed=24301  OK       VM         211701
+globals.luau     seed=11     OK       VM         211715
+globals.luau     seed=24301  OK       VM         211730
+hello_world.luau seed=11     OK       VM         207901
+hello_world.luau seed=24301  OK       VM         211667
+metatables.luau  seed=11     OK       VM         211711
+metatables.luau  seed=24301  OK       VM         211702
+methods.luau     seed=11     OK       VM         211729
+methods.luau     seed=24301  OK       VM         211688
+print67.luau     seed=11     OK       VM         208499
+print67.luau     seed=24301  OK       VM         211666
+semantics_matrix.luau seed=11     OK       VM         211701
+semantics_matrix.luau seed=24301  OK       VM         213420
+strings.luau     seed=11     OK       VM         211716
+strings.luau     seed=24301  OK       VM         211712
+types.luau       seed=11     OK       VM         211707
+types.luau       seed=24301  OK       VM         211669
+varargs.luau     seed=11     OK       VM         211703
+varargs.luau     seed=24301  OK       VM         211699
+
+reliability / compatibility
+--------------------------------------------------------------------
+three presets            OK       168490 / 211732 / 659700 B
+compat environment       OK      
+no loadstring            OK      
+zero-comment return      OK      
+api meta                 OK      
+legacy api clamps        OK      
+ui presets               OK      
+provenance               OK      
+runtime budget           OK       original 2.8 ms, heavy 45.9 ms (16.31x)
+return entry             OK       light:layout#0 medium:layout#0 heavy:layout#0
+format polymorphism      OK       4 layouts, 4 boots, 8 distinct prefixes
+executor-like env        OK       4 / 4 boot styles
+
+anti-analysis / private source map / benchmarks
+--------------------------------------------------------------------
+compat differential      OK       12 original-vs-obfuscated runs
+executor advanced        OK      
+output scanner           OK       12 production chunks + web API
+seeded reproducibility   OK      
+benchmarks               OK       150,608 / 211,588 / 659,712 B, 480.4x runtime
+
+second-pass anti-analysis verification
+--------------------------------------------------------------------
+print67 returns          OK       6 stdout+return probes
+complex fixtures         OK       6 differential runs
+runtime analysis         OK       2 instrumented probes
+five-build diversity     OK       seeds [1, 94, 14, 122, 3]
+old-vs-improved          OK       old 2 -> new 0 startup needles, 501.2x runtime
+explicit unsupported     OK      
+third-pass regression    OK       67 checks, 3 probes
+refreshed artifacts      OK      
+local-only repo          OK      
+loadstring publisher     OK       13 checks
+
+vm integrity v4 / high-entropy verification
+--------------------------------------------------------------------
+vm integrity v4          OK       87 integrity/trap checks
+high entropy v4          OK       124 entropy/gate checks
+
+96 base transform/run + 32 VM-mode transform/run + 12 compatibility differential + 12 production scans + 6 return probes + 6 complex checks + 16 reliability + 8 second-pass + 3 third-pass + 13 loadstring + 87 vm-integrity-v4 + 124 high-entropy-v4 checks, 0 failure(s)
+ALL GREEN

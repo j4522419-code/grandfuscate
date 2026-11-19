@@ -7,7 +7,7 @@ import os
 import random
 import subprocess
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 
 from . import ast as A
@@ -17,6 +17,23 @@ from .layout import make_layout
 from .names import Names
 from .pool import ConstantPool, PoolBuild, _next_prime
 from .render import Context, Options, Renderer
+from .vm.integrity import prepare_v4
+
+# Bounded cache of exact zero-padding base sizes, keyed by the full option set
+# and input digest. The suite, scanner and example regeneration obfuscate the
+# same (opts, input) many times; measuring the base once keeps those builds from
+# doing a second full render each time. Bounded so a long-lived web process does
+# not grow without limit.
+_V4_BASE_CACHE: dict[tuple, int] = {}
+_V4_BASE_CACHE_MAX = 512
+
+
+def _v4_base_key(data: bytes, opts: Options) -> tuple:
+    return (
+        hashlib.sha256(data).hexdigest(),
+        tuple(sorted((k, repr(v)) for k, v in vars(opts).items())),
+    )
+
 
 @dataclass
 class Result:
@@ -27,6 +44,9 @@ class Result:
     # Private debug/source map.  It is returned to the caller but never
     # serialized into the production .luau chunk.
     source_map: dict = field(default_factory=dict)
+    # Private v4 integrity/trap/entropy plan (Python-side only; used by tests
+    # and reports, never embedded in the emitted chunk).
+    v4: object | None = None
 
 
 PRESETS: dict[str, dict] = {
@@ -35,18 +55,21 @@ PRESETS: dict[str, dict] = {
         encode_constants=True, flatten=False, junk=0, flatten_ratio=0.0,
         min_stmts=3, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=0, pool_slices=2, vm_fragments=2,
+        decoy_traps=8, entropy_budget=40000,
     ),
     "medium": dict(
         vm=True, virtualize_globals=True, virtualize_properties=True,
         encode_constants=True, flatten=True, junk=2, flatten_ratio=0.75,
         min_stmts=3, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=4096, pool_slices=3, vm_fragments=4,
+        decoy_traps=24, entropy_budget=60000,
     ),
     "heavy": dict(
         vm=True, virtualize_globals=True, virtualize_properties=True,
         encode_constants=True, flatten=True, junk=8, flatten_ratio=1.0,
         min_stmts=1, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=65536, pool_slices=5, vm_fragments=7,
+        decoy_traps=64, entropy_budget=100000,
     ),
 }
 
@@ -181,7 +204,15 @@ def _build_source_map(
     }
 
 
-def obfuscate(data: bytes, opts: Options) -> Result:
+def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) -> Result:
+    """Obfuscate ``data``.
+
+    ``_v4_base_bytes`` is an internal measurement hook: when ``None`` (normal
+    builds) the exact size of the same build with zero entropy padding is
+    measured first, so the v4 ``<=15%`` size gate is enforced against the real
+    per-seed/per-input base instead of a hardcoded estimate. The measurement
+    build passes ``0`` to terminate the one-level recursion.
+    """
     tree, source = A.parse(data)
     A.tag_tree(tree)
 
@@ -256,6 +287,30 @@ def obfuscate(data: bytes, opts: Options) -> Result:
             layout, built.slice_count,
             getattr(vm_program, "fragment_count", opts.vm_fragments),
         )
+    # v4 core integrity + decoy traps + high-entropy markers. Computed from
+    # the compiled program/pool/layout; the plan is consumed by vm.runtime.
+    if opts.vm and opts.integrity:
+        if _v4_base_bytes is None:
+            # Exact zero-padding base for THIS (preset, seed, input). The VM
+            # runtime dominates output size and varies ~2x across seeds, so a
+            # hardcoded base estimate cannot enforce the size gate. One extra
+            # render (no Luau execution) is cheap and keeps the build seeded-
+            # reproducible: the measurement build passes 0 and does not recurse.
+            key = _v4_base_key(data, opts)
+            if key in _V4_BASE_CACHE:
+                base_bytes = _V4_BASE_CACHE[key]
+            else:
+                base_bytes = len(obfuscate(
+                    data, replace(opts, entropy_budget=0), _v4_base_bytes=0
+                ).output)
+                if len(_V4_BASE_CACHE) >= _V4_BASE_CACHE_MAX:
+                    _V4_BASE_CACHE.clear()
+                _V4_BASE_CACHE[key] = base_bytes
+        else:
+            base_bytes = _v4_base_bytes
+        ctx.v4 = prepare_v4(ctx, vm_program, built, layout, opts, base_bytes)
+    else:
+        ctx.v4 = None
 
     # Normal builds ship exactly one VM runtime. The old nested/armor layer is
     # no longer used by any preset because its environment checks poisoned D()
@@ -427,6 +482,7 @@ def obfuscate(data: bytes, opts: Options) -> Result:
         keys=keys,
         stats=stats,
         source_map=source_map,
+        v4=ctx.v4,
     )
 
 

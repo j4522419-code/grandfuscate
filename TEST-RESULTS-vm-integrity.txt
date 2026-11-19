@@ -1,0 +1,10 @@
+# V4 VM integrity + decoy trap verification
+
+Generated 2026-11-19T07:53:19.786964+00:00. Standalone: `python3 tests/vm_integrity_v4.py`; wired into `tests/run_tests.py` section 28.
+
+VM-INTEGRITY-V4: ALL GREEN (87 checks), 0 failure(s).
+
+Covered: private canonical manifest (bytecode/stream/fragment blobs/constant slices/opcode maps/dispatch/layout/per-node coefficients); deterministic per-domain + global digests and single-byte tamper detection; wrong-ticket decoys -> controlled error; valid-ticket -> harmless default; bounded 96-step window checks; real-decoder tamper -> harmless default (no error/hang); no bare forbidden globals; no dynamic loader; no unbounded `while`/`repeat` in v4-emitted code.
+
+Full suite (section 28): vm integrity v4 OK, 87 checks. Complete suite: ALL GREEN, 0 failure(s).
+No push, deploy, repo, token, bundle or download-link changes.

@@ -374,11 +374,11 @@
   "declarations": [
     {
       "location": "0,6 - 0,11",
-      "renamed": "jSOfO5BJLOili5"
+      "renamed": "sl"
     },
     {
       "location": "1,4 - 1,5",
-      "renamed": "JSISJ00I7tStiB"
+      "renamed": "Hm"
     }
   ],
   "opcodes": {
@@ -555,7 +555,8 @@
       "min_chunks": 3,
       "max_extra": 3,
       "hard_cap": 1024
-    }
+    },
+    "integrity_salt": 385331085
   },
   "field_keys": {
     "V": 64341811,
@@ -1010,6 +1011,6 @@
       "handler_group_coverage": 3,
       "pool_slice_coverage": 3
     },
-    "structural_digest": "f551e925a5bf10b4c560b818f4f290574bcaaff5b59496d5201cc1d19396e8ac"
+    "structural_digest": "fe4a597a2c6d75480b44ccd65a125f37abdc6674c557f803ebd7c67dd9c7c291"
   }
 }

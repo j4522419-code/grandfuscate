@@ -1,0 +1,22 @@
+# V4 high-entropy output verification
+
+Generated 2026-11-19T07:53:19.786964+00:00. Standalone: `python3 tests/high_entropy_v4.py`; wired into `tests/run_tests.py` section 29.
+
+HIGH-ENTROPY-V4: ALL GREEN (124 checks), 0 failure(s).
+
+Covered: valid Luau (parse + differential behaviour), zero comments / byte-0 return, no dynamic loader, no multi-megabyte padding, <=15% size gate (canonical seed vs v3 baseline; zero padding when a build's own base already exceeds it), long-bracket + mixed-escape markers, symbol soup only inside string literals, bounded loops, standalone long-bracket / mixed-escape decode probes.
+
+Exact literal-share records (hello_world, seed/preset matrix):
+
+preset seed          bytes     gate     base     pad     str%     enc%     vs_v3
+light  20261118     147673   179903   108331   40000   37.97%   53.74%     -5.6%
+light  7            168509   179903   133170   35938   31.55%   47.62%      7.7%
+light  99991        215807   179903   215807       0    7.57%   28.50%     38.0%
+medium 20261118     209143   225877   149748   60000   48.21%   61.38%      6.5%
+medium 7            211678   225877   173076   39248   38.68%   53.06%      7.8%
+medium 99991        263959   225877   263959       0   15.38%   34.92%     34.4%
+heavy  20261118     657027   702493   557639  100000   78.55%   84.00%      7.6%
+heavy  7            659733   702493   575637   84706   76.07%   81.68%      8.0%
+heavy  99991        684457   702493   684457       0   60.87%   70.14%     12.0%
+
+Full suite (section 29): high entropy v4 OK, 124 checks. Complete suite: ALL GREEN, 0 failure(s).

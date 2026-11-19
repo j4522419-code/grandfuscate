@@ -1437,6 +1437,7 @@
     "handler_a": 657332,
     "handler_b": 124828,
     "handler_groups": 3,
+    "integrity_salt": 385331085,
     "node_a": 840403,
     "node_b": 491974,
     "node_groups": 3,
@@ -1492,7 +1493,7 @@
       ],
       "word_group_coverage": 2
     },
-    "structural_digest": "5cb3764a1759fee385bb5ca146067ba84a30070e553de8cfa5b747b09ba5288a",
+    "structural_digest": "7af7164d9ad84d370cc94a84bf062dc3b525c81f9caff3193106d35b976fa3ef",
     "vm_profile": "inline",
     "word_groups": 4
   },

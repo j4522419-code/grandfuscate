@@ -251,7 +251,7 @@ def run(failures: list[str]) -> int:
             else:
                 os.environ[k] = v
 
-    # 13. UI, route, Blueprint and setup guide markers all exist.
+    # 13. UI, route, Blueprint, guide and removed-helper-text markers.
     total += 1
     ui = (ROOT / "web" / "index.html").read_text(encoding="utf-8")
     server = (ROOT / "obf" / "web.py").read_text(encoding="utf-8")
@@ -269,8 +269,11 @@ def run(failures: list[str]) -> int:
         and "OBF_MAX_PUBLISH" in blueprint
         and guide.is_file()
         and "self.close_connection = True" in server
+        and "Publishes the obfuscated output" not in ui
+        and 'class="hint"' not in ui
+        and ".hint{" not in ui
     )
-    check(failures, markers, "loadstring UI/route/Blueprint/guide markers are incomplete")
+    check(failures, markers, "loadstring UI/route/Blueprint/guide markers are incomplete or helper text returned")
 
     ok = not failures
     print(f"{'loadstring publisher':<24} {'OK' if ok else 'FAIL':<8} {total} checks")

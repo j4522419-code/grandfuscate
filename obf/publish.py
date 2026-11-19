@@ -23,7 +23,7 @@ from urllib import error, parse, request
 API_ROOT = "https://api.github.com"
 RAW_ROOT = "https://raw.githubusercontent.com"
 API_VERSION = "2026-03-10"
-DEFAULT_MAX_PUBLISH = 8 * 1024 * 1024
+DEFAULT_MAX_PUBLISH = 16 * 1024 * 1024
 DEFAULT_TIMEOUT = 15.0
 SAFE_SEGMENT = re.compile(r"^[A-Za-z0-9._-]+$")
 SAFE_REF = re.compile(r"^[A-Za-z0-9._/-]+$")

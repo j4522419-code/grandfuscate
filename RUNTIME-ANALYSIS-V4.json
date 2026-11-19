@@ -1,0 +1,185 @@
+{
+  "attempts": {
+    "bare_forbidden_globals": "0 (alias-rewritten)",
+    "bounded_work": "no while/repeat in v4-emitted code",
+    "central_decoy_dispatch_chain": "0 scanner findings",
+    "dynamic_loader": "absent",
+    "real_decoder_marker_tamper": "harmless default (rc=0, no error/hang)",
+    "runtime_print_observation": "succeeded (unavoidable)",
+    "valid_ticket_decoy_default": "harmless default returned",
+    "window_checksum_tamper_detection": "detected (OK_FALSE)",
+    "wrong_ticket_decoy_error": "deterministic controlled error (no hang)"
+  },
+  "checks": 211,
+  "created": "2026-11-19T07:53:19.786964+00:00",
+  "failures": [],
+  "fixture": "print('Hello World!')",
+  "integrity_scope": "core (bytecode + constants + dispatch)",
+  "integrity_window": 96,
+  "limitations": "Obfuscation decoys, not a security boundary. Client scripts remain recoverable to an analyst who executes/debugs them; runtime observation of output strings is unavoidable. No 100% dumper/env-logger defeat claim, no red-team or executor certification. Official Luau debug hooks are nil.",
+  "presets": {
+    "heavy": {
+      "bare_globals": {
+        "bit32.bxor": 0,
+        "error(": 0,
+        "string.byte": 0,
+        "type(": 0
+      },
+      "bytes": 657027,
+      "canonical_len": 219745,
+      "decoder_tamper_error": "",
+      "decoder_tamper_rc": 0,
+      "decoy_probe": {
+        "decoys": 64,
+        "guesses": 13,
+        "hang": 0,
+        "rc": 0,
+        "valid_ticket_defaults": 64,
+        "wrong_ticket_errors": 832
+      },
+      "decoy_traps": 64,
+      "domains": [
+        "byte",
+        "fragment",
+        "word",
+        "node",
+        "constant",
+        "eval",
+        "exec"
+      ],
+      "global_digest": 2340804788,
+      "group_digests": {
+        "byte": 2983152706,
+        "constant": 458813660,
+        "eval": 552262595,
+        "exec": 4269465211,
+        "fragment": 2278501770,
+        "node": 269523436,
+        "word": 3710596778
+      },
+      "integrity_window": 96,
+      "long_bracket_literals": 6,
+      "marker_forms": [
+        "long",
+        "quoted"
+      ],
+      "markers": 7,
+      "real_opcode_values": 59,
+      "scanner_findings": 0,
+      "v4_unbounded_loop": false,
+      "window_clean": "OK_TRUE",
+      "window_quoted_clean": "OK_TRUE",
+      "window_tampered": "OK_FALSE"
+    },
+    "light": {
+      "bare_globals": {
+        "bit32.bxor": 0,
+        "error(": 0,
+        "string.byte": 0,
+        "type(": 0
+      },
+      "bytes": 147673,
+      "canonical_len": 10540,
+      "decoder_tamper_error": "",
+      "decoder_tamper_rc": 0,
+      "decoy_probe": {
+        "decoys": 8,
+        "guesses": 13,
+        "hang": 0,
+        "rc": 0,
+        "valid_ticket_defaults": 8,
+        "wrong_ticket_errors": 104
+      },
+      "decoy_traps": 8,
+      "domains": [
+        "byte",
+        "fragment",
+        "word",
+        "node",
+        "constant",
+        "eval",
+        "exec"
+      ],
+      "global_digest": 2340804976,
+      "group_digests": {
+        "byte": 3420650153,
+        "constant": 834500987,
+        "eval": 2545655710,
+        "exec": 4174111039,
+        "fragment": 1761598979,
+        "node": 1800199356,
+        "word": 1647265430
+      },
+      "integrity_window": 96,
+      "long_bracket_literals": 6,
+      "marker_forms": [
+        "long",
+        "quoted"
+      ],
+      "markers": 7,
+      "real_opcode_values": 59,
+      "scanner_findings": 0,
+      "v4_unbounded_loop": false,
+      "window_clean": "OK_TRUE",
+      "window_quoted_clean": "OK_TRUE",
+      "window_tampered": "OK_FALSE"
+    },
+    "medium": {
+      "bare_globals": {
+        "bit32.bxor": 0,
+        "error(": 0,
+        "string.byte": 0,
+        "type(": 0
+      },
+      "bytes": 209143,
+      "canonical_len": 23299,
+      "decoder_tamper_error": "",
+      "decoder_tamper_rc": 0,
+      "decoy_probe": {
+        "decoys": 24,
+        "guesses": 13,
+        "hang": 0,
+        "rc": 0,
+        "valid_ticket_defaults": 24,
+        "wrong_ticket_errors": 312
+      },
+      "decoy_traps": 24,
+      "domains": [
+        "byte",
+        "fragment",
+        "word",
+        "node",
+        "constant",
+        "eval",
+        "exec"
+      ],
+      "global_digest": 2340804836,
+      "group_digests": {
+        "byte": 3290019449,
+        "constant": 3029581748,
+        "eval": 3523654979,
+        "exec": 3609266825,
+        "fragment": 3052190857,
+        "node": 1938158225,
+        "word": 1359952817
+      },
+      "integrity_window": 96,
+      "long_bracket_literals": 6,
+      "marker_forms": [
+        "long",
+        "quoted"
+      ],
+      "markers": 7,
+      "real_opcode_values": 59,
+      "scanner_findings": 0,
+      "v4_unbounded_loop": false,
+      "window_clean": "OK_TRUE",
+      "window_quoted_clean": "OK_TRUE",
+      "window_tampered": "OK_FALSE"
+    }
+  },
+  "scanner_findings_total": 0,
+  "seed": 20261118,
+  "success": true,
+  "toolchain": "official Luau 0.747 (tools/luau)"
+}

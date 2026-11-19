@@ -73,6 +73,7 @@ class Layout:
     source_spread: dict = field(default_factory=dict)
     field_keys: dict[str, int] = field(default_factory=dict)
     chunk_settings: dict[str, int] = field(default_factory=dict)
+    integrity_salt: int = 0
 
     # -- classic dispatcher helpers ---------------------------------------
     def field(self, name: str) -> int:
@@ -171,7 +172,8 @@ class Layout:
         d = self.per_node_operand_d
         return (
             f"(((({key_expr}) * {a} + {b} + "
-            f"(({key_expr}) % 97) * {c} + {d}) % 1000000007))"
+            f"(({key_expr}) % 97) * {c} + {d} + "
+            f"{self.integrity_salt}) % 1000000007))"
         )
 
     def guard_line(
@@ -455,6 +457,7 @@ class Layout:
             "source_spread": dict(self.source_spread),
             "field_keys": dict(self.field_keys),
             "chunk_settings": dict(self.chunk_settings),
+            "integrity_salt": self.integrity_salt,
         }
 
 
@@ -517,4 +520,5 @@ def make_layout(seed: int, preset: str) -> Layout:
         per_node_operand_d=r.randrange(0, 1 << 20),
         field_keys=keys,
         chunk_settings=dict(PRESET_CHUNKS.get(preset, PRESET_CHUNKS["medium"])),
+        integrity_salt=r.randrange(0, 1 << 30),
     )

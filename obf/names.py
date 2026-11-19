@@ -14,8 +14,39 @@ import re
 # Luau identifiers are [A-Za-z_][A-Za-z0-9_]*.  These are maximally
 # confusable in common monospace fonts, which is the point: a human reading a
 # decompilation cannot tell them apart, but the compiler can.
-FIRST = "lIO_oJiLSjZ"
-REST = "lIO_oJiLSjZ08B52S7tTf"
+FIRST = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+REST = FIRST + "0123456789"
+
+# Names that must never be emitted as generated locals: reserved words,
+# common globals, and semantic names the scanner treats as regression markers.
+# Hard-coded Luau locals written literally in the Python emitters. Because
+# `_rename_locals` keeps the reserved `env`/`alias` names verbatim and remaps
+# everything else, a generated compact name equal to one of these (e.g. a bare
+# `l`) would shadow the captured alias table. Reserving them (plus every single
+# letter) makes compact names collision-free by construction.
+_HARD_CODED = frozenset(
+    """__mode a b c e f h i j k l m n o p r s t v
+    args band bor bxor byte char concat ctrl cur floor fn fr fr2 gh id init kind
+    kv lh li lv ml na nd np nv obj op parts pi slot st t1 up v1 vals vi""".split()
+)
+_SINGLE_LETTERS = frozenset(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+)
+_RESERVED_EXTRA = frozenset(
+    """_G getfenv setfenv loadstring load require print warn game workspace script
+    Instance task coroutine debug shared Enum Vector3 CFrame UDim2 Color3
+    BrickColor TweenInfo Ray Region3 NumberSequence ColorSequence NumberRange
+    PhysicalProperties DateTime Random buffer utf8 os io math string table bit32
+    tonumber tostring pairs ipairs select rawset rawget rawequal setmetatable
+    getmetatable pcall xpcall error assert next unpack pack tick wait spawn delay
+    elapsedTime time collectgarbage gcinfo self
+    EVAL EXEC GETLV SETLV NODES CODE KQ DQ Q E B C S O D BAD H G
+    APPLYBIN APPLYUN INVOKE DOCALL CMAP SETVAR DECL SNAP CLOSURE VAR
+    EH SH BH UH LH GH DEC W NODE ARG op nd fr args vals
+    source_map PRIVATE_SOURCE_MAP build_id input_sha256 opcodes binmap
+    operand_info stream_key_hex DEBUG NODE_N sourceMappingURL PX1
+    V UP VA n v proto up""".split()
+) | _HARD_CODED | _SINGLE_LETTERS
 
 KEYWORDS = frozenset(
     """and break do else elseif end false for function if in local nil not or
@@ -36,8 +67,11 @@ _RUNTIME_KEYS = (
 class Names:
     def __init__(self, seed: int):
         self.rng = random.Random(seed ^ 0x5A17C0DE)
-        self.used: set[str] = set()
+        self.used: set[str] = set(KEYWORDS) | set(_RESERVED_EXTRA)
         self.ns: dict[str, str] = {}
+        pool = [c for c in FIRST] + [a + b for a in FIRST for b in REST]
+        self.rng.shuffle(pool)
+        self._pool = iter(pool)
         for key in _RUNTIME_KEYS:
             self.ns[key] = self.new()
         # Per-domain tables hold independently guarded decoder/dispatch
@@ -56,13 +90,35 @@ class Names:
         """Return a fresh random identifier; `hint` is deliberately ignored."""
         return self.new()
 
-    def new(self) -> str:
+    def fresh_boot(self, hint: str = "r") -> str:
+        """Long, distinctive name for a reserved boot local (env/alias).
+
+        `_rename_locals` keeps reserved names verbatim in both the boot and the
+        rewritten chunk, so these must never equal a hard-coded short Luau local
+        or any compact generated name. A nine-character confusable name makes
+        that collision impossible.
+        """
+        alpha = "lIO_oJiLSjZ"
         while True:
-            length = self.rng.randint(6, 14)
-            s = self.rng.choice(FIRST) + "".join(
-                self.rng.choice(REST) for _ in range(length - 1)
+            s = self.rng.choice(alpha) + "".join(
+                self.rng.choice(alpha) for _ in range(8)
             )
-            if s in KEYWORDS or s in self.used:
+            if s not in self.used:
+                self.used.add(s)
+                return s
+
+    def new(self) -> str:
+        """Return a fresh short identifier (two characters in normal builds)."""
+        while True:
+            try:
+                s = next(self._pool)
+            except StopIteration:
+                # Deterministic exhaustion fallback (should not be reached in
+                # normal builds): three-character name from the same rng.
+                s = self.rng.choice(FIRST) + "".join(
+                    self.rng.choice(REST) for _ in range(2)
+                )
+            if s in KEYWORDS or s in self.used or s in _RESERVED_EXTRA:
                 continue
             self.used.add(s)
             return s

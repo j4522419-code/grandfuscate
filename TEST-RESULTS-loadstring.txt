@@ -1,3 +1,46 @@
+# Final loadstring verification (UI cleanup)
+
+UI cleanup: removed the circled helper text under the button and its unused CSS.
+No Python publisher logic changed.
+
+Targeted verification after cleanup:
+# UI cleanup verification
+
+Change: removed the circled helper text under "make it a loadstring!" and its unused CSS.
+
+== compile
+COMPILEALL_OK
+
+== targeted publisher/UI tests
+loadstring publisher     OK       13 checks
+ALL GREEN (13 checks)
+
+== served page checks
+OK   GET / status 200
+OK   make it a loadstring! button present
+OK   Copy loadstring button present
+OK   helper sentence absent
+OK   hint div absent
+OK   hint CSS absent
+OK   GET /LOADSTRINGS.md status 200
+OK   guide content type markdown
+SERVED_PAGE_OK
+
+== local HTML markers
+86:  #loadstringOut{
+92:  #rawUrlLink{color:#000000;text-decoration:underline}
+155:      <button type="button" id="makeLoadstring" class="primary">make it a loadstring!</button>
+156:      <textarea id="loadstringOut" readonly spellcheck="false" wrap="off" placeholder="Your loadstring will appear here."></textarea>
+158:        <button type="button" id="copyLoadstring">Copy loadstring</button>
+161:      <div id="rawUrlLine"><a id="rawUrlLink" href="#" target="_blank" rel="noopener" hidden></a></div>
+173:  $("loadstringOut").value = "";
+175:  const a = $("rawUrlLink");
+257:    $("loadstringOut").value = j.loadstring;
+258:    const a = $("rawUrlLink");
+
+No GitHub token, repository, remote, push or Render service was created here.
+
+--- Previous full-suite result (Python logic unchanged by this UI-only edit) ---
 # Final loadstring verification
 
 Full suite: ALL GREEN, 0 failure(s)

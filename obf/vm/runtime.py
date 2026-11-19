@@ -50,6 +50,7 @@ def render(
     eval_names = ns.group_names("eval")
     exec_names = ns.group_names("exec")
     ok_eval, ok_exec = ns.fresh_runtime(), ns.fresh_runtime()
+    v4 = getattr(ctx, "v4", None)
 
     def C(expr: str | int) -> str:
         return layout.function_selector("constant", str(expr), [], ns)
@@ -80,6 +81,11 @@ def render(
             "DECL", "SNAP", "APPLYBIN", "APPLYUN",
         )
     ]
+    if v4 is not None:
+        for line in v4.emit_marker_definitions():
+            add(line)
+        for line in v4.emit_trap_group():
+            add(line)
     add(f"local {ok_eval}, {ok_exec} = true, true")
     for line in layout.init_group_table_lines(ev_table, "eval", ns):
         add(line)
@@ -94,9 +100,9 @@ def render(
     add("end")
 
     # Independent, lazily assembled stream fragments and guarded byte groups.
-    emit_fragments(add, ns, program, ctx, R, layout)
+    emit_fragments(add, ns, program, ctx, R, layout, v4=v4)
     # Guarded word/node groups and per-node operand reconstruction.
-    emit_nodes(add, ns, program, R, layout)
+    emit_nodes(add, ns, program, R, layout, v4=v4)
 
     for table_key in ("EH", "SH", "BH", "UH", "LH", "GH"):
         for line in layout.init_vm_handler_lines(
@@ -559,6 +565,11 @@ def render(
         add(line)
     for line in emit_group_integrity_lines(ns, exec_names, ok_exec):
         add(line)
+    if v4 is not None:
+        for line in v4.emit_verify_lines(["eval", "constant"], ok_eval):
+            add(line)
+        for line in v4.emit_verify_lines(["exec"], ok_exec):
+            add(line)
 
     add(f"local {R['fr']} = {{ V = {{}}, UP = {{}}, VA = {{ n = 0 }} }}")
     add(f"local {R['sig']} = {EX(program.entry, R['fr'])}")

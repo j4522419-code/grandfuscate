@@ -4,7 +4,7 @@ Prepared 2026-11-18 (Pacific/Auckland). **No push, GitHub repository, remote, or
 
 **Windows users:** use `WINDOWS-STEP-BY-STEP.md` and `grandfuscate-windows.zip`. `unzip`, `./setup-local.sh`, and `PORT=8000 ...` are Bash/Linux commands and will not work in Windows CMD.
 
-The partial “uncap” edits were reverted. The app is back to its verified third-pass state: `OBF_MAX_SOURCE=262144`, `OBF_MAX_BODY=16777216`, `MAX_IDENTIFY=8388608` (hard-coded), and `OBF_TIMEOUT=60` by default. Small CLI builds and the 67-check third-pass probe were verified unchanged after the revert.
+The partial “uncap” edits were reverted, so `OBF_MAX_SOURCE=262144` stays unchanged and `/api/identify` remains hard-coded to `MAX_IDENTIFY=8388608` (8 MiB). The v4 cap future-proofing (`raise_both`) raised the **checked-in** defaults to `OBF_MAX_BODY=33554432` (32 MiB) and `OBF_MAX_PUBLISH=16777216` (16 MiB); `OBF_TIMEOUT=60` by default. These are conservative guard increases, not permission for multi-megabyte outputs — the `<=15%` size gate still wins. After pushing the updated code, set the two new values manually under your service → **Environment** on an existing Render Blueprint (Blueprints do not back-fill `sync:false` secrets). Small CLI builds and the full suite were verified with the new defaults.
 
 ---
 
@@ -201,7 +201,7 @@ Render supplies `PORT`; do not set it manually. The app binds to `0.0.0.0`.
 | Key | Value currently in `render.yaml` | Suggested value if you need the 1,463,380-byte source | Notes |
 |---|---:|---:|---|
 | `OBF_MAX_SOURCE` | `262144` | `10485760` | Must be larger than your source. This is the error you hit. |
-| `OBF_MAX_BODY` | `16777216` | `16777216` or higher | JSON request-body cap; 16 MiB already covers 1.46 MB. |
+| `OBF_MAX_BODY` | `33554432` | `33554432` or higher | JSON request-body cap; 32 MiB already covers 1.46 MB. |
 | `OBF_TIMEOUT` | `60` | `300` | Parse/generate budget for large local sources. |
 | `OBF_RATE_LIMIT` | `24` | `24` | Requests per minute. |
 | `OBF_ALLOWED_ORIGIN` | `*` | `https://<your-service>.onrender.com` | Tighten CORS after you know the URL. |
@@ -222,7 +222,7 @@ these extra Render Environment values:
 | `OBF_GITHUB_REPO` | `grandfuscate-loads` | Must be public. |
 | `OBF_GITHUB_BRANCH` | `main` | Already in `render.yaml`; override only if different. |
 | `OBF_GITHUB_PATH` | `loadstrings` | Folder inside the repo. |
-| `OBF_MAX_PUBLISH` | `8388608` | 8 MiB publish cap. |
+| `OBF_MAX_PUBLISH` | `16777216` | 16 MiB publish cap. |
 
 On an existing Render Blueprint, add the `sync: false` values manually under
 **service → Environment**. See `LOADSTRINGS.md` for the exact GitHub token and

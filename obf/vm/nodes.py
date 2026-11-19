@@ -13,7 +13,7 @@ from ..names import Names
 from .compiler import Program
 
 
-def emit_nodes(add, ns: Names, program: Program, R: dict, layout: Layout) -> None:
+def emit_nodes(add, ns: Names, program: Program, R: dict, layout: Layout, *, v4=None) -> None:
     op_off = 0 if program.word_order == "op_len" else 1
     len_off = 1 if program.word_order == "op_len" else 0
     style = program.node_style
@@ -169,3 +169,8 @@ def emit_nodes(add, ns: Names, program: Program, R: dict, layout: Layout) -> Non
         ns, ns.group_names("node"), ok_node
     ):
         add(line)
+    if v4 is not None:
+        for line in v4.emit_verify_lines(["word"], ok_word):
+            add(line)
+        for line in v4.emit_verify_lines(["node"], ok_node):
+            add(line)

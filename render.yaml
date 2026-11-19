@@ -18,7 +18,7 @@ services:
       - key: OBF_MAX_SOURCE
         value: "262144"
       - key: OBF_MAX_BODY
-        value: "16777216"
+        value: "33554432"
       - key: OBF_RATE_LIMIT
         value: "24"
       - key: OBF_ALLOWED_ORIGIN
@@ -40,4 +40,4 @@ services:
       - key: OBF_GITHUB_PATH
         value: "loadstrings"
       - key: OBF_MAX_PUBLISH
-        value: "8388608"
+        value: "16777216"

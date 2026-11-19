@@ -9,11 +9,11 @@
     "single_execute_function_hook": "portable debug hook unavailable",
     "startup_constant_dump": "failed"
   },
-  "created": "2026-11-19T02:54:56.771492+00:00",
+  "created": "2026-11-19T07:34:41.111124+00:00",
   "failures": [],
   "output_bytes": {
-    "print67": 198717,
-    "scan_fixture": 196415
+    "print67": 209050,
+    "scan_fixture": 211588
   },
   "preset": "medium",
   "probes": [
@@ -39,12 +39,12 @@
       "original_stdout_lines": [
         "plain_output_marker\tANOTHER_SECRET_STRINGSOURCE_STRING_NEVER_SHIP\t45"
       ],
-      "output_bytes": 196415,
+      "output_bytes": 211588,
       "runtime_diagnostics": {
         "all_source_hits": "0",
         "band_calls": "66",
-        "bxor_calls": "7113",
-        "byte_calls": "9561",
+        "bxor_calls": "7785",
+        "byte_calls": "10233",
         "call_samples": "0",
         "char_calls": "95",
         "chunk_error": "",
@@ -55,7 +55,7 @@
         "debug_getupvalue": "false",
         "debug_sethook": "false",
         "debug_traceback": "true",
-        "distinct_blobs": "12",
+        "distinct_blobs": "19",
         "global_dispatcher_candidates": "0",
         "hook_available": "false",
         "hook_installed": "false",
@@ -65,7 +65,7 @@
         "prints": "1",
         "small_word_hits": "0",
         "small_word_ratio": "0",
-        "startup_blobs": "12",
+        "startup_blobs": "19",
         "startup_source_hits": "0",
         "total_words": "23",
         "unpack_calls": "2"
@@ -98,12 +98,12 @@
       "original_stdout_lines": [
         "67"
       ],
-      "output_bytes": 198717,
+      "output_bytes": 209050,
       "runtime_diagnostics": {
         "all_source_hits": "0",
         "band_calls": "0",
-        "bxor_calls": "8834",
-        "byte_calls": "9822",
+        "bxor_calls": "9506",
+        "byte_calls": "10494",
         "call_samples": "0",
         "char_calls": "10",
         "chunk_error": "",
@@ -114,7 +114,7 @@
         "debug_getupvalue": "false",
         "debug_sethook": "false",
         "debug_traceback": "true",
-        "distinct_blobs": "15",
+        "distinct_blobs": "22",
         "global_dispatcher_candidates": "0",
         "hook_available": "false",
         "hook_installed": "false",
@@ -124,7 +124,7 @@
         "prints": "1",
         "small_word_hits": "0",
         "small_word_ratio": "0",
-        "startup_blobs": "15",
+        "startup_blobs": "22",
         "startup_source_hits": "0",
         "total_words": "2",
         "unpack_calls": "1"
@@ -146,8 +146,8 @@
   "runtime_diagnostics": {
     "all_source_hits": "0",
     "band_calls": "66",
-    "bxor_calls": "7113",
-    "byte_calls": "9561",
+    "bxor_calls": "7785",
+    "byte_calls": "10233",
     "call_samples": "0",
     "char_calls": "95",
     "chunk_error": "",
@@ -158,7 +158,7 @@
     "debug_getupvalue": "false",
     "debug_sethook": "false",
     "debug_traceback": "true",
-    "distinct_blobs": "12",
+    "distinct_blobs": "19",
     "global_dispatcher_candidates": "0",
     "hook_available": "false",
     "hook_installed": "false",
@@ -168,7 +168,7 @@
     "prints": "1",
     "small_word_hits": "0",
     "small_word_ratio": "0",
-    "startup_blobs": "12",
+    "startup_blobs": "19",
     "startup_source_hits": "0",
     "total_words": "23",
     "unpack_calls": "2"

@@ -54,6 +54,10 @@ class Options:
     """Number of independent, late-decoded constant-pool slices."""
     vm_fragments: int = 4
     """Number of independently encoded VM instruction-stream fragments."""
+    decoy_traps: int = 24
+    """Preset-scaled count of opaque decoy VM handlers."""
+    entropy_budget: int = 60000
+    """Maximum extra source bytes added by literal inflation/padding."""
 
 
 @dataclass

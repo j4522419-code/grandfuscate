@@ -30,6 +30,8 @@ from tests import compare_versions as CV  # noqa: E402
 from tests import runtime_analysis as RA  # noqa: E402
 from tests import return_probe as RP  # noqa: E402
 from tests import test_publish as PUB  # noqa: E402
+from tests import vm_integrity_v4 as V4I  # noqa: E402
+from tests import high_entropy_v4 as V4E  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -38,7 +40,12 @@ PRESETS = ["light", "medium", "heavy"]
 SEEDS = [11, 0x5EED]
 
 
-def run(data: bytes, timeout: int = 60) -> tuple[int, bytes, bytes]:
+def run(data: bytes, timeout: int = 120) -> tuple[int, bytes, bytes]:
+    # A VM-interpreted 200000-iteration fixture (tests/cases/bench.luau) is
+    # legitimately ~55-60 s of CPU on a cold interpreter; keep the wall-clock
+    # guard above that so a correct-but-slow differential run cannot flake.
+    # timed() already used 120 s. This is a liveness ceiling, not a correctness
+    # relaxation: stdout/exit/status equality is still asserted on every run.
     exe = A.tool_path("luau")
     fd, path = tempfile.mkstemp(suffix=".luau")
     try:
@@ -195,6 +202,8 @@ def main() -> int:
     second_total = 0
     third_total = 0
     publish_total = 0
+    v4_integrity_total = 0
+    v4_entropy_total = 0
     return_total = 0
     complex_total = 0
     hard_bad: list[str] = []
@@ -867,12 +876,33 @@ def main() -> int:
     # 27. Loadstring publisher (mocked GitHub; no secrets or network).
     publish_total += PUB.run(failures)
 
+    print("\nvm integrity v4 / high-entropy verification")
+    print("-" * 68)
+
+    # 28. VM integrity manifest, decoy traps, bounded windows, harmless default.
+    third_total += 1
+    before = len(failures)
+    v4_integrity_total += V4I.run(failures)
+    v4i_ok = len(failures) == before
+    print(f"{'vm integrity v4':<24} {'OK' if v4i_ok else 'FAIL':<8} "
+          f"{v4_integrity_total} integrity/trap checks")
+
+    # 29. High-entropy surface, literal shares, <=15% size gate, no loader.
+    third_total += 1
+    before = len(failures)
+    v4_entropy_total += V4E.run(failures)
+    v4e_ok = len(failures) == before
+    print(f"{'high entropy v4':<24} {'OK' if v4e_ok else 'FAIL':<8} "
+          f"{v4_entropy_total} entropy/gate checks")
+
     print(
         f"\n{total} base transform/run + {vm_total} VM-mode transform/run + "
         f"{compat_total} compatibility differential + {scan_total} production scans + "
         f"{return_total} return probes + {complex_total} complex checks + "
         f"{hard_total} reliability + {second_total} second-pass + "
-        f"{third_total} third-pass + {publish_total} loadstring checks, "
+        f"{third_total} third-pass + {publish_total} loadstring + "
+        f"{v4_integrity_total} vm-integrity-v4 + "
+        f"{v4_entropy_total} high-entropy-v4 checks, "
         f"{len(failures)} failure(s)"
     )
     if failures:

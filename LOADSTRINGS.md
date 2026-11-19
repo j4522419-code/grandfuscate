@@ -25,6 +25,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YOU/REPO/<commit-sha>
   - readonly loadstring box.
   - `Copy loadstring` button underneath it.
   - stale loadstring is cleared whenever you obfuscate again or upload a new input.
+  - no explanatory helper text under the button; the guide is still served at `/LOADSTRINGS.md`.
 - `obf/publish.py`
   - server-side GitHub raw publisher.
   - Base64 upload via GitHub contents API.
@@ -151,7 +152,7 @@ Add these:
 | `OBF_GITHUB_REPO` | `grandfuscate-loads` |
 | `OBF_GITHUB_BRANCH` | `main` |
 | `OBF_GITHUB_PATH` | `loadstrings` |
-| `OBF_MAX_PUBLISH` | `8388608` |
+| `OBF_MAX_PUBLISH` | `16777216` |
 
 Keep all your existing variables too, especially:
 
@@ -243,7 +244,7 @@ You should see:
   "enabled": true,
   "backend": "github",
   "requires_api_key": true,
-  "max_publish_bytes": 8388608,
+  "max_publish_bytes": 16777216,
   "wrapper": "loadstring(game:HttpGet(<pinned raw url>))()"
 }
 ```
