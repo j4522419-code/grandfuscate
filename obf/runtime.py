@@ -19,6 +19,7 @@ from .chunks import emit_chunk_getter, make_chunk_plan
 from .layout import Layout
 from .names import Names
 from .pool import PoolBuild
+from .vm import stealth as V5S
 
 
 def _plan_rng(build_id: str, sl_index: int, tag: str) -> random.Random:
@@ -75,6 +76,7 @@ def _render_source_runtime(
     extra_hash: int | None = None,
     extra_hash_seed: int = 0x9E3779B9,
     runtime_consts: dict[str, int] | None = None,
+    stealth_plan: object | None = None,
 ) -> str:
     if runtime_consts is None:
         raise ValueError("runtime_consts are required")
@@ -331,6 +333,7 @@ def _render_vm_runtime(
     extra_hash: int | None = None,
     extra_hash_seed: int = 0x9E3779B9,
     runtime_consts: dict[str, int] | None = None,
+    stealth_plan: object | None = None,
 ) -> str:
     """Third-pass, ticketed and group-scattered constant runtime.
 
@@ -344,6 +347,12 @@ def _render_vm_runtime(
     N = ns.N
     L: list[str] = []
     add = L.append
+    if stealth_plan is not None:
+        # Define the active-decoy reactor/T/P locals once, before any guard
+        # line in either the prelude or the VM body references them.
+        object.__setattr__(layout, "stealth_plan", stealth_plan)
+        for line in V5S.emit_stealth_lines(stealth_plan):
+            add(line)
     E = N("E")
     ok_all = ns.fresh_runtime()
     cd = ns.group_tables["constant"]
@@ -588,6 +597,7 @@ def render_runtime(
     extra_hash_seed: int = 0x9E3779B9,
     runtime_consts: dict[str, int] | None = None,
     vm: bool = False,
+    stealth_plan: object | None = None,
 ) -> str:
     if vm:
         return _render_vm_runtime(
@@ -599,6 +609,7 @@ def render_runtime(
             anti_tamper=anti_tamper, extra_hash=extra_hash,
             extra_hash_seed=extra_hash_seed,
             runtime_consts=runtime_consts,
+            stealth_plan=stealth_plan,
         )
     return _render_source_runtime(
         ns, b, layout=layout,
@@ -609,4 +620,5 @@ def render_runtime(
         anti_tamper=anti_tamper, extra_hash=extra_hash,
         extra_hash_seed=extra_hash_seed,
         runtime_consts=runtime_consts,
+        stealth_plan=stealth_plan,
     )

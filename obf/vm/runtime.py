@@ -15,6 +15,7 @@ from ..render import Context
 from .compiler import Program, BIN_OPS, UN_OPS
 from .fragments import emit_fragments
 from .nodes import emit_nodes
+from . import stealth as V5S
 
 
 _BIN_EXPR = {
@@ -51,6 +52,7 @@ def render(
     exec_names = ns.group_names("exec")
     ok_eval, ok_exec = ns.fresh_runtime(), ns.fresh_runtime()
     v4 = getattr(ctx, "v4", None)
+    stealth = getattr(v4, "stealth", None) if v4 is not None else None
 
     def C(expr: str | int) -> str:
         return layout.function_selector("constant", str(expr), [], ns)
@@ -108,6 +110,13 @@ def render(
         for line in layout.init_vm_handler_lines(
             R[table_key], ns.fresh_runtime(), ns.fresh_runtime()
         ):
+            add(line)
+    if stealth is not None:
+        # V5: decoys live in the SAME real handler tables, not a separate inert
+        # table. T/P/R locals were defined in the constant-pool prelude and are
+        # in scope here. Keys are outside the real opcode space, so none of the
+        # real assignments below overwrite them.
+        for line in V5S.emit_handler_assignments(stealth, layout, R):
             add(line)
 
     add(f"{R['VAR']} = function(fr, id)")

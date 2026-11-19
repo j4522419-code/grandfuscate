@@ -55,7 +55,7 @@ WEB_DIR = ROOT / "web"
 PORT = int(os.environ.get("PORT", "8000"))
 MAX_SOURCE = int(os.environ.get("OBF_MAX_SOURCE", "262144"))
 # Heavy builds stay well under 1 MB; identify accepts the file back.
-MAX_BODY = int(os.environ.get("OBF_MAX_BODY", str(16 * 1024 * 1024)))
+MAX_BODY = int(os.environ.get("OBF_MAX_BODY", str(32 * 1024 * 1024)))
 MAX_IDENTIFY = 8 * 1024 * 1024
 try:
     MAX_PUBLISH = int(os.environ.get("OBF_MAX_PUBLISH", str(publish.DEFAULT_MAX_PUBLISH)))
@@ -88,7 +88,8 @@ STATIC = {
 # Only harmless per-request tweaks are accepted. The single-VM policy is
 # enforced below and cannot be switched back on through the API.
 BOOL_KEYS = frozenset(
-    {"flatten", "virtualize_globals", "virtualize_properties", "integrity"}
+    {"flatten", "virtualize_globals", "virtualize_properties", "integrity",
+     "stealth"}
 )
 INT_KEYS = frozenset({"junk", "min_stmts", "place_id", "game_id", "blob_pad"})
 FLOAT_KEYS = frozenset({"flatten_ratio"})
@@ -171,6 +172,9 @@ def build_request(payload: dict) -> tuple[object, bool, bytes]:
     for k in BOOL_KEYS:
         if k in payload and isinstance(payload[k], bool):
             overrides[k] = payload[k]
+    # Convenience alias matching the plan's wording; never a separate option.
+    if "fail_closed" in payload and isinstance(payload["fail_closed"], bool):
+        overrides["stealth"] = payload["fail_closed"]
     for k in INT_KEYS:
         v = payload.get(k)
         if v in (None, ""):
@@ -346,6 +350,7 @@ def meta() -> dict:
             "nested_vm": False,
             "anti_env": False,
             "anti_tamper": False,
+            "stealth": False,
             "blob_pad": 4096,
             "verify": True,
             "junk": 2,

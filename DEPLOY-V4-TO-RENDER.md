@@ -5,6 +5,15 @@ GitHub and Render connectors are unsupported in this session, and no push,
 deploy, repository, remote, token or new service was created for you. You run
 the git commands; Render deploys from the commit you push.
 
+**Deployment status (verified 2026-11-19):** you pushed `97d767a` to `main`;
+Render deployed it. Live `https://luau-obf.onrender.com/api/health` is 200,
+`/api/meta` reports `max_body_bytes=33554432` / `max_publish_bytes=16777216`,
+and the live `/LOADSTRINGS.md` is byte-identical to the V4 bundle. The steps
+below remain as the reproducible guide / rollback reference. The opt-in V5
+stealth / fail-closed decoys (`PLAN-stealth-v5.md`) now have prepared bundles,
+links and `DEPLOY-V5-TO-RENDER.md`, but are **not deployed**; this live service
+is still V4.
+
 **What you are deploying:** the V4 build — VM integrity verification (private
 canonical manifest + seven bounded 96-step window checks), opaque decoy traps
 (wrong-ticket controlled error, valid-ticket harmless default), and high-entropy
@@ -40,27 +49,53 @@ refresh it — the ZIPs themselves stay in the workspace.
 
 ## 1. Download the V4 bundle
 
-Use the **new** `grandfuscate-github-repo.zip` link from chat or
-`PUBLIC-DOWNLOAD-LINKS.md` (the 03:29 UI-cleanup links are stale and do **not**
-contain V4).
+> **Start every PowerShell session with `$ErrorActionPreference = 'Stop'`.**
+> Without it, PowerShell 5.1 continues after an error — a failed download can
+> silently lead to an empty `git status` and a no-op push. The commands below
+> verify the SHA-256 and **throw** on any mismatch.
 
-PowerShell:
+**Why this matters:** tmpfiles.org `/dl/...` links are short-lived *signed*
+URLs. They expire within minutes; after that the server returns an HTML page
+instead of the ZIP, and `Expand-Archive` fails with *"End of Central Directory
+record could not be found"*. The **page** URL is stable, and it always contains
+a fresh signed link — so resolve the link at download time.
+
+### Option A — most reliable: download from the Arena workspace viewer
+
+The ZIP is also in the workspace file viewer (offered as a direct download,
+no third-party host, no expiry). Save it to
+`C:\Users\user\Downloads\grandfuscate-github-repo.zip`, then continue at §2.
+Still run the hash check below.
+
+### Option B — PowerShell (resolves a fresh signed link automatically)
 
 ```powershell
-$url = "PASTE_THE_NEW_grandfuscate-github-repo.zip_DIRECT_URL"
-Invoke-WebRequest -Uri $url -OutFile "$env:USERPROFILE\Downloads\grandfuscate-github-repo.zip"
+$ErrorActionPreference = 'Stop'
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Stable page URL for this bundle (from PUBLIC-DOWNLOAD-LINKS.md):
+$page  = "https://tmpfiles.org/wdAEXjY7X0eG/grandfuscate-github-repo.zip"
+$dest  = "$env:USERPROFILE\Downloads\grandfuscate-github-repo.zip"
+$want  = "28DE3309FC688BF60996D62CDB7A58671C92D4FE6D0AF7B2A1D8ED7A2E33AC50"
+
+$html  = (Invoke-WebRequest -UseBasicParsing -Uri $page).Content
+$dl    = [regex]::Match($html, 'href="(https://tmpfiles\.org/dl/[^"]+)"').Groups[1].Value
+if (-not $dl) { throw "No download link found on $page - the mirror may have expired. Ask for a refreshed link." }
+Invoke-WebRequest -UseBasicParsing -Uri $dl -OutFile $dest
+
+$got = (Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash
+if ($got -ne $want) { throw "SHA-256 MISMATCH: got $got - expected $want. Do NOT continue." }
+Write-Host "OK: $got"
 ```
 
-Optional integrity check (PowerShell):
+The expected hash is also in `SHA256SUMS.txt`. If the file is an HTML page or
+truncated, the hash check stops you **before** any git command runs.
 
-```powershell
-Get-FileHash "$env:USERPROFILE\Downloads\grandfuscate-github-repo.zip" -Algorithm SHA256
-```
-
-Compare with the `grandfuscate-github-repo.zip` line in `SHA256SUMS.txt`.
-
-> Windows CMD alternative: `curl -L -o "%USERPROFILE%\Downloads\grandfuscate-github-repo.zip" "PASTE_URL"`
-> Linux/macOS: `curl -L -o ~/Downloads/grandfuscate-github-repo.zip "PASTE_URL"`
+> Windows CMD: use the browser/viewer (Option A), or
+> `curl -L -A "Mozilla/5.0" -o "%USERPROFILE%\Downloads\grandfuscate-github-repo.zip" "PASTE_FRESH_DL_URL"`
+> then verify with `certutil -hashfile ... SHA256`.
+> Linux/macOS: same page-resolve idea with `curl`/`grep`, or `curl -L -o ~/Downloads/... "FRESH_DL_URL"`,
+> then `sha256sum`.
 
 ---
 
@@ -138,7 +173,13 @@ locally, that's fine — Render fetches the Linux tools during its build; skip
 ## 4. Commit and push
 
 ```powershell
+$ErrorActionPreference = 'Stop'
 cd "$env:USERPROFILE\luau-obf-update"
+
+# Guard: never push an empty/no-op change set.
+$status = git status --porcelain
+if (-not $status) { throw "No changes detected - the V4 files were not copied. Aborting before commit." }
+
 git add -A
 git commit -m "V4: VM integrity, decoy traps, high-entropy output and cap raises"
 git push origin main

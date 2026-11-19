@@ -20,6 +20,7 @@ from dataclasses import dataclass, field
 
 from .. import entropy as EN
 from ..checksum import ChecksumParams, checksum, make_params
+from . import stealth as V5S
 from . import traps as TR
 
 DOMAINS: tuple[str, ...] = (
@@ -188,6 +189,8 @@ class V4Plan:
     j_vars: dict[str, str] = field(default_factory=dict)
     padding_bytes: int = 0
     budget: EN.LiteralBudget | None = None
+    # Opt-in V5 active-decoy plan; None when stealth is off.
+    stealth: object | None = None
 
     @property
     def decoy_opcodes(self) -> list[int]:
@@ -254,6 +257,20 @@ def prepare_v4(ctx, program, built, layout, opts, base_bytes: int | None = None)
         rng, integrity, max(0, int(opts.decoy_traps)), ns
     )
 
+    # V5 opt-in active decoys. Built after the V4 integrity plan so the
+    # build-time digest salts the decoy tickets, and installed on ``layout`` so
+    # every guard_line (prelude + VM body) calls the reactor on a wrong ticket.
+    stealth_plan = None
+    if bool(getattr(opts, "stealth", False)):
+        excluded = set(int(v) for v in integrity.real_opcode_values)
+        excluded |= {int(d.key) for d in traps.decoys}
+        count = max(4, int(opts.decoy_traps) * 2)
+        stealth_rng = random.Random((int(opts.seed) ^ 0x5357EA17) & 0xFFFFFFFF)
+        stealth_plan = V5S.make_stealth_plan(
+            stealth_rng, ns, count, integrity.global_digest, excluded
+        )
+    object.__setattr__(layout, "stealth_plan", stealth_plan)
+
     # The measured base already contains the marker/trap/verify skeleton, so
     # the only remaining budget room goes to the inert symbol-soup padding.
     budget = EN.LiteralBudget(
@@ -304,6 +321,7 @@ def prepare_v4(ctx, program, built, layout, opts, base_bytes: int | None = None)
         j_vars=j_vars,
         padding_bytes=padding,
         budget=budget,
+        stealth=stealth_plan,
     )
     ctx.v4 = plan
     return plan

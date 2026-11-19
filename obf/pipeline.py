@@ -47,6 +47,9 @@ class Result:
     # Private v4 integrity/trap/entropy plan (Python-side only; used by tests
     # and reports, never embedded in the emitted chunk).
     v4: object | None = None
+    # Private V5 active-decoy plan; None when stealth is off. Also reachable as
+    # ``result.v4.stealth`` for compatibility with the V4 plan object.
+    stealth: object | None = None
 
 
 PRESETS: dict[str, dict] = {
@@ -55,21 +58,21 @@ PRESETS: dict[str, dict] = {
         encode_constants=True, flatten=False, junk=0, flatten_ratio=0.0,
         min_stmts=3, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=0, pool_slices=2, vm_fragments=2,
-        decoy_traps=8, entropy_budget=40000,
+        decoy_traps=8, entropy_budget=40000, stealth=False,
     ),
     "medium": dict(
         vm=True, virtualize_globals=True, virtualize_properties=True,
         encode_constants=True, flatten=True, junk=2, flatten_ratio=0.75,
         min_stmts=3, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=4096, pool_slices=3, vm_fragments=4,
-        decoy_traps=24, entropy_budget=60000,
+        decoy_traps=24, entropy_budget=60000, stealth=False,
     ),
     "heavy": dict(
         vm=True, virtualize_globals=True, virtualize_properties=True,
         encode_constants=True, flatten=True, junk=8, flatten_ratio=1.0,
         min_stmts=1, integrity=True, anti_env=False, anti_tamper=False,
         nested_vm=False, blob_pad=65536, pool_slices=5, vm_fragments=7,
-        decoy_traps=64, entropy_budget=100000,
+        decoy_traps=64, entropy_budget=100000, stealth=False,
     ),
 }
 
@@ -321,6 +324,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
     extra_hash = None
     if opts.anti_tamper:
         extra_hash = hardening.fnv(built.blob + built.key, 0x9E3779B9)
+    stealth_plan = getattr(getattr(ctx, "v4", None), "stealth", None)
 
     prelude = runtime.render_runtime(
         names,
@@ -340,6 +344,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         extra_hash_seed=0x9E3779B9,
         runtime_consts=runtime_consts,
         vm=opts.vm,
+        stealth_plan=stealth_plan,
     )
 
     if vm_program is not None:
@@ -400,6 +405,8 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "nested_vm": outer is not None,
         "anti_env": opts.anti_env,
         "anti_tamper": opts.anti_tamper,
+        "stealth": opts.stealth,
+        "stealth_decoys": stealth_plan.count if stealth_plan else 0,
         "blob_pad": opts.blob_pad,
         "flatten_ratio": opts.flatten_ratio,
         "junk": opts.junk,
@@ -451,6 +458,8 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "outer_meta_ops": outer.meta_count if outer else 0,
         "anti_env": opts.anti_env,
         "anti_tamper": opts.anti_tamper,
+        "stealth": opts.stealth,
+        "stealth_decoys": stealth_plan.count if stealth_plan else 0,
         "blob_pad_bytes": opts.blob_pad,
         "flatten_ratio": opts.flatten_ratio,
         "junk": opts.junk,
@@ -483,6 +492,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         stats=stats,
         source_map=source_map,
         v4=ctx.v4,
+        stealth=getattr(getattr(ctx, "v4", None), "stealth", None),
     )
 
 

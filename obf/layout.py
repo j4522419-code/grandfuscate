@@ -74,6 +74,9 @@ class Layout:
     field_keys: dict[str, int] = field(default_factory=dict)
     chunk_settings: dict[str, int] = field(default_factory=dict)
     integrity_salt: int = 0
+    # Set by ``obf.vm.integrity.prepare_v4`` when the opt-in V5 stealth mode is
+    # active. Guard lines then call the active-decoy reactor on a wrong ticket.
+    stealth_plan: object | None = None
 
     # -- classic dispatcher helpers ---------------------------------------
     def field(self, name: str) -> int:
@@ -192,7 +195,16 @@ class Layout:
             f"{self.bank_expr(key_expr)} ~= {bank}",
             f"{self.group_expr(domain, key_expr)} ~= {group}",
         ]
-        return f"if {' or '.join(checks)} then return {default} end"
+        # V5: on a wrong capability ticket, call the active-decoy reactor that
+        # is defined in the constant-pool prelude. Normal builds keep the
+        # original harmless default. The reactor is in scope for both prelude
+        # and VM-body guard lines because it is emitted before both.
+        target = (
+            self.stealth_plan.react_call(key_expr, ticket_var)
+            if self.stealth_plan is not None
+            else default
+        )
+        return f"if {' or '.join(checks)} then return {target} end"
 
     def function_selector(
         self,

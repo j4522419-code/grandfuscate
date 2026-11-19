@@ -61,7 +61,7 @@ _FORBIDDEN_FIELDS = frozenset(
 )
 _STABLE_CONSTANTS = (b"2166136261", b"16777619", b"4294967295", b"811C9DC5")
 _FORBIDDEN_GLOBALS = frozenset(
-    """string table math bit32 tonumber pairs error setmetatable getmetatable
+    """string table math bit32 coroutine tonumber pairs error setmetatable getmetatable
     tostring select rawset pcall print warn debug io os loadstring load require""".split()
 )
 _FORBIDDEN_MEMBER_CHAINS = frozenset(
@@ -70,6 +70,7 @@ _FORBIDDEN_MEMBER_CHAINS = frozenset(
         ("string", "match"), ("table", "concat"), ("table", "pack"),
         ("table", "unpack"), ("math", "floor"), ("bit32", "bxor"),
         ("bit32", "band"), ("bit32", "bor"),
+        ("coroutine", "yield"),
     }
 )
 

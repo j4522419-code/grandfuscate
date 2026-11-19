@@ -32,6 +32,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--place-id", type=int, help="lock output to a Roblox PlaceId")
     p.add_argument("--game-id", type=int, help="lock output to a Roblox GameId / UniverseId")
     p.add_argument("--verify", action="store_true", help="compile-check output with luau-compile")
+    p.add_argument(
+        "--stealth", "--fail-closed", dest="stealth", action="store_true",
+        help="opt-in V5 active decoys: fail-closed / poison reactions (off by default)",
+    )
     p.add_argument("--quiet", action="store_true")
     p.add_argument("--identify", metavar="FILE", help="report provenance for an output file")
     p.add_argument("--self-test", action="store_true", help="run the behaviour test suite")
@@ -70,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
         "nested_vm": False,
         "anti_env": False,
         "anti_tamper": False,
+        "stealth": bool(a.stealth),
     }
     if a.place_id is not None:
         overrides["place_id"] = a.place_id
@@ -120,6 +125,10 @@ def main(argv: list[str] | None = None) -> int:
             f"{s.get('vm_fragments')} VM fragments / {s.get('source_map_nodes')} private map nodes"
         )
         print(f"blob pad      : {s.get('blob_pad_bytes', 0)} B")
+        print(
+            f"stealth       : {'ON' if s.get('stealth') else 'OFF'} "
+            f"({s.get('stealth_decoys', 0)} active decoys)"
+        )
         print(f"chaff         : ratio {s.get('flatten_ratio')}, junk {s.get('junk')}, min {s.get('min_stmts')}, {s.get('vm_decoy_words', 0)} IR decoys")
         print(f"syntax check  : {'OK' if ok else 'FAILED'}" if a.verify else "")
         print(f"wrote         : {out_path}")

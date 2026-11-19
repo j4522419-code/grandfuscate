@@ -32,6 +32,7 @@ from tests import return_probe as RP  # noqa: E402
 from tests import test_publish as PUB  # noqa: E402
 from tests import vm_integrity_v4 as V4I  # noqa: E402
 from tests import high_entropy_v4 as V4E  # noqa: E402
+from tests import stealth_v5 as V5S  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -204,6 +205,7 @@ def main() -> int:
     publish_total = 0
     v4_integrity_total = 0
     v4_entropy_total = 0
+    v5_total = 0
     return_total = 0
     complex_total = 0
     hard_bad: list[str] = []
@@ -304,6 +306,7 @@ def main() -> int:
         and meta["defaults"]["nested_vm"] is False
         and meta["defaults"]["anti_env"] is False
         and meta["defaults"]["anti_tamper"] is False
+        and meta["defaults"]["stealth"] is False
         and meta["defaults"]["blob_pad"] == 4096
         and meta["defaults"]["flatten_ratio"] == 0.75
         and meta["limits"]["blob_pad_max"] == 65536
@@ -334,6 +337,7 @@ def main() -> int:
         and opts.nested_vm is False
         and opts.anti_env is False
         and opts.anti_tamper is False
+        and opts.stealth is False
         and opts.one_line is True
         and opts.junk <= 8
         and opts.min_stmts <= 16
@@ -876,7 +880,7 @@ def main() -> int:
     # 27. Loadstring publisher (mocked GitHub; no secrets or network).
     publish_total += PUB.run(failures)
 
-    print("\nvm integrity v4 / high-entropy verification")
+    print("\nvm integrity v4 / high-entropy / stealth v5 verification")
     print("-" * 68)
 
     # 28. VM integrity manifest, decoy traps, bounded windows, harmless default.
@@ -895,6 +899,14 @@ def main() -> int:
     print(f"{'high entropy v4':<24} {'OK' if v4e_ok else 'FAIL':<8} "
           f"{v4_entropy_total} entropy/gate checks")
 
+    # 30. V5 opt-in active decoys: fail-closed / poison, embedded in real path.
+    third_total += 1
+    before = len(failures)
+    v5_total += V5S.run(failures)
+    v5_ok = len(failures) == before
+    print(f"{'stealth v5':<24} {'OK' if v5_ok else 'FAIL':<8} "
+          f"{v5_total} active-decoy checks")
+
     print(
         f"\n{total} base transform/run + {vm_total} VM-mode transform/run + "
         f"{compat_total} compatibility differential + {scan_total} production scans + "
@@ -902,7 +914,8 @@ def main() -> int:
         f"{hard_total} reliability + {second_total} second-pass + "
         f"{third_total} third-pass + {publish_total} loadstring + "
         f"{v4_integrity_total} vm-integrity-v4 + "
-        f"{v4_entropy_total} high-entropy-v4 checks, "
+        f"{v4_entropy_total} high-entropy-v4 + "
+        f"{v5_total} stealth-v5 checks, "
         f"{len(failures)} failure(s)"
     )
     if failures:

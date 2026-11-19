@@ -1,11 +1,14 @@
 Grandfuscate deployment bundle
-Generated: 2026-11-19T17:26:55.061920+00:00
+Generated: reproducible V5 workspace snapshot (see SHA256SUMS.txt)
 Type: clean GitHub source bundle; tools/ omitted and gitignored
-Regular files: 162
+Regular files: 169
 Extra generated files: 0
 V4 build: VM integrity verification, opaque decoy traps, high-entropy output.
+V5 opt-in stealth: active fail-closed/poison decoys embedded in real handler tables (--stealth / API stealth).
 V4 caps: OBF_MAX_BODY=33554432, OBF_MAX_PUBLISH=16777216 (set in Render Environment).
 Loadstring publisher: included; helper text removed; set OBF_GITHUB_* in Render Environment (see LOADSTRINGS.md)
+V5 deploy guide: DEPLOY-V5-TO-RENDER.md. V5 remains opt-in (stealth=false by default).
+Bundled V5 guide is hash/page-normalized; exact ZIP SHA-256 and stable page are in PUBLIC-DOWNLOAD-LINKS.md / the public guide.
 No .git directory is included. No remote, push or deployment was performed.
 Windows users: see WINDOWS-STEP-BY-STEP.md.
 V4 deploy guide: DEPLOY-V4-TO-RENDER.md.

@@ -43,6 +43,7 @@ ALIAS_PATHS: dict[str, tuple[str, ...]] = {
     "PAIRS": ("pairs",),
     "ERROR": ("error",),
     "GETMETATABLE": ("getmetatable",),
+    "CYIELD": ("coroutine", "yield"),
     "G": ("_G",),
 }
 
@@ -75,6 +76,7 @@ MEMBER_REWRITES: dict[tuple[str, str], str] = {
     ("bit32", "bxor"): "BXOR",
     ("bit32", "band"): "BAND",
     ("bit32", "bor"): "BOR",
+    ("coroutine", "yield"): "CYIELD",
 }
 
 # Keywords and globals are never treated as local identifiers by the
@@ -233,7 +235,7 @@ def _rewrite(raw: str, alias_name: str, keymap: dict[str, str]) -> str:
                 i += 1
                 continue
             if (
-                name in ("string", "table", "bit32", "math")
+                name in ("string", "table", "bit32", "math", "coroutine")
                 and i + 2 < n
                 and tokens[i + 1].kind == "symbol"
                 and tokens[i + 1].text == b"."

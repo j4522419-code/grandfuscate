@@ -58,6 +58,9 @@ class Options:
     """Preset-scaled count of opaque decoy VM handlers."""
     entropy_budget: int = 60000
     """Maximum extra source bytes added by literal inflation/padding."""
+    stealth: bool = False
+    """Opt-in V5 active decoys / fail-closed reactions. Off by default; normal
+    builds stay compatible with ordinary executors. See PLAN-stealth-v5.md."""
 
 
 @dataclass
