@@ -88,8 +88,6 @@
     border:1px solid var(--line);
   }
   #loadstringStatus{min-height:16px;font-weight:600}
-  .hint{color:#404040;font-size:11px}
-  .hint a{color:#000000;text-decoration:underline}
   #rawUrlLine{font:11px/1.4 var(--mono);word-break:break-all}
   #rawUrlLink{color:#000000;text-decoration:underline}
 
@@ -155,11 +153,6 @@
     <div class="tab">Loadstring</div>
     <div class="body">
       <button type="button" id="makeLoadstring" class="primary">make it a loadstring!</button>
-      <div class="hint">
-        Publishes the obfuscated output to a public GitHub raw file and builds one
-        executor-style loader. Requires the <code>OBF_GITHUB_*</code> settings in
-        Render; see <a href="/LOADSTRINGS.md">LOADSTRINGS.md</a>.
-      </div>
       <textarea id="loadstringOut" readonly spellcheck="false" wrap="off" placeholder="Your loadstring will appear here."></textarea>
       <div class="row">
         <button type="button" id="copyLoadstring">Copy loadstring</button>
