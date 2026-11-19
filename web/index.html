@@ -79,6 +79,20 @@
   }
   #error{min-height:18px;margin-top:6px;font-weight:600}
 
+  .loadstring{margin-top:8px;background:var(--panel);border:1px solid var(--line)}
+  .loadstring .body{padding:6px;display:flex;flex-direction:column;gap:6px}
+  .loadstring .primary{width:100%;grid-column:auto}
+  .loadstring .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  #loadstringOut{
+    flex:none;height:58px;min-height:58px;resize:vertical;
+    border:1px solid var(--line);
+  }
+  #loadstringStatus{min-height:16px;font-weight:600}
+  .hint{color:#404040;font-size:11px}
+  .hint a{color:#000000;text-decoration:underline}
+  #rawUrlLine{font:11px/1.4 var(--mono);word-break:break-all}
+  #rawUrlLink{color:#000000;text-decoration:underline}
+
   @media(max-width:900px){.panes{grid-template-columns:1fr}.pane{min-height:360px}}
 </style>
 </head>
@@ -137,6 +151,24 @@
     </section>
   </div>
 
+  <section class="loadstring">
+    <div class="tab">Loadstring</div>
+    <div class="body">
+      <button type="button" id="makeLoadstring" class="primary">make it a loadstring!</button>
+      <div class="hint">
+        Publishes the obfuscated output to a public GitHub raw file and builds one
+        executor-style loader. Requires the <code>OBF_GITHUB_*</code> settings in
+        Render; see <a href="/LOADSTRINGS.md">LOADSTRINGS.md</a>.
+      </div>
+      <textarea id="loadstringOut" readonly spellcheck="false" wrap="off" placeholder="Your loadstring will appear here."></textarea>
+      <div class="row">
+        <button type="button" id="copyLoadstring">Copy loadstring</button>
+        <span id="loadstringStatus" aria-live="polite"></span>
+      </div>
+      <div id="rawUrlLine"><a id="rawUrlLink" href="#" target="_blank" rel="noopener" hidden></a></div>
+    </div>
+  </section>
+
   <div id="error"></div>
 </div>
 
@@ -144,11 +176,21 @@
 "use strict";
 const $ = id => document.getElementById(id);
 
+function clearLoadstring() {
+  $("loadstringOut").value = "";
+  $("loadstringStatus").textContent = "";
+  const a = $("rawUrlLink");
+  a.href = "#";
+  a.textContent = "";
+  a.hidden = true;
+}
+
 $("srcFile").addEventListener("change", async e => {
   const f = e.target.files[0];
   if (!f) return;
   $("src").value = await f.text();
   $("error").textContent = "";
+  clearLoadstring();
   e.target.value = "";
 });
 
@@ -180,6 +222,7 @@ $("options").addEventListener("submit", async e => {
   const btn = $("run");
   const err = $("error");
   err.textContent = "";
+  clearLoadstring();
   if (!$("src").value.trim()) { err.textContent = "Input is empty."; return; }
   btn.disabled = true;
   try {
@@ -200,6 +243,38 @@ $("options").addEventListener("submit", async e => {
   }
 });
 
+$("makeLoadstring").onclick = async () => {
+  const out = $("out").value;
+  const status = $("loadstringStatus");
+  const btn = $("makeLoadstring");
+  if (!out.trim()) { status.textContent = "Obfuscate first."; return; }
+  clearLoadstring();
+  btn.disabled = true;
+  status.textContent = "Uploading to GitHub raw...";
+  try {
+    const r = await fetch("/api/loadstring", {
+      method: "POST",
+      headers: Object.assign({}, authHeaders(), { "Content-Type": "application/json" }),
+      body: JSON.stringify({ output: out })
+    });
+    let j;
+    try { j = await r.json(); }
+    catch (_) { throw new Error("API returned a non-JSON response (" + r.status + ")"); }
+    if (!r.ok || j.ok === false) throw new Error(j.error || ("HTTP " + r.status));
+    $("loadstringOut").value = j.loadstring;
+    const a = $("rawUrlLink");
+    a.href = j.raw_url;
+    a.textContent = j.raw_url;
+    a.hidden = false;
+    const n = typeof j.bytes === "number" ? " (" + j.bytes.toLocaleString() + " bytes)" : "";
+    status.textContent = "Published" + n + ". Copy the loadstring above.";
+  } catch (ex) {
+    status.textContent = "Error: " + ex.message;
+  } finally {
+    btn.disabled = false;
+  }
+};
+
 async function copyText(t) {
   try { await navigator.clipboard.writeText(t); return true; }
   catch (_) {
@@ -215,6 +290,13 @@ async function copyText(t) {
 $("copy").onclick = async () => {
   const ok = await copyText($("out").value);
   $("error").textContent = ok ? "" : "Copy failed.";
+};
+
+$("copyLoadstring").onclick = async () => {
+  const t = $("loadstringOut").value;
+  if (!t) { $("loadstringStatus").textContent = "Generate a loadstring first."; return; }
+  const ok = await copyText(t);
+  $("loadstringStatus").textContent = ok ? "Copied loadstring." : "Copy failed.";
 };
 
 $("download").onclick = () => {

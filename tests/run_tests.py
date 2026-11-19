@@ -29,6 +29,7 @@ from tests import build_diversity as BD  # noqa: E402
 from tests import compare_versions as CV  # noqa: E402
 from tests import runtime_analysis as RA  # noqa: E402
 from tests import return_probe as RP  # noqa: E402
+from tests import test_publish as PUB  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -193,6 +194,7 @@ def main() -> int:
     scan_total = 0
     second_total = 0
     third_total = 0
+    publish_total = 0
     return_total = 0
     complex_total = 0
     hard_bad: list[str] = []
@@ -797,13 +799,14 @@ def main() -> int:
     brand = b"-- obfuscated by " + b"grandfuscate"
     doc_paths = [
         "README.md", "NEXT_STEPS.md", "PLAN-anti-deobfuscation.md",
+        "LOADSTRINGS.md",
         "ARCHITECTURE.md", "ROADMAP.md", "DEPLOY.md", "config/README.md",
         "REPORT-vm-hardening.md", "REPORT-anti-analysis-v2.md",
         "REPORT-anti-analysis-v3.md", "BENCHMARKS-anti-analysis.md",
         "BENCHMARKS-old-vs-improved.md", "RUNTIME-ANALYSIS.md",
         "RUNTIME-ANALYSIS-V3.md", "examples/roblox_sample.luau",
         "tests/anti_analysis.py", "tests/run_tests.py", "obf/pipeline.py",
-        "obf/cli.py", "obf/web.py",
+        "obf/cli.py", "obf/web.py", "obf/publish.py", "tests/test_publish.py",
     ]
     for rel in doc_paths:
         path = os.path.join(ROOT, rel)
@@ -861,12 +864,15 @@ def main() -> int:
         failures.append("git remote is configured; deployment must remain local-only")
     print(f"{'local-only repo':<24} {'OK' if local_only else 'FAIL':<8}")
 
+    # 27. Loadstring publisher (mocked GitHub; no secrets or network).
+    publish_total += PUB.run(failures)
+
     print(
         f"\n{total} base transform/run + {vm_total} VM-mode transform/run + "
         f"{compat_total} compatibility differential + {scan_total} production scans + "
         f"{return_total} return probes + {complex_total} complex checks + "
         f"{hard_total} reliability + {second_total} second-pass + "
-        f"{third_total} third-pass checks, "
+        f"{third_total} third-pass + {publish_total} loadstring checks, "
         f"{len(failures)} failure(s)"
     )
     if failures:

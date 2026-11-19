@@ -21,9 +21,11 @@ The partial “uncap” edits were reverted. The app is back to its verified thi
 | `DOWNLOADS-AND-DEPLOY.md` | This guide | Instructions |
 | `render-large-source.env.example` | Environment-variable template | Copy into Render’s Environment panel |
 | `setup-local.sh` | Recreates the baseline `tools` symlink and optionally runs the self-test | Local testing |
-| `SHA256SUMS.txt` | SHA-256 checksums for the two zip files | Verifying downloads |
+| `SHA256SUMS.txt` | SHA-256 checksums for the three zip bundles | Verifying downloads |
+| `LOADSTRINGS.md` | Setup guide for the new loadstring button | GitHub token + Render env vars |
+| `TEST-RESULTS-loadstring.txt` | Full local verification log | Evidence |
 
-In the Arena workspace, open the file list, click a file, and use the download control. The Markdown guide previews in-app; the `.zip` files are downloads.
+In the Arena workspace, open the file list, click a file, and use the download control. The Markdown guide previews in-app; the `.zip` files are downloads. Fresh temporary public direct links are also supplied in chat and recorded in `PUBLIC-DOWNLOAD-LINKS.md`.
 
 ### External tools you may want
 
@@ -118,7 +120,7 @@ cd grandfuscate
 
 git init -b main
 git add .
-git commit -m "Grandfuscate: third-pass hardening and deployment files"
+git commit -m "Grandfuscate: loadstring publisher and deployment files"
 
 gh auth login
 gh repo create grandfuscate --public --source=. --remote=origin --push
@@ -130,6 +132,29 @@ Use `--private` instead of `--public` if you want a private repo. If the reposit
 git remote add origin https://github.com/<your-username>/grandfuscate.git
 git push -u origin main
 ```
+
+### If you already have a GitHub repo connected to Render
+
+Use this instead of `gh repo create`. Replace `YOUR_USERNAME` and
+`YOUR_EXISTING_REPO` before running the commands. It preserves the existing
+`.git` folder and does **not** force-push.
+
+```bash
+cd ~
+rm -rf luau-obf-update grandfuscate-unzip
+gh auth login
+git clone https://github.com/YOUR_USERNAME/YOUR_EXISTING_REPO.git luau-obf-update
+unzip ~/Downloads/grandfuscate-github-repo.zip -d ~/grandfuscate-unzip
+cd luau-obf-update
+find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+cp -a ~/grandfuscate-unzip/grandfuscate/. .
+git add -A
+git commit -m "Grandfuscate: loadstring publisher"
+git push origin main
+```
+
+If your existing branch is not `main`, replace `main` with that branch name.
+Render will auto-deploy from the connected repo after this push.
 
 ### Option B: use the included helper
 
@@ -185,6 +210,24 @@ Render supplies `PORT`; do not set it manually. The app binds to `0.0.0.0`.
 
 Copy-paste template: see `render-large-source.env.example`.
 
+### Optional loadstring publisher
+
+The new `make it a loadstring!` button needs a free public GitHub raw repo and
+these extra Render Environment values:
+
+| Key | Value | Notes |
+|---|---|---|
+| `OBF_GITHUB_TOKEN` | fine-grained GitHub token | `Contents: Read and write` on one repo; never commit it. |
+| `OBF_GITHUB_OWNER` | your GitHub username | Used in the raw URL. |
+| `OBF_GITHUB_REPO` | `grandfuscate-loads` | Must be public. |
+| `OBF_GITHUB_BRANCH` | `main` | Already in `render.yaml`; override only if different. |
+| `OBF_GITHUB_PATH` | `loadstrings` | Folder inside the repo. |
+| `OBF_MAX_PUBLISH` | `8388608` | 8 MiB publish cap. |
+
+On an existing Render Blueprint, add the `sync: false` values manually under
+**service → Environment**. See `LOADSTRINGS.md` for the exact GitHub token and
+Render dashboard steps.
+
 Important: the revert restored the default 256 KiB source cap. Setting `OBF_MAX_SOURCE` in Render raises it for that deployment only; it does not modify the checked-in code. If you also want `/api/identify` to accept files larger than 8 MiB, that requires a separate code change.
 
 ### Docker alternative
@@ -230,6 +273,9 @@ Expected:
 | CORS error in browser | Set `OBF_ALLOWED_ORIGIN` to the exact Render URL. |
 | `/api/identify` rejects a large generated file | Identify cap is hard-coded to 8 MiB after the revert; ask for a code change if needed. |
 | GitHub Pages shows a static page but API fails | Use Render or another Python host; the backend is not static. |
+| `Loadstring publishing is not configured` | Add `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER`, `OBF_GITHUB_REPO` in Render → service → Environment, then redeploy. |
+| `Obfuscate first.` | Click **Obfuscate** before **make it a loadstring!**. |
+| `GitHub denied the request (403)` | Check token repo access and `Contents: Read and write`; see `LOADSTRINGS.md`. |
 | Free tier feels slow on first request | Expected cold start; wait 30–60 seconds and retry. |
 
 ---
@@ -243,7 +289,8 @@ Expected:
 - [ ] Pushed `main` with `git push -u origin main` or `gh repo create ... --push`
 - [ ] Created Render Blueprint from `render.yaml`
 - [ ] Set `OBF_MAX_SOURCE`, `OBF_MAX_BODY`, `OBF_TIMEOUT`, `OBF_ALLOWED_ORIGIN`, `OBF_API_KEY`
-- [ ] Smoke-tested `/api/health`, `/api/meta`, `/api/obfuscate`
+- [ ] Optional: set `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER`, `OBF_GITHUB_REPO` and friends for loadstrings
+- [ ] Smoke-tested `/api/health`, `/api/meta`, `/api/obfuscate`, optional `/api/loadstring`
 - [ ] No secrets committed to GitHub
 
 This remains client-side Luau obfuscation, not encryption or real security. A capable executor-specific debugger can still inspect runtime values; real security needs server-side authority. No commercial or live Roblox executor certification is claimed.

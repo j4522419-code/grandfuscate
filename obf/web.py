@@ -18,10 +18,14 @@ split handler tables and distributed late-decoded constant slices; a private
 source map is kept out of the production chunk. Nested dispatch,
 anti-environment poisoning and oversized padding are disabled so ordinary
 Luau/Roblox environments do not poison the constant decoder. No `loadstring`
-is emitted by any build.
+is emitted by any build. The optional web publisher wraps a finished build in
+a separate `loadstring(game:HttpGet(...))()` loader; that wrapper is not part
+of the protected chunk.
 
 Deployment is paused: see DEPLOY.md. No Git remote, push, GitHub repo or
-Render service has been created.
+Render service has been created here. The service keeps no local persistent
+storage; the optional publisher stores public raw files in an external GitHub
+repo configured by environment variables.
 """
 from __future__ import annotations
 
@@ -45,6 +49,7 @@ from obf import __version__  # noqa: E402
 from obf import ast as A  # noqa: E402
 from obf import format as F  # noqa: E402
 from obf import pipeline  # noqa: E402
+from obf import publish  # noqa: E402
 
 WEB_DIR = ROOT / "web"
 PORT = int(os.environ.get("PORT", "8000"))
@@ -52,6 +57,12 @@ MAX_SOURCE = int(os.environ.get("OBF_MAX_SOURCE", "262144"))
 # Heavy builds stay well under 1 MB; identify accepts the file back.
 MAX_BODY = int(os.environ.get("OBF_MAX_BODY", str(16 * 1024 * 1024)))
 MAX_IDENTIFY = 8 * 1024 * 1024
+try:
+    MAX_PUBLISH = int(os.environ.get("OBF_MAX_PUBLISH", str(publish.DEFAULT_MAX_PUBLISH)))
+except ValueError:
+    MAX_PUBLISH = publish.DEFAULT_MAX_PUBLISH
+if MAX_PUBLISH <= 0:
+    MAX_PUBLISH = publish.DEFAULT_MAX_PUBLISH
 OBF_TIMEOUT = int(os.environ.get("OBF_TIMEOUT", "60"))
 os.environ.setdefault("OBF_TIMEOUT", str(OBF_TIMEOUT))
 RATE_LIMIT = int(os.environ.get("OBF_RATE_LIMIT", "24"))
@@ -71,6 +82,7 @@ STATIC = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/favicon.svg": ("favicon.svg", "image/svg+xml"),
+    "/LOADSTRINGS.md": ("../LOADSTRINGS.md", "text/markdown; charset=utf-8"),
 }
 
 # Only harmless per-request tweaks are accepted. The single-VM policy is
@@ -265,6 +277,16 @@ def do_identify(payload: dict) -> dict:
         raise ValueError(f"invalid key file: {exc}") from exc
 
 
+def do_loadstring(payload: dict) -> dict:
+    """Publish already-obfuscated output and return a loadstring wrapper."""
+    if not isinstance(payload, dict):
+        raise ValueError("request body must be a JSON object")
+    output = payload.get("output")
+    if not isinstance(output, str):
+        raise ValueError("`output` must be a string")
+    return publish.publish_output(output)
+
+
 def health() -> dict:
     tools = {
         n: os.path.isfile(os.path.join(A.TOOLS_DIR, n))
@@ -275,7 +297,8 @@ def health() -> dict:
         "ok": tools["luau-ast"] and tools["luau-compile"],
         "version": __version__,
         "tools": tools,
-        "policy": "parse + compile only; user Luau code is never executed",
+        "loadstring_publish": publish.is_configured(),
+        "policy": "parse + compile only; user Luau code is never executed; output is returned, not stored locally",
     }
 
 
@@ -309,6 +332,7 @@ def meta() -> dict:
             "max_source_bytes": MAX_SOURCE,
             "max_body_bytes": MAX_BODY,
             "max_identify_bytes": MAX_IDENTIFY,
+            "max_publish_bytes": MAX_PUBLISH,
             "timeout_seconds": OBF_TIMEOUT,
             "rate_limit_per_minute": RATE_LIMIT,
             "junk_max": RANGES["junk"][1],
@@ -328,8 +352,15 @@ def meta() -> dict:
             "min_stmts": 3,
             "flatten_ratio": 0.75,
         },
+        "loadstring_publish": {
+            "enabled": publish.is_configured(),
+            "backend": "github",
+            "requires_api_key": bool(API_KEY),
+            "max_publish_bytes": MAX_PUBLISH,
+            "wrapper": "loadstring(game:HttpGet(<pinned raw url>))()",
+        },
         "requires_api_key": bool(API_KEY),
-        "policy": "Your source is parsed/compiled, never executed. Nothing is stored on the server.",
+        "policy": "Your source is parsed/compiled, never executed. Obfuscated output is returned to you; the optional loadstring publisher stores only the public raw file in an external GitHub repo.",
     }
 
 
@@ -351,6 +382,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, X-API-Key")
         self.send_header("Access-Control-Max-Age", "600")
+        if self.close_connection:
+            self.send_header("Connection", "close")
         if ctype.startswith("text/html"):
             # No frame-ancestors directive: Render/iframe previews must work.
             self.send_header(
@@ -403,13 +436,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
-        if path not in ("/api/obfuscate", "/api/identify"):
+        if path not in ("/api/obfuscate", "/api/identify", "/api/loadstring"):
+            self.close_connection = True
             self._json(404, {"ok": False, "error": "not found"})
             return
         if API_KEY and self.headers.get("X-API-Key", "") != API_KEY:
+            # The body has not been read yet; close so it is not parsed as a
+            # second HTTP/1.1 request on a keep-alive connection.
+            self.close_connection = True
             self._json(401, {"ok": False, "error": "API key required (X-API-Key header)"})
             return
         if not _rate_ok(_client_ip(self)):
+            self.close_connection = True
             self._json(429, {"ok": False, "error": f"rate limit: {RATE_LIMIT} requests/minute"})
             return
         try:
@@ -417,21 +455,27 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             length = 0
         if length <= 0 or length > MAX_BODY:
+            self.close_connection = True
             self._json(413, {"ok": False, "error": "request body missing or too large"})
             return
         body = self.rfile.read(length)
         try:
             payload = json.loads(body.decode("utf-8"))
         except (ValueError, UnicodeDecodeError) as exc:
+            self.close_connection = True
             self._json(400, {"ok": False, "error": f"invalid JSON: {exc}"})
             return
         try:
             if path == "/api/obfuscate":
                 self._json(200, do_obfuscate(payload))
+            elif path == "/api/loadstring":
+                self._json(200, do_loadstring(payload))
             else:
                 self._json(200, do_identify(payload))
         except PayloadTooLarge as exc:
             self._json(413, {"ok": False, "error": str(exc)})
+        except publish.PublishError as exc:
+            self._json(exc.status, {"ok": False, "error": str(exc)})
         except (ValueError, TypeError) as exc:
             self._json(400, {"ok": False, "error": str(exc)})
         except A.ParseError as exc:
@@ -442,7 +486,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json(504, {"ok": False, "error": str(exc)})
         except Exception:  # noqa: BLE001
             traceback.print_exc()
-            self._json(500, {"ok": False, "error": "internal error while obfuscating"})
+            self._json(500, {"ok": False, "error": "internal error while processing request"})
 
 
 class Server(ThreadingHTTPServer):

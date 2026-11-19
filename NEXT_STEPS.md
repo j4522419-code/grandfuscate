@@ -8,6 +8,11 @@ zero top-level locals and no dynamic loader. The private source map stays out
 of the chunk. The workspace contains refreshed examples, reports, benchmarks,
 runtime-analysis results and a five-build diversity manifest.
 
+The web UI also has an optional loadstring publisher: `make it a loadstring!`
+uploads finished output to a public GitHub raw file and returns
+`loadstring(game:HttpGet(...))()`. It is local code only; no GitHub repo, token,
+remote, push or Render service has been created here. See `LOADSTRINGS.md`.
+
 Hosting remains paused. There is no Git remote, no push, no GitHub repository
 and no Render service. Do not create or push to an origin unless the user
 explicitly reverses that instruction.
@@ -46,7 +51,8 @@ python3 -m obf.cli --self-test
 3. Push the local `main` branch.
 4. Use `render.yaml` for the Render Blueprint, then wait for the free-tier cold
    start.
-5. Smoke-test `/api/health`, `/api/meta` and `/api/obfuscate`.
+5. Smoke-test `/api/health`, `/api/meta`, `/api/obfuscate` and, if configured,
+   `/api/loadstring`.
 
 None of those steps has been performed.
 

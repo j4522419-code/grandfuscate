@@ -1,6 +1,6 @@
 # Anti-analysis benchmarks
 
-Measured 2026-11-18T05:32:06.723377+00:00 with official Luau 0.747 (tools/luau).
+Measured 2026-11-19T02:54:42.635284+00:00 with official Luau 0.747 (tools/luau).
 Three process launches per measurement; min/median wall time and max/median peak RSS (`ru_maxrss`).
 RSS includes the interpreter's allocator baseline and can vary with process placement; small differences are not meaningful. Local engineering measurement only.
 
@@ -18,21 +18,21 @@ Input fixture: `tests/scan_fixture.luau` (485 B).
 
 | Build | Min ms | Median ms | Max RSS KiB | Median RSS KiB |
 |---|---:|---:|---:|---:|
-| original | 2.03 | 2.11 | 90,904 | 90,904 |
-| light | 13.64 | 14.46 | 90,904 | 90,904 |
-| medium | 15.80 | 16.11 | 90,904 | 90,904 |
-| heavy | 26.74 | 28.70 | 90,904 | 90,904 |
+| original | 2.05 | 2.21 | 93,096 | 93,096 |
+| light | 13.41 | 14.46 | 93,096 | 93,096 |
+| medium | 15.86 | 16.05 | 93,096 | 93,096 |
+| heavy | 27.95 | 30.13 | 93,096 | 93,096 |
 
 ## Runtime overhead
 
-Workload: `tests/bench_runtime.luau (5,000 loop iterations)`. Heavy build generation took 1136.5 ms.
+Workload: `tests/bench_runtime.luau (5,000 loop iterations)`. Heavy build generation took 1094.5 ms.
 
 | Build | Min ms | Median ms | Max RSS KiB | Median RSS KiB |
 |---|---:|---:|---:|---:|
-| original | 3.15 | 3.29 | 90,904 | 90,904 |
-| heavy | 1209.01 | 1219.38 | 90,904 | 90,904 |
+| original | 2.19 | 2.22 | 93,096 | 93,096 |
+| heavy | 1193.53 | 1209.12 | 93,096 | 93,096 |
 
-Median runtime overhead: **370.14x** original.
+Median runtime overhead: **545.05x** original.
 
 Third-pass distributed ticketed decoders and per-build group matrices add interpreter work; the suite uses a 650x gross-regression ceiling rather than the earlier single-router budget.
 

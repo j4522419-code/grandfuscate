@@ -40,6 +40,7 @@ source.luau
 - `obf/pipeline.py` — orchestration, public keys/stats, private source map and
   syntax validation.
 - `obf/cli.py`, `obf/web.py` — CLI and stdlib web service.
+- `obf/publish.py` — optional GitHub raw publisher for the loadstring button.
 
 ## Generated runtime
 

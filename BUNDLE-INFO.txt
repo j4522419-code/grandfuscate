@@ -1,8 +1,9 @@
 Grandfuscate deployment bundle
-Generated: 2026-11-18T06:28:27.949308+00:00
-Type: native Windows source bundle with official Luau 0.747 Windows tools
-Regular files: 141
-Extra generated files: 8
+Generated: 2026-11-19T03:05:37.573631+00:00
+Type: clean GitHub source bundle; tools/ omitted and gitignored
+Regular files: 145
+Extra generated files: 0
+Loadstring publisher: included; set OBF_GITHUB_* in Render Environment (see LOADSTRINGS.md)
 No .git directory is included. No remote, push or deployment was performed.
 Windows users: see WINDOWS-STEP-BY-STEP.md.
 Full deploy guide: DOWNLOADS-AND-DEPLOY.md.

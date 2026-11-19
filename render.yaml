@@ -27,3 +27,17 @@ services:
       # an X-API-Key header; leave blank to keep the instance open.
       - key: OBF_API_KEY
         sync: false
+      # Optional loadstring publisher. Set the three sync:false values manually
+      # on an existing Blueprint; see LOADSTRINGS.md.
+      - key: OBF_GITHUB_TOKEN
+        sync: false
+      - key: OBF_GITHUB_OWNER
+        sync: false
+      - key: OBF_GITHUB_REPO
+        sync: false
+      - key: OBF_GITHUB_BRANCH
+        value: "main"
+      - key: OBF_GITHUB_PATH
+        value: "loadstrings"
+      - key: OBF_MAX_PUBLISH
+        value: "8388608"

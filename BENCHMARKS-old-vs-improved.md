@@ -1,6 +1,6 @@
 # Old-vs-improved benchmark
 
-Measured 2026-11-18T05:35:58.061483+00:00 with official Luau 0.747 (tools/luau), seed 20261118. Old = `tests/baseline (frozen pre-second-pass engine)`. Three fresh Luau process launches per timing; min/median wall time and peak RSS (`ru_maxrss`) are local engineering numbers, not a red-team result.
+Measured 2026-11-19T02:58:39.331915+00:00 with official Luau 0.747 (tools/luau), seed 20261118. Old = `tests/baseline (frozen pre-second-pass engine)`. Three fresh Luau process launches per timing; min/median wall time and peak RSS (`ru_maxrss`) are local engineering numbers, not a red-team result.
 
 ## Output size
 
@@ -25,14 +25,14 @@ The old `print(67)` build exposed the identifying byte-0 comment, fixed checksum
 
 | Measurement | Original | Old | New |
 |---|---:|---:|---:|
-| Startup median ms | 2.10 | 6.43 | 16.03 |
-| Startup min ms | 2.01 | 6.31 | 15.68 |
-| Startup median RSS KiB | 118,048 | 118,048 | 118,048 |
-| Workload median ms | 2.80 | 424.88 | 1231.88 |
-| Workload min ms | 2.08 | 414.83 | 1191.69 |
-| Workload max RSS KiB | 118,048 | 118,048 | 118,048 |
+| Startup median ms | 2.91 | 9.62 | 16.72 |
+| Startup min ms | 2.78 | 6.72 | 16.27 |
+| Startup median RSS KiB | 113,428 | 113,428 | 113,428 |
+| Workload median ms | 2.31 | 419.31 | 1239.09 |
+| Workload min ms | 2.22 | 412.22 | 1235.82 |
+| Workload max RSS KiB | 113,428 | 113,428 | 113,428 |
 
-5,000-loop median overhead: old 151.6x, new 439.6x. Tree-walker cost remains the dominant runtime factor. The third-pass distributed ticketed decoder matrices add work relative to the old single-router build; 650x is a gross-regression sanity ceiling, not a speed target or a guarantee.
+5,000-loop median overhead: old 181.6x, new 536.6x. Tree-walker cost remains the dominant runtime factor. The third-pass distributed ticketed decoder matrices add work relative to the old single-router build; 650x is a gross-regression sanity ceiling, not a speed target or a guarantee.
 
 ## Caveat
 

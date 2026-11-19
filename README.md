@@ -111,9 +111,16 @@ PORT=8000 OBF_TIMEOUT=60 python3 -m obf.web
 ```
 
 The stdlib HTTP service parses and compile-checks untrusted Luau; it never
-executes user Luau. Endpoints: `/`, `/index.html`, `/favicon.svg`, `/api/health`,
-`/api/meta`, `/api/obfuscate`, `/api/identify`. Request-size, rate, concurrency,
-CORS and CSP limits are enabled. No persistent storage is used.
+executes user Luau. Endpoints: `/`, `/index.html`, `/favicon.svg`,
+`/LOADSTRINGS.md`, `/api/health`, `/api/meta`, `/api/obfuscate`,
+`/api/identify`, `/api/loadstring`. Request-size, rate, concurrency, CORS and
+CSP limits are enabled. No local persistent storage is used.
+
+The optional `POST /api/loadstring` publishes a finished output to a public
+GitHub raw file and returns `loadstring(game:HttpGet(...))()`. It is disabled
+until `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER` and `OBF_GITHUB_REPO` are set.
+See `LOADSTRINGS.md`. The generated chunk itself still contains no dynamic
+loader.
 
 ## Limitations
 

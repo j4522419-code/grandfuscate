@@ -191,7 +191,7 @@ Then:
 ```powershell
 git init -b main
 git add .
-git commit -m "Grandfuscate: third-pass hardening and deployment files"
+git commit -m "Grandfuscate: loadstring publisher and deployment files"
 gh repo create grandfuscate --public --source=. --remote=origin --push
 ```
 
@@ -210,6 +210,29 @@ Check:
 git remote -v
 git log -1 --oneline
 ```
+
+### If you already have a GitHub repo connected to Render
+
+Use this instead of creating a new repo. Replace `YOUR_USERNAME` and
+`YOUR_EXISTING_REPO` before running the commands. It preserves the existing
+`.git` folder and does **not** force-push.
+
+```powershell
+cd $env:USERPROFILE
+Remove-Item -Recurse -Force .\luau-obf-update, .\grandfuscate-unzip -ErrorAction SilentlyContinue
+gh auth login
+git clone https://github.com/YOUR_USERNAME/YOUR_EXISTING_REPO.git luau-obf-update
+Expand-Archive -LiteralPath "$env:USERPROFILE\Downloads\grandfuscate-github-repo.zip" -DestinationPath "$env:USERPROFILE\grandfuscate-unzip" -Force
+cd .\luau-obf-update
+Get-ChildItem -Force -Exclude .git | Remove-Item -Recurse -Force
+Get-ChildItem -LiteralPath "$env:USERPROFILE\grandfuscate-unzip\grandfuscate" -Force | Copy-Item -Destination . -Recurse -Force
+git add -A
+git commit -m "Grandfuscate: loadstring publisher"
+git push origin main
+```
+
+If your existing branch is not `main`, replace `main` with that branch name.
+Render will auto-deploy from the connected repo after this push.
 
 ---
 
@@ -238,6 +261,22 @@ OBF_API_KEY=REPLACE_WITH_A_LONG_RANDOM_SECRET
 Do **not** set `OBF_MAX_IDENTIFY`; after the revert, identify size is hard-coded to 8 MiB in `obf/web.py`.
 
 Do not set `PORT`; Render supplies it. Do not commit `OBF_API_KEY` to GitHub.
+
+For the optional loadstring button, also add these in the same Render
+**Environment** page. The first three are required for publishing:
+
+```text
+OBF_GITHUB_TOKEN=PASTE_YOUR_FINE_GRAINED_GITHUB_TOKEN_HERE
+OBF_GITHUB_OWNER=YOUR_GITHUB_USERNAME
+OBF_GITHUB_REPO=grandfuscate-loads
+OBF_GITHUB_BRANCH=main
+OBF_GITHUB_PATH=loadstrings
+OBF_MAX_PUBLISH=8388608
+```
+
+Do not commit the GitHub token. Create a public repo named
+`grandfuscate-loads` and a fine-grained token with `Contents: Read and write`.
+See `LOADSTRINGS.md` for the exact clicks.
 
 6. Click **Apply** / **Create Resources**.
 7. Wait for the first deploy. Free-tier cold starts can take roughly 30–60 seconds.
@@ -296,6 +335,9 @@ Expected:
 | `API key required` | Send `X-API-Key`, or clear `OBF_API_KEY` in Render. |
 | Build fails fetching Luau | Render needs outbound access to GitHub releases; retry the deploy. |
 | `/api/identify` rejects a large file | 8 MiB hard-coded limit; ask for a code change if needed. |
+| `Loadstring publishing is not configured` | Set `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER`, `OBF_GITHUB_REPO` in Render → service → Environment. |
+| `Obfuscate first.` | Click **Obfuscate** before **make it a loadstring!**. |
+| `GitHub denied the request (403)` | Check the token's selected repo and `Contents: Read and write`; see `LOADSTRINGS.md`. |
 
 ---
 
@@ -312,6 +354,7 @@ Expected:
 - [ ] Pushed `main` to GitHub
 - [ ] Created Render Blueprint
 - [ ] Set `OBF_MAX_SOURCE`, `OBF_TIMEOUT`, `OBF_API_KEY`, `OBF_ALLOWED_ORIGIN`
-- [ ] Smoke-tested `/api/health`, `/api/meta`, `/api/obfuscate`
+- [ ] Optional: set `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER`, `OBF_GITHUB_REPO` for loadstrings
+- [ ] Smoke-tested `/api/health`, `/api/meta`, `/api/obfuscate`, optional `/api/loadstring`
 
 No remote, push, GitHub repository, or Render service has been created by Arena. This remains client-side Luau obfuscation, not encryption or real security.

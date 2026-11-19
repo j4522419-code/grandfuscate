@@ -19,7 +19,9 @@ public preset list is only `light / medium / heavy`.
 - Zero comments; `return` at byte 0.
 - One line plus a trailing newline.
 - Zero top-level `local` declarations.
-- No dynamic loader (`loadstring`, `load(` or `require(`).
+- Production chunks contain no dynamic loader (`loadstring`, `load(` or
+  `require(`). The optional web button generates a separate loader wrapper;
+  see `LOADSTRINGS.md`.
 - No identifying brand or source-map marker in production bytes.
 - Public keys contain opaque numeric entry/boot layout IDs and a SHA-256 of the
   private source map, not the private map itself.
@@ -32,6 +34,7 @@ The simplified UI exposes only:
 - `light`, `medium`, `heavy` preset selector;
 - seed field;
 - obfuscate, copy and download actions;
+- `make it a loadstring!` and `Copy loadstring` actions, when configured;
 - syntax and size readouts.
 
 It does not expose nested VM, anti-environment, anti-tamper, padding, ratio or

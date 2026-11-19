@@ -1,53 +1,53 @@
 {
   "baseline": "tests/baseline (frozen pre-second-pass engine)",
-  "created": "2026-11-18T05:35:58.061483+00:00",
+  "created": "2026-11-19T02:58:39.331915+00:00",
   "performance": {
     "measures": {
       "new_runtime": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 1.231875753001077,
-        "seconds_min": 1.1916893320012605
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 1.2390867930007516,
+        "seconds_min": 1.2358204550037044
       },
       "new_startup": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 0.01603054099905421,
-        "seconds_min": 0.01568363899787073
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 0.01671861100476235,
+        "seconds_min": 0.016266233003989328
       },
       "old_runtime": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 0.4248784949995752,
-        "seconds_min": 0.41483109399996465
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 0.4193060520046856,
+        "seconds_min": 0.41222457100229803
       },
       "old_startup": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 0.006432666999899084,
-        "seconds_min": 0.006311492001259467
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 0.009623147998354398,
+        "seconds_min": 0.006715124996844679
       },
       "original_runtime": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 0.002802461000101175,
-        "seconds_min": 0.002081507002003491
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 0.0023092419942258857,
+        "seconds_min": 0.0022247119995881803
       },
       "original_startup": {
-        "rss_kib_max": 118048,
-        "rss_kib_median": 118048,
-        "seconds_median": 0.0021005560010962654,
-        "seconds_min": 0.002007724997383775
+        "rss_kib_max": 113428,
+        "rss_kib_median": 113428,
+        "seconds_median": 0.0029064600021229126,
+        "seconds_min": 0.0027786669961642474
       }
     },
     "overhead_median": {
-      "new": 439.5692760600785,
-      "old": 151.6090660973466
+      "new": 536.5772821120568,
+      "old": 181.57735441029308
     },
     "startup_median_ms": {
-      "new": 16.03054099905421,
-      "old": 6.432666999899084,
-      "original": 2.1005560010962654
+      "new": 16.71861100476235,
+      "old": 9.623147998354398,
+      "original": 2.9064600021229126
     },
     "startup_source": "local x = 1",
     "workload": "tests/bench_runtime.luau (5,000 loop iterations)"

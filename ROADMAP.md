@@ -18,6 +18,8 @@
 - [x] Third-pass ticketed group matrices with no central decoder/dispatcher,
       per-build VM structure, spread source constants and exact Hello World
       production/runtime-analysis evidence.
+- [x] Optional GitHub raw loadstring publisher with `/api/loadstring`, UI
+      button, mocked tests and `LOADSTRINGS.md` setup guide.
 - [x] Refreshed examples, reports, benchmark sanity ceilings and documentation.
 
 ## Not claimed / not done

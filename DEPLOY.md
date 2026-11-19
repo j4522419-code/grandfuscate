@@ -14,6 +14,8 @@ workspace live preview only.
 - `obf/fetch_tools.py` — downloads official Luau 0.747 at build time; `tools/`
   is gitignored.
 - `push_to_github.sh` — helper script only; it has not been run.
+- `obf/publish.py` — optional GitHub raw loadstring publisher.
+- `LOADSTRINGS.md` — setup guide for the new `make it a loadstring!` button.
 
 ## Local run
 
@@ -32,7 +34,8 @@ enabled. Temp files are deleted.
 2. Create a GitHub repository and add the origin.
 3. Push the local `main` branch.
 4. Create the Render Blueprint from `render.yaml`.
-5. Smoke-test `/api/health`, `/api/meta` and `/api/obfuscate`.
+5. Smoke-test `/api/health`, `/api/meta`, `/api/obfuscate` and, if configured,
+   `/api/loadstring`.
 6. Expect a Render free-tier cold start of roughly 30–60 seconds.
 
 GitHub Pages alone is insufficient: the UI calls same-origin API endpoints and
@@ -42,3 +45,13 @@ the backend is a Python web service, not a static site.
 
 The API does not execute user Luau, but generated output is still client-side
 obfuscation. It is not real security. Roblox scripts need server-side authority.
+
+## Optional loadstring publisher
+
+The UI includes `make it a loadstring!` and `Copy loadstring`. The feature uses
+`POST /api/loadstring`, which publishes the obfuscated output to a public GitHub
+raw file and returns an executor-style loader. It requires a free public GitHub
+repo, a fine-grained token with `Contents: Read and write`, and the
+`OBF_GITHUB_*` variables in Render Environment. See `LOADSTRINGS.md` for exact
+steps. No token is committed here, and no GitHub repo or Render service has
+been created by Arena.
