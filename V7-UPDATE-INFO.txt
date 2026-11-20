@@ -1,0 +1,6 @@
+Grandfuscate V7 source update, based on deployed V5 main.
+Expected Git base commit: a567ed0b758f3c010b66f479f62d5d53f58eeee8
+Contains only changed/new source, tests, examples and documentation; excludes .git, tools, old bundle archives, download mirrors, and generated test/build cache files.
+Validation: tests/run_tests.py ALL GREEN, 0 failures, RC=0; tests/crypto_v7.py 248 checks; local Render-like API smoke passed.
+Public Render is not changed by this archive. The included PowerShell deployment helper must be run against your clean Windows clone.
+Files included: 70

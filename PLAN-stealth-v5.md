@@ -1,12 +1,11 @@
 # Plan: V5 stealth / fail-closed active decoys
 
-Status: **IMPLEMENTED locally, V5 bundles/links prepared — full suite ALL GREEN
-(507 checks, 0 failures), NOT deployed.** This is a follow-up to the V4 build
-that is already on Render. It is an opt-in local/API flag. V5 ZIPs,
-`SHA256SUMS.txt`, `PUBLIC-DOWNLOAD-LINKS.md` and
-`DEPLOY-V5-TO-RENDER.md` have been rebuilt and verified, but no commit, push,
-remote, token or deploy was performed here. Standalone `tests/stealth_v5.py`:
-**92 checks, ALL GREEN**. See `REPORT-stealth-v5.md`,
+Status: **IMPLEMENTED and DEPLOYED by the user — full suite ALL GREEN, 0
+failures.** V5 was pushed as `a567ed0` on 2026-11-19 and is live; see
+`DEPLOY-V5-STATUS.md` and `TEST-RESULTS-v5-live-smoke.txt` for the verified
+post-deploy state. This plan was written before that push and remains part of
+the deployed bundle. It is an opt-in local/API flag. Standalone
+`tests/stealth_v5.py`: **92 checks, ALL GREEN**. See `REPORT-stealth-v5.md`,
 `TEST-RESULTS-stealth-v5.txt` and `TEST-RESULTS-v5-full-suite.txt`.
 
 ## What the user asked for

@@ -223,7 +223,7 @@ ALL GREEN
 GET /api/health
 {"ok": true, "version": "0.1.0", "tools": {"luau-ast": true, "luau-compile": true, "luau": true, "luau-analyze": true}, "loadstring_publish": false, "policy": "parse + compile only; user Luau code is never executed; output is returned, not stored locally"}
 GET /api/meta loadstring_publish
-{"loadstring_publish": {"enabled": false, "backend": "github", "requires_api_key": true, "max_publish_bytes": 8388608, "wrapper": "loadstring(game:HttpGet(<pinned raw url>))()"}, "max_publish_bytes": 8388608, "requires_api_key": true}
+{"loadstring_publish": {"enabled": false, "backend": "github", "requires_api_key": true, "max_publish_bytes": 8388608, "wrapper": "--protected by grand6_7 (on discord)\nloadstring(game:HttpGet(<pinned raw url>))()"}, "max_publish_bytes": 8388608, "requires_api_key": true}
 GET /LOADSTRINGS.md
 200 text/markdown; charset=utf-8
 POST /api/loadstring wrong key

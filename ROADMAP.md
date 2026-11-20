@@ -5,7 +5,7 @@
 - [x] Official Luau 0.747 parsing, compile checks and behaviour tests.
 - [x] One polymorphic VM runtime with shuffled 32-bit opcodes and encoded IR.
 - [x] Light, medium and heavy presets with safe one-line output.
-- [x] Return at byte 0, zero comments, zero top-level locals, no dynamic loader.
+- [x] Required top banner, return-first body, no other comments, no top-level locals, no dynamic loader.
 - [x] Lazy/chunked constant-pool and VM-stream payload storage.
 - [x] Per-build structural layout, randomized slot bases and numeric field keys.
 - [x] Removal of stable router, field, checksum, format and library wording

@@ -2,8 +2,9 @@
 
 The obfuscator itself never emits a dynamic loader. This module publishes a
 finished protected chunk to a public GitHub repository and returns a separate
-executor-style wrapper:
+executor-style wrapper, also starting with the required Luau comment:
 
+    --protected by grand6_7 (on discord)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/..."))()
 
 Only the Python standard library is used. All secrets stay in server-side
@@ -19,6 +20,8 @@ import secrets
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from urllib import error, parse, request
+
+from .banner import BANNER_TEXT
 
 API_ROOT = "https://api.github.com"
 RAW_ROOT = "https://raw.githubusercontent.com"
@@ -132,7 +135,10 @@ def lua_quote(value: str) -> str:
 
 
 def build_loadstring(raw_url: str) -> str:
-    return "loadstring(game:HttpGet(" + lua_quote(raw_url) + "))()"
+    return (
+        BANNER_TEXT + "\n"
+        + "loadstring(game:HttpGet(" + lua_quote(raw_url) + "))()"
+    )
 
 
 def new_path(prefix: str) -> str:

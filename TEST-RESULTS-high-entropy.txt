@@ -4,7 +4,7 @@ Generated 2026-11-19T07:53:19.786964+00:00. Standalone: `python3 tests/high_entr
 
 HIGH-ENTROPY-V4: ALL GREEN (124 checks), 0 failure(s).
 
-Covered: valid Luau (parse + differential behaviour), zero comments / byte-0 return, no dynamic loader, no multi-megabyte padding, <=15% size gate (canonical seed vs v3 baseline; zero padding when a build's own base already exceeds it), long-bracket + mixed-escape markers, symbol soup only inside string literals, bounded loops, standalone long-bracket / mixed-escape decode probes.
+Covered: valid Luau (parse + differential behaviour), required top banner + no-other-comment / return-first body, no dynamic loader, no multi-megabyte padding, <=15% size gate (canonical seed vs v3 baseline; zero padding when a build's own base already exceeds it), long-bracket + mixed-escape markers, symbol soup only inside string literals, bounded loops, standalone long-bracket / mixed-escape decode probes.
 
 Exact literal-share records (hello_world, seed/preset matrix):
 

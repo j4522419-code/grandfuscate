@@ -61,6 +61,16 @@ class Options:
     stealth: bool = False
     """Opt-in V5 active decoys / fail-closed reactions. Off by default; normal
     builds stay compatible with ordinary executors. See PLAN-stealth-v5.md."""
+    crypto: bool = False
+    """Opt-in V7 HKDF-SHA256 + ChaCha20 + HMAC-SHA256 whitening of emitted
+    constant-pool / VM byte payloads. Off by default so V5 builds stay
+    byte-compatible. The derived key is embedded: obfuscation, not secrecy."""
+    key_text: str | None = None
+    """Local V7 passphrase text, never emitted verbatim. If absent with
+    ``crypto=True``, seed-only convenience whitening is used instead."""
+    key_file: str | None = None
+    """Local V7 passphrase file, never emitted verbatim. CLI-only; the web API
+    does not read server paths."""
 
 
 @dataclass

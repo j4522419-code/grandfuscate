@@ -6,7 +6,9 @@ checksum.  A slice's encoded blob/key are assembled only when one of its
 constants is first requested.  Checksums use randomized coefficients, not a
 fixed FNV pair, and failure only makes that slice return nil constants.
 
-The transforms here are obfuscation encodings, not encryption.
+Normal builds are obfuscation encodings. The opt-in V7 layer whitens these
+byte payloads with ChaCha20 and authenticates them with HMAC-SHA256, but its
+derived key is embedded, so it is obfuscation, not confidentiality.
 """
 from __future__ import annotations
 
@@ -16,9 +18,11 @@ import random
 from . import hardening
 from .checksum import emit_group_integrity_lines, emit_verify_lines
 from .chunks import emit_chunk_getter, make_chunk_plan
+from .crypto import CryptoPlan, crypto_chunk_bytes, emit_decrypt_lines
 from .layout import Layout
 from .names import Names
 from .pool import PoolBuild
+from .vm import crypto_runtime as CR
 from .vm import stealth as V5S
 
 
@@ -77,12 +81,16 @@ def _render_source_runtime(
     extra_hash_seed: int = 0x9E3779B9,
     runtime_consts: dict[str, int] | None = None,
     stealth_plan: object | None = None,
+    crypto_plan: CryptoPlan | None = None,
 ) -> str:
     if runtime_consts is None:
         raise ValueError("runtime_consts are required")
     N = ns.N
     L: list[str] = []
     add = L.append
+    if crypto_plan is not None:
+        for line in CR.emit_crypto_lines(crypto_plan, ns):
+            add(line)
 
     E = N("E")
     B = N("B")
@@ -108,8 +116,11 @@ def _render_source_runtime(
     for sl in b.slices:
         cfg = layout.chunk_settings
         extra = cfg["max_extra"] + (2 if layout.chunk_strategy == "jitter" else 0)
+        q_bytes, k_bytes, dec_payloads = crypto_chunk_bytes(
+            crypto_plan, "pool", sl.index, sl.blob, sl.key
+        )
         qplan = make_chunk_plan(
-            sl.blob,
+            q_bytes,
             _plan_rng(b.build_id, sl.index, "blob"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -119,7 +130,7 @@ def _render_source_runtime(
             hard_cap=cfg["hard_cap"],
         )
         kplan = make_chunk_plan(
-            sl.key,
+            k_bytes,
             _plan_rng(b.build_id, sl.index, "key"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -156,6 +167,10 @@ def _render_source_runtime(
         add(f"    if {q} then return end")
         add(f"    {q} = {qget}()")
         add(f"    {kq} = {kget}()")
+        for line in emit_decrypt_lines(
+            crypto_plan, dec_payloads, q, kq, ok, indent="    "
+        ):
+            add(line)
         add(f"    {ok} = true")
         if integrity:
             add(
@@ -334,6 +349,7 @@ def _render_vm_runtime(
     extra_hash_seed: int = 0x9E3779B9,
     runtime_consts: dict[str, int] | None = None,
     stealth_plan: object | None = None,
+    crypto_plan: CryptoPlan | None = None,
 ) -> str:
     """Third-pass, ticketed and group-scattered constant runtime.
 
@@ -347,6 +363,9 @@ def _render_vm_runtime(
     N = ns.N
     L: list[str] = []
     add = L.append
+    if crypto_plan is not None:
+        for line in CR.emit_crypto_lines(crypto_plan, ns):
+            add(line)
     if stealth_plan is not None:
         # Define the active-decoy reactor/T/P locals once, before any guard
         # line in either the prelude or the VM body references them.
@@ -375,8 +394,11 @@ def _render_vm_runtime(
     for sl in b.slices:
         cfg = layout.chunk_settings
         extra = cfg["max_extra"] + (2 if layout.chunk_strategy == "jitter" else 0)
+        q_bytes, k_bytes, dec_payloads = crypto_chunk_bytes(
+            crypto_plan, "pool", sl.index, sl.blob, sl.key
+        )
         qplan = make_chunk_plan(
-            sl.blob,
+            q_bytes,
             _plan_rng(b.build_id, sl.index, "blob"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -386,7 +408,7 @@ def _render_vm_runtime(
             hard_cap=cfg["hard_cap"],
         )
         kplan = make_chunk_plan(
-            sl.key,
+            k_bytes,
             _plan_rng(b.build_id, sl.index, "key"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -422,6 +444,10 @@ def _render_vm_runtime(
         add(f"    if {q} then return end")
         add(f"    {q} = {qget}()")
         add(f"    {kq} = {kget}()")
+        for line in emit_decrypt_lines(
+            crypto_plan, dec_payloads, q, kq, ok, indent="    "
+        ):
+            add(line)
         add(f"    {ok} = true")
         if integrity:
             add("\n".join(emit_verify_lines(
@@ -598,6 +624,7 @@ def render_runtime(
     runtime_consts: dict[str, int] | None = None,
     vm: bool = False,
     stealth_plan: object | None = None,
+    crypto_plan: CryptoPlan | None = None,
 ) -> str:
     if vm:
         return _render_vm_runtime(
@@ -610,6 +637,7 @@ def render_runtime(
             extra_hash_seed=extra_hash_seed,
             runtime_consts=runtime_consts,
             stealth_plan=stealth_plan,
+            crypto_plan=crypto_plan,
         )
     return _render_source_runtime(
         ns, b, layout=layout,
@@ -621,4 +649,5 @@ def render_runtime(
         extra_hash_seed=extra_hash_seed,
         runtime_consts=runtime_consts,
         stealth_plan=stealth_plan,
+        crypto_plan=crypto_plan,
     )

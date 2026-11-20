@@ -36,6 +36,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--stealth", "--fail-closed", dest="stealth", action="store_true",
         help="opt-in V5 active decoys: fail-closed / poison reactions (off by default)",
     )
+    p.add_argument(
+        "--crypto", action="store_true",
+        help="opt-in V7 HKDF-SHA256 + ChaCha20 + HMAC-SHA256 whitening (off by default)",
+    )
+    p.add_argument(
+        "--key-text", metavar="TEXT",
+        help="V7 passphrase text; never emitted verbatim (avoid shell history)",
+    )
+    p.add_argument(
+        "--key-file", metavar="PATH",
+        help="read V7 passphrase bytes from a local file; never emitted verbatim",
+    )
     p.add_argument("--quiet", action="store_true")
     p.add_argument("--identify", metavar="FILE", help="report provenance for an output file")
     p.add_argument("--self-test", action="store_true", help="run the behaviour test suite")
@@ -75,7 +87,13 @@ def main(argv: list[str] | None = None) -> int:
         "anti_env": False,
         "anti_tamper": False,
         "stealth": bool(a.stealth),
+        "crypto": bool(a.crypto),
+        "key_text": a.key_text if a.crypto else None,
+        "key_file": a.key_file if a.crypto else None,
     }
+    if a.crypto and a.key_text and a.key_file:
+        print("error: use either --key-text or --key-file, not both", file=sys.stderr)
+        return 2
     if a.place_id is not None:
         overrides["place_id"] = a.place_id
     if a.game_id is not None:
@@ -88,6 +106,9 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc), file=sys.stderr)
         return 2
     except pipeline.A.ToolMissing as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
 
@@ -128,6 +149,12 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"stealth       : {'ON' if s.get('stealth') else 'OFF'} "
             f"({s.get('stealth_decoys', 0)} active decoys)"
+        )
+        print(
+            f"crypto        : {'ON' if s.get('crypto') else 'OFF'} "
+            f"({s.get('crypto_alg') or 'none'}, "
+            f"{s.get('crypto_key_source') or 'none'}, "
+            f"{s.get('crypto_bytes', 0)} B)"
         )
         print(f"chaff         : ratio {s.get('flatten_ratio')}, junk {s.get('junk')}, min {s.get('min_stmts')}, {s.get('vm_decoy_words', 0)} IR decoys")
         print(f"syntax check  : {'OK' if ok else 'FAILED'}" if a.verify else "")

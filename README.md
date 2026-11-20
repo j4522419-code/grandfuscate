@@ -4,10 +4,11 @@ Grandfuscate is a local, AST-based Luau obfuscator. It parses real Luau with the
 official `luau-ast` tool, compiles a custom tree-walking VM program, encodes its
 constants and instruction stream, and emits one `return`-first Luau chunk.
 
-The third anti-analysis pass is active. Production output has **zero comments**,
-begins with `return` at byte 0, contains no identifying brand, ships no top-level
-`local` declarations, uses no dynamic loader, and keeps the private source map
-out of the chunk.
+The third anti-analysis pass is active. Every production output begins with the
+required Luau comment `--protected by grand6_7 (on discord)`. After that banner,
+the protected body starts with `return`, contains no other comments or
+identifying brand, ships no top-level `local` declarations, uses no dynamic
+loader, and keeps the private source map out of the chunk.
 
 ## Quick start
 

@@ -11,6 +11,8 @@ from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 
 from . import ast as A
+from . import crypto as CR
+from .banner import BANNER_BYTES, strip_banner
 from . import flatten, format as F, hardening, minify, runtime, transform, vm
 from .fields import randomize_fields
 from .layout import make_layout
@@ -18,6 +20,7 @@ from .names import Names
 from .pool import ConstantPool, PoolBuild, _next_prime
 from .render import Context, Options, Renderer
 from .vm.integrity import prepare_v4
+from .crypto import CryptoPlan
 
 # Bounded cache of exact zero-padding base sizes, keyed by the full option set
 # and input digest. The suite, scanner and example regeneration obfuscate the
@@ -50,6 +53,8 @@ class Result:
     # Private V5 active-decoy plan; None when stealth is off. Also reachable as
     # ``result.v4.stealth`` for compatibility with the V4 plan object.
     stealth: object | None = None
+    # Private V7 crypto plan; None when crypto is off. Python-side only.
+    crypto: CryptoPlan | None = None
 
 
 PRESETS: dict[str, dict] = {
@@ -237,6 +242,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         source=source, names=names, pool=pool, rng=rng, opts=opts, renderer=renderer
     )
     ctx.layout = layout
+    ctx.crypto = None
     ctx.decl_map = {loc: names.new() for loc in A.decl_locations(tree)}
 
     vm_program = None
@@ -303,9 +309,11 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
             if key in _V4_BASE_CACHE:
                 base_bytes = _V4_BASE_CACHE[key]
             else:
-                base_bytes = len(obfuscate(
+                # Exclude the fixed top banner from the V4 padding base so the
+                # protected body stays byte-compatible with pre-banner builds.
+                base_bytes = len(strip_banner(obfuscate(
                     data, replace(opts, entropy_budget=0), _v4_base_bytes=0
-                ).output)
+                ).output))
                 if len(_V4_BASE_CACHE) >= _V4_BASE_CACHE_MAX:
                     _V4_BASE_CACHE.clear()
                 _V4_BASE_CACHE[key] = base_bytes
@@ -314,6 +322,35 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         ctx.v4 = prepare_v4(ctx, vm_program, built, layout, opts, base_bytes)
     else:
         ctx.v4 = None
+
+    # V7 opt-in whitening. A dedicated RNG keeps the encryption material from
+    # perturbing the existing seeded build. The plan binds every tag to the
+    # private V4 integrity digest, so literals from another build fail HMAC.
+    if opts.crypto:
+        integrity = getattr(getattr(ctx, "v4", None), "integrity", None)
+        digest = int(getattr(integrity, "global_digest", 0))
+        aad_extra = f"{digest}|{built.expected_hash}".encode("ascii")
+        payloads: list[tuple[str, int, bytes]] = []
+        for sl in built.slices:
+            payloads.append(("pool_blob", sl.index, sl.blob))
+            payloads.append(("pool_key", sl.index, sl.key))
+        if vm_program is not None:
+            for frag in vm_program.fragments:
+                payloads.append(("vm_blob", frag.index, frag.blob))
+                payloads.append(("vm_key", frag.index, frag.key))
+        crng = random.Random((int(opts.seed) ^ 0x56375721) & 0xFFFFFFFF)
+        passphrase = CR.load_passphrase(opts.key_text, opts.key_file)
+        ctx.crypto = CR.make_crypto_plan(
+            passphrase,
+            build_id=built.build_id,
+            preset=opts.preset,
+            seed=opts.seed,
+            rng=crng,
+            payloads=payloads,
+            aad_extra=aad_extra,
+        )
+        if not CR.verify_plan(ctx.crypto):
+            raise RuntimeError("V7 crypto plan failed build-time verification")
 
     # Normal builds ship exactly one VM runtime. The old nested/armor layer is
     # no longer used by any preset because its environment checks poisoned D()
@@ -345,6 +382,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         runtime_consts=runtime_consts,
         vm=opts.vm,
         stealth_plan=stealth_plan,
+        crypto_plan=ctx.crypto,
     )
 
     if vm_program is not None:
@@ -369,8 +407,9 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
     wrapped, fmt = F.build_entry(chunk_text, ctx)
     raw = wrapped.encode("utf-8")
     minified = minify.minify(raw, one_line=opts.one_line).rstrip() + b"\n"
-    # Production output starts with `return` at byte zero and has no comments.
-    output = minified
+    # The required user banner is the very first line. The protected
+    # `return`-based chunk follows on the next line.
+    output = BANNER_BYTES + minified
 
     vm_hash = None
     if vm_program is not None:
@@ -379,6 +418,56 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
     source_map = _build_source_map(
         data, opts, ctx, pool, vm_program, built, runtime_consts, layout, fmt
     )
+
+    # With crypto on, the private key file records ciphertext material rather
+    # than plaintext pool/stream bytes. The derived key is never written here;
+    # only hashes and public statistics are kept.
+    crypto = ctx.crypto
+    if crypto is not None:
+        pool_blob_literal = crypto.payload(
+            "pool_blob", built.slices[0].index
+        ).ciphertext_literal
+        pool_key_hex = b"".join(
+            crypto.payload("pool_key", sl.index).ciphertext
+            for sl in built.slices
+        ).hex()
+        slice_literals = [
+            crypto.payload("pool_blob", sl.index).ciphertext_literal
+            for sl in built.slices
+        ]
+        stream_key_hex = (
+            b"".join(
+                crypto.payload("vm_key", frag.index).ciphertext
+                for frag in vm_program.fragments
+            ).hex() if vm_program else None
+        )
+        crypto_fields = {
+            "crypto": True,
+            "crypto_alg": crypto.alg,
+            "crypto_key_source": crypto.key_source,
+            "crypto_passphrase_sha256": crypto.passphrase_sha256,
+            "crypto_key_sha256": hashlib.sha256(crypto.key).hexdigest(),
+            "crypto_aad_extra_sha256": crypto.aad_extra_sha256,
+            "crypto_bytes": crypto.encrypted_bytes,
+            "crypto_payloads": len(crypto.payloads),
+            "crypto_tag_ok": CR.verify_plan(crypto),
+        }
+    else:
+        pool_blob_literal = built.blob_literal
+        pool_key_hex = built.key.hex()
+        slice_literals = [s.blob_literal for s in built.slices]
+        stream_key_hex = vm_program.stream_key.hex() if vm_program else None
+        crypto_fields = {
+            "crypto": False,
+            "crypto_alg": None,
+            "crypto_key_source": None,
+            "crypto_passphrase_sha256": None,
+            "crypto_key_sha256": None,
+            "crypto_aad_extra_sha256": None,
+            "crypto_bytes": 0,
+            "crypto_payloads": 0,
+            "crypto_tag_ok": True,
+        }
 
     keys = {
         "format": 3,
@@ -389,8 +478,8 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "seed": opts.seed,
         "place_id": opts.place_id,
         "game_id": opts.game_id,
-        "blob_literal": built.blob_literal,
-        "key_hex": built.key.hex(),
+        "blob_literal": pool_blob_literal,
+        "key_hex": pool_key_hex,
         "delta": built.delta,
         "gamma": built.gamma,
         "salt": built.salt,
@@ -400,13 +489,14 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "vm": vm_program is not None,
         "vm_fallback_reason": vm_warning,
         "opcodes": vm_program.opcodes if vm_program else None,
-        "stream_key_hex": vm_program.stream_key.hex() if vm_program else None,
+        "stream_key_hex": stream_key_hex,
         "vm_hash": vm_hash,
         "nested_vm": outer is not None,
         "anti_env": opts.anti_env,
         "anti_tamper": opts.anti_tamper,
         "stealth": opts.stealth,
         "stealth_decoys": stealth_plan.count if stealth_plan else 0,
+        **crypto_fields,
         "blob_pad": opts.blob_pad,
         "flatten_ratio": opts.flatten_ratio,
         "junk": opts.junk,
@@ -432,7 +522,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "pool_slices": built.slice_count,
         "slice_stride": built.slice_stride,
         "slice_shift": built.slice_shift,
-        "slice_literals": [s.blob_literal for s in built.slices],
+        "slice_literals": slice_literals,
         "vm_fragments": getattr(vm_program, "fragment_count", 0) if vm_program else 0,
         "operand_stride": getattr(vm_program, "operand_stride", 0) if vm_program else 0,
         "operand_shift": getattr(vm_program, "operand_shift", 0) if vm_program else 0,
@@ -460,6 +550,12 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         "anti_tamper": opts.anti_tamper,
         "stealth": opts.stealth,
         "stealth_decoys": stealth_plan.count if stealth_plan else 0,
+        "crypto": crypto_fields["crypto"],
+        "crypto_alg": crypto_fields["crypto_alg"],
+        "crypto_key_source": crypto_fields["crypto_key_source"],
+        "crypto_bytes": crypto_fields["crypto_bytes"],
+        "crypto_payloads": crypto_fields["crypto_payloads"],
+        "crypto_tag_ok": crypto_fields["crypto_tag_ok"],
         "blob_pad_bytes": opts.blob_pad,
         "flatten_ratio": opts.flatten_ratio,
         "junk": opts.junk,
@@ -493,6 +589,7 @@ def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) 
         source_map=source_map,
         v4=ctx.v4,
         stealth=getattr(getattr(ctx, "v4", None), "stealth", None),
+        crypto=crypto,
     )
 
 

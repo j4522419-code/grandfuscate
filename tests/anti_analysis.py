@@ -25,6 +25,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import ast as A  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf import minify  # noqa: E402
 from obf import pipeline  # noqa: E402
 
@@ -70,6 +71,9 @@ _FORBIDDEN_MEMBER_CHAINS = frozenset(
         ("string", "match"), ("table", "concat"), ("table", "pack"),
         ("table", "unpack"), ("math", "floor"), ("bit32", "bxor"),
         ("bit32", "band"), ("bit32", "bor"),
+        ("bit32", "bnot"), ("bit32", "lshift"),
+        ("bit32", "rshift"), ("bit32", "lrotate"),
+        ("bit32", "rrotate"),
         ("coroutine", "yield"),
     }
 )
@@ -126,14 +130,17 @@ def scan_output(
         if not condition:
             bad.append(message)
 
-    need(output.startswith(b"return"), "output does not start with return at byte zero")
-    comments = [t for t in minify.tokenize(output) if t.kind == "comment"]
-    need(not comments, f"production output contains {len(comments)} comment(s)")
-    need(first_token(output) == "return", "first code token is not return")
-    need(top_level_locals(output) == 0, "top-level local declaration found")
-    need(output.count(b"\n") == 1, "output is not one code line + trailing newline")
+    body = strip_banner(output)
+    text = body.decode("latin-1")
+    need(output.startswith(BANNER_BYTES), "output is missing the required top banner")
+    need(body.startswith(b"return"), "protected chunk does not start with return")
+    comments = [t for t in minify.tokenize(body) if t.kind == "comment"]
+    need(not comments, f"protected chunk contains {len(comments)} extra comment(s)")
+    need(first_token(body) == "return", "first code token is not return")
+    need(top_level_locals(body) == 0, "top-level local declaration found")
+    need(body.count(b"\n") == 1, "protected chunk is not one code line + trailing newline")
 
-    sig = _sig(output)
+    sig = _sig(body)
     names = [t.text.decode("latin-1") for t in sig if t.kind == "name"]
     forbidden = sorted(set(names) & _FORBIDDEN_NAMES)
     need(not forbidden, f"semantic VM names remain: {forbidden[:12]}")
@@ -165,7 +172,7 @@ def scan_output(
         ):
             field_hits.add(t.text.decode("latin-1"))
     need(not field_hits, f"stable VM/frame field names remain: {sorted(field_hits)}")
-    stable = [c.decode("ascii") for c in _STABLE_CONSTANTS if c in output]
+    stable = [c.decode("ascii") for c in _STABLE_CONSTANTS if c in body]
     need(not stable, f"fixed checksum constants remain: {stable}")
     hard_keys: set[str] = set()
     for i in range(len(sig) - 2):
@@ -229,7 +236,7 @@ def scan_output(
 
     # No obvious small-numbered instruction table of function handlers and no
     # local one-argument decoder that simply forwards into one central table.
-    raw_text = text if "text" in locals() else output.decode("latin-1")
+    raw_text = text
     small_groups: dict[str, int] = {}
     for m in re.finditer(
         r"([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\](?:\[(\d+)\])?"
@@ -263,7 +270,7 @@ def scan_output(
     )
 
     # No readable sequential opcode table or long run of tiny constants.
-    text = output.decode("latin-1")
+    text = body.decode("latin-1")
     need(
         re.search(r"=\{1,2,3,4,5,6,7,8", text) is None,
         "sequential small-integer opcode table remains",
@@ -290,7 +297,7 @@ def scan_output(
 
     # Source identifiers, strings and comments must not survive as plaintext.
     for fragment in _source_fragments(source):
-        need(fragment not in output, f"plaintext source fragment remains: {fragment[:48]!r}")
+        need(fragment not in body, f"plaintext source fragment remains: {fragment[:48]!r}")
 
     # No debug output or private key/source-map material in the chunk.
     debug_names = {
@@ -302,11 +309,11 @@ def scan_output(
         not (set(names) & debug_names),
         f"debug/source-map marker remains: {sorted(set(names) & debug_names)}",
     )
-    need(b"source_map" not in output, "source_map marker remains in output")
-    need(b"__GRANDFUSCATE_PRIVATE_SOURCE_MAP" not in output, "private source-map marker remains in output")
-    need(b"sourceMappingURL" not in output, "accidental source-map URL remains in output")
-    need(b"PX1" not in output, "recognizable provenance metadata remains in output")
-    need(b"build_id" not in output, "build identifier remains in production output")
+    need(b"source_map" not in body, "source_map marker remains in output")
+    need(b"__GRANDFUSCATE_PRIVATE_SOURCE_MAP" not in body, "private source-map marker remains in output")
+    need(b"sourceMappingURL" not in body, "accidental source-map URL remains in output")
+    need(b"PX1" not in body, "recognizable provenance metadata remains in output")
+    need(b"build_id" not in body, "build identifier remains in production output")
 
     if source_map is not None:
         need(
@@ -357,14 +364,14 @@ def scan_output(
             keys.get("source_map_sha256", ""),
         ):
             need(
-                bool(secret) and secret.encode("utf-8") not in output,
+                bool(secret) and secret.encode("utf-8") not in body,
                 "private source-map identifier is present in production output",
             )
         for node in source_map.get("nodes", []):
             excerpt = node.get("excerpt")
             if excerpt and ("GRANDFUSCATE_SECRET" in excerpt or "SOURCE_STRING_NEVER_SHIP" in excerpt):
                 need(
-                    excerpt.encode("utf-8") not in output,
+                    excerpt.encode("utf-8") not in body,
                     "private source-map excerpt is present in production output",
                 )
     return bad
@@ -413,7 +420,7 @@ def run_luau(data: bytes, timeout: int = 120) -> tuple[int, bytes, bytes]:
         p = subprocess.run(
             [A.tool_path("luau"), path], capture_output=True, timeout=timeout
         )
-        return p.returncode, p.stdout, p.stderr
+        return p.returncode, p.stdout.replace(b"\r\n", b"\n"), p.stderr
     finally:
         try:
             os.unlink(path)
@@ -424,22 +431,32 @@ def run_luau(data: bytes, timeout: int = 120) -> tuple[int, bytes, bytes]:
 def _run_rusage(data: bytes, timeout: int = 120) -> tuple[float, int, int]:
     """Return (seconds, peak RSS KiB, exit status) for one fresh Luau process."""
     path = _write_tmp(data)
-    devnull = os.open(os.devnull, os.O_WRONLY)
     try:
         exe = A.tool_path("luau")
-        file_actions = [
-            (os.POSIX_SPAWN_DUP2, devnull, 1),
-            (os.POSIX_SPAWN_DUP2, devnull, 2),
-        ]
         t0 = time.perf_counter()
-        # posix_spawn avoids copying this Python process's pages into the
-        # measured child, so ru_maxrss reflects the Luau process itself.
-        pid = os.posix_spawn(exe, [exe, path], os.environ, file_actions=file_actions)
-        _, status, usage = os.wait4(pid, 0)
-        elapsed = time.perf_counter() - t0
-        return elapsed, usage.ru_maxrss, os.waitstatus_to_exitcode(status)
+        if all(hasattr(os, attr) for attr in ("posix_spawn", "POSIX_SPAWN_DUP2", "wait4", "waitstatus_to_exitcode")):
+            devnull = os.open(os.devnull, os.O_WRONLY)
+            try:
+                file_actions = [
+                    (os.POSIX_SPAWN_DUP2, devnull, 1),
+                    (os.POSIX_SPAWN_DUP2, devnull, 2),
+                ]
+                # posix_spawn avoids copying this Python process's pages into
+                # the measured child, so ru_maxrss reflects the Luau process.
+                pid = os.posix_spawn(exe, [exe, path], os.environ, file_actions=file_actions)
+                _, status, usage = os.wait4(pid, 0)
+                elapsed = time.perf_counter() - t0
+                return elapsed, usage.ru_maxrss, os.waitstatus_to_exitcode(status)
+            finally:
+                os.close(devnull)
+        # Windows lacks POSIX wait4/ru_maxrss: retain timing and exit checks,
+        # with RSS reported as unavailable (0).
+        p = subprocess.run(
+            [exe, path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            timeout=timeout, check=False,
+        )
+        return time.perf_counter() - t0, 0, p.returncode
     finally:
-        os.close(devnull)
         try:
             os.unlink(path)
         except OSError:
@@ -513,7 +530,7 @@ def write_benchmark_markdown(results: dict, path: str | None = None) -> str:
         "# Anti-analysis benchmarks",
         "",
         f"Measured {results['timestamp']} with {results['toolchain']}.",
-        "Three process launches per measurement; min/median wall time and max/median peak RSS (`ru_maxrss`).",
+        "Three process launches per measurement; min/median wall time and max/median peak RSS where the OS exposes it (`ru_maxrss` on POSIX). Windows reports RSS as unavailable (0).",
         "RSS includes the interpreter's allocator baseline and can vary with process placement; small differences are not meaningful. Local engineering measurement only.",
         "",
         "## Output size",

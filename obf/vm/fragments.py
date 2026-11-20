@@ -11,6 +11,7 @@ import random
 
 from ..checksum import emit_group_integrity_lines, emit_verify_lines
 from ..chunks import emit_chunk_getter, make_chunk_plan
+from ..crypto import crypto_chunk_bytes, emit_decrypt_lines
 from ..layout import Layout
 from ..names import Names
 from .compiler import Program
@@ -43,9 +44,13 @@ def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layou
     cfg = layout.chunk_settings
     extra = cfg["max_extra"] + (2 if layout.chunk_strategy == "jitter" else 0)
 
+    crypto_plan = getattr(ctx, "crypto", None)
     for frag in program.fragments:
+        q_bytes, k_bytes, dec_payloads = crypto_chunk_bytes(
+            crypto_plan, "vm", frag.index, frag.blob, frag.key
+        )
         qplan = make_chunk_plan(
-            frag.blob,
+            q_bytes,
             _plan_rng(ctx.opts.seed, frag.index, "blob"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -55,7 +60,7 @@ def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layou
             hard_cap=cfg["hard_cap"],
         )
         kplan = make_chunk_plan(
-            frag.key,
+            k_bytes,
             _plan_rng(ctx.opts.seed, frag.index, "key"),
             assembly=layout.chunk_assembly,
             strategy=layout.chunk_strategy,
@@ -80,6 +85,10 @@ def emit_fragments(add, ns: Names, program: Program, ctx, R: dict, layout: Layou
         add(f"    if {q} then return end")
         add(f"    {q} = {qget}()")
         add(f"    {kq} = {kget}()")
+        for line in emit_decrypt_lines(
+            crypto_plan, dec_payloads, q, kq, ok, indent="    "
+        ):
+            add(line)
         add(f"    {ok} = true")
         add("\n".join(emit_verify_lines(
             ns, q, kq, frag.hash_params, ok_var=ok, indent="    "

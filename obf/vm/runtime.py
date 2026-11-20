@@ -4,7 +4,8 @@ There is no sequential `CODE`/`NODES` table, no central `EVAL`/`EXEC` router,
 no central `W`/`NODE`/`D` decoder and no stable frame-field names. Words,
 nodes, constants and byte fragments are decoded by independently guarded
 generated routines; handlers live in per-build groups keyed by random opcodes.
-These are obfuscation encodings, not encryption.
+Normal builds are obfuscation encodings. The opt-in V7 layer whitens byte
+payloads with an embedded derived key: obfuscation, not confidentiality.
 """
 from __future__ import annotations
 

@@ -3,8 +3,10 @@
 ## Current state
 
 The third-pass anti-analysis implementation is local and verified. Production
-chunks start with `return`, have zero comments, no identifying brand, one line,
-zero top-level locals and no dynamic loader. The private source map stays out
+chunks start with the required `--protected by grand6_7 (on discord)` Luau
+comment, then a one-line, return-first protected body with no other comments,
+no identifying brand, zero top-level locals and no dynamic loader. The private
+source map stays out
 of the chunk. The workspace contains refreshed examples, reports, benchmarks,
 runtime-analysis results and a five-build diversity manifest.
 

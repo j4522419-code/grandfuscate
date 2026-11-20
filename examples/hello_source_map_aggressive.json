@@ -1,5 +1,5 @@
 {
-  "alias_count": 25,
+  "alias_count": 26,
   "binmap": {
     "Add": 3305061563,
     "CompareEq": 3594679299,
@@ -16,7 +16,7 @@
     "Pow": 2422677392,
     "Sub": 4219442158
   },
-  "boot_layout": 0,
+  "boot_layout": 3,
   "build_id": "39561e1014aba752",
   "compile_notes": [],
   "constants": [
@@ -890,7 +890,7 @@
   },
   "declarations": [],
   "decoy_count": 11,
-  "entry_layout": 3,
+  "entry_layout": 4,
   "field_keys": {
     "NODE_N": 242346265,
     "UP": 410362834,

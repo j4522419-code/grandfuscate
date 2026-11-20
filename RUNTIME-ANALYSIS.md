@@ -1,13 +1,13 @@
 # Runtime-analysis probe
 
-Measured 2026-11-19T07:34:41.111124+00:00 with official Luau 0.747, medium preset and seed 20261118.
+Measured 2026-11-20T02:42:52.079871+00:00 with official Luau 0.747, medium preset and seed 20261118.
 
 The protected scripts still produce their original output. This probe attempts the restricted-runtime shortcuts that recovered `print(67)` from the previous build. A capable executor-specific debugger can observe more; this is not a security proof or a commercial comparison.
 
 | Probe | Output | Original stdout needles | Startup dump needles | All simple dump needles | Result |
 |---|---:|---:|---:|---:|---|
-| `scan_fixture` | 211,588 B | 10 | 0 | 0 | PASS |
-| `print67` | 209,050 B | 3 | 0 | 0 | PASS |
+| `scan_fixture` | 211,758 B | 10 | 0 | 0 | PASS |
+| `print67` | 209,299 B | 3 | 0 | 0 | PASS |
 
 ## Attempts on both probes
 

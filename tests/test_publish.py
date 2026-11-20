@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from obf import publish  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf import web  # noqa: E402
 
 
@@ -49,6 +50,7 @@ def _github_response(commit_sha: str = "a" * 40) -> bytes:
 
 
 def run(failures: list[str]) -> int:
+    local: list[str] = []
     total = 0
     cfg = publish.Config(
         token="testtoken",
@@ -70,7 +72,10 @@ def run(failures: list[str]) -> int:
     try:
         result = publish.publish_output(output, config=cfg, opener=opener)
         expected_url = publish.build_raw_url(cfg, result["path"], "a" * 40)
-        expected_loader = "loadstring(game:HttpGet(" + publish.lua_quote(expected_url) + "))()"
+        expected_loader = (
+            BANNER_TEXT + "\n"
+            + "loadstring(game:HttpGet(" + publish.lua_quote(expected_url) + "))()"
+        )
         body = json.loads(captured["req"].data.decode("utf-8"))
         headers = {k.lower(): v for k, v in captured["req"].header_items()}
         ok = (
@@ -88,35 +93,35 @@ def run(failures: list[str]) -> int:
             and base64.b64decode(body.get("content", "")).decode("utf-8") == output
             and captured["timeout"] == cfg.timeout
         )
-        check(failures, ok, "mocked GitHub publish did not produce the expected request/response")
+        check(local, ok, "mocked GitHub publish did not produce the expected request/response")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"mocked GitHub publish raised {exc!r}")
+        check(local, False, f"mocked GitHub publish raised {exc!r}")
 
     # 2. Lua string escaping is safe.
     total += 1
     quoted = publish.lua_quote('a"b\\c\nd\te\x01f')
     expected_quoted = r'"a\"b\\c\nd\te\001f"'
-    check(failures, quoted == expected_quoted, f"lua_quote escaping failed: {quoted!r}")
+    check(local, quoted == expected_quoted, f"lua_quote escaping failed: {quoted!r}")
 
     # 3. Missing configuration is a clean 503.
     total += 1
     try:
         publish.Config(token="", owner="testowner", repo="testrepo").validate()
-        check(failures, False, "missing token did not raise PublishNotConfigured")
+        check(local, False, "missing token did not raise PublishNotConfigured")
     except publish.PublishNotConfigured as exc:
-        check(failures, exc.status == 503, "PublishNotConfigured status is not 503")
+        check(local, exc.status == 503, "PublishNotConfigured status is not 503")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"missing token raised unexpected {exc!r}")
+        check(local, False, f"missing token raised unexpected {exc!r}")
 
     # 4. Invalid config values are rejected without leaking into URLs.
     total += 1
     try:
         publish.Config(token="t", owner="../bad", repo="testrepo").validate()
-        check(failures, False, "unsafe owner was accepted")
+        check(local, False, "unsafe owner was accepted")
     except publish.PublishError as exc:
-        check(failures, exc.status == 500, "unsafe owner did not map to HTTP 500")
+        check(local, exc.status == 500, "unsafe owner did not map to HTTP 500")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"unsafe owner raised unexpected {exc!r}")
+        check(local, False, f"unsafe owner raised unexpected {exc!r}")
 
     # 5. Oversized output is a clean 413 and never calls GitHub.
     total += 1
@@ -129,21 +134,21 @@ def run(failures: list[str]) -> int:
     )
     try:
         publish.publish_output("return 12345\n", config=small, opener=counting_opener)
-        check(failures, False, "oversized output did not raise PublishTooLarge")
+        check(local, False, "oversized output did not raise PublishTooLarge")
     except publish.PublishTooLarge as exc:
-        check(failures, exc.status == 413 and called["n"] == 0, "PublishTooLarge status or no-network rule failed")
+        check(local, exc.status == 413 and called["n"] == 0, "PublishTooLarge status or no-network rule failed")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"oversized output raised unexpected {exc!r}")
+        check(local, False, f"oversized output raised unexpected {exc!r}")
 
     # 6. Empty output is a clean 400.
     total += 1
     try:
         publish.publish_output("   \n", config=cfg, opener=counting_opener)
-        check(failures, False, "empty output did not raise PublishBadRequest")
+        check(local, False, "empty output did not raise PublishBadRequest")
     except publish.PublishBadRequest as exc:
-        check(failures, exc.status == 400, "PublishBadRequest status is not 400")
+        check(local, exc.status == 400, "PublishBadRequest status is not 400")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"empty output raised unexpected {exc!r}")
+        check(local, False, f"empty output raised unexpected {exc!r}")
 
     # 7. GitHub HTTP errors map to a safe upstream error with no token leak.
     total += 1
@@ -151,7 +156,7 @@ def run(failures: list[str]) -> int:
         raise error.HTTPError(req.full_url, 403, "Forbidden", {}, None)
     try:
         publish.publish_output(output, config=cfg, opener=http_403)
-        check(failures, False, "HTTP 403 did not raise PublishError")
+        check(local, False, "HTTP 403 did not raise PublishError")
     except publish.PublishError as exc:
         msg = str(exc)
         check(
@@ -160,7 +165,7 @@ def run(failures: list[str]) -> int:
             "HTTP 403 mapping leaked a token or used the wrong status",
         )
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"HTTP 403 raised unexpected {exc!r}")
+        check(local, False, f"HTTP 403 raised unexpected {exc!r}")
 
     # 8. Network errors map to a clean 502.
     total += 1
@@ -168,11 +173,11 @@ def run(failures: list[str]) -> int:
         raise error.URLError("offline")
     try:
         publish.publish_output(output, config=cfg, opener=url_error)
-        check(failures, False, "URLError did not raise PublishError")
+        check(local, False, "URLError did not raise PublishError")
     except publish.PublishError as exc:
-        check(failures, exc.status == 502 and "Could not reach" in str(exc), "URLError mapping failed")
+        check(local, exc.status == 502 and "Could not reach" in str(exc), "URLError mapping failed")
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"URLError raised unexpected {exc!r}")
+        check(local, False, f"URLError raised unexpected {exc!r}")
 
     # 9. Branch raw URL fallback is explicit and warned about.
     total += 1
@@ -193,7 +198,7 @@ def run(failures: list[str]) -> int:
             "branch raw URL fallback was not flagged",
         )
     except Exception as exc:  # noqa: BLE001
-        check(failures, False, f"branch raw URL fallback raised {exc!r}")
+        check(local, False, f"branch raw URL fallback raised {exc!r}")
 
     # 10. web.do_loadstring validates the payload and delegates to the publisher.
     total += 1
@@ -212,7 +217,7 @@ def run(failures: list[str]) -> int:
         )
         try:
             web.do_loadstring({"output": 123})
-            check(failures, False, "web.do_loadstring accepted a non-string output")
+            check(local, False, "web.do_loadstring accepted a non-string output")
         except ValueError:
             pass
     finally:
@@ -243,7 +248,7 @@ def run(failures: list[str]) -> int:
         os.environ["OBF_GITHUB_OWNER"] = "env-owner"
         os.environ["OBF_GITHUB_REPO"] = "env-repo"
         present = publish.is_configured()
-        check(failures, not missing and present, "is_configured env detection failed")
+        check(local, not missing and present, "is_configured env detection failed")
     finally:
         for k, v in saved.items():
             if v is None:
@@ -273,9 +278,10 @@ def run(failures: list[str]) -> int:
         and 'class="hint"' not in ui
         and ".hint{" not in ui
     )
-    check(failures, markers, "loadstring UI/route/Blueprint/guide markers are incomplete or helper text returned")
+    check(local, markers, "loadstring UI/route/Blueprint/guide markers are incomplete or helper text returned")
 
-    ok = not failures
+    failures.extend(local)
+    ok = not local
     print(f"{'loadstring publisher':<24} {'OK' if ok else 'FAIL':<8} {total} checks")
     return total
 

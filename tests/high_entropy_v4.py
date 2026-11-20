@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from obf import ast as A  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf import entropy as EN  # noqa: E402
 from obf import minify  # noqa: E402
 from obf import pipeline  # noqa: E402
@@ -128,10 +129,12 @@ def run(failures: list[str]) -> int:
                   f"{tag}: behaviour changed rc={rc} out={out[:60]!r} err={err[:100]!r}")
             checks += 1
 
-            # zero-comment, byte-0 return policy
-            check(failures, o.startswith(b"return")
-                  and not any(t.kind == "comment" for t in minify.tokenize(o)),
-                  f"{tag}: output breaks return-at-byte-0 / zero-comment policy")
+            # required top banner, then zero-comment return-first body
+            body = strip_banner(o)
+            check(failures, o.startswith(BANNER_BYTES)
+                  and body.startswith(b"return")
+                  and not any(t.kind == "comment" for t in minify.tokenize(body)),
+                  f"{tag}: output breaks banner / return-first body policy")
             checks += 1
             # no dynamic loader / self-decoding chunk
             check(failures, b"loadstring" not in o and b"HttpGet" not in o,
@@ -144,12 +147,12 @@ def run(failures: list[str]) -> int:
             # <=15% gate: measured against the v3 baseline at the canonical
             # seed. For other seeds the third-pass VM's own base can exceed that
             # fixed baseline; in that case v4 must add zero padding.
-            check(failures, len(o) <= max(gate, base) + 16,
-                  f"{tag}: output {len(o)} exceeds max(fixed_gate {gate}, base {base})")
+            check(failures, len(body) <= max(gate, base) + 16,
+                  f"{tag}: protected body {len(body)} exceeds max(fixed_gate {gate}, base {base})")
             checks += 1
             if seed == CANONICAL_SEED:
-                check(failures, len(o) <= gate,
-                      f"{tag}: canonical-seed 15% gate exceeded ({len(o)} > {gate})")
+                check(failures, len(body) <= gate,
+                      f"{tag}: canonical-seed 15% gate exceeded ({len(body)} > {gate})")
                 checks += 1
             if base > gate:
                 check(failures, res.v4.padding_bytes == 0,

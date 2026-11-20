@@ -9,8 +9,8 @@
     "startup_dump": "failed",
     "table_pack_hook_observation": "succeeded (unavoidable library call)"
   },
-  "checks": 67,
-  "created": "2026-11-19T18:51:23.075590+00:00",
+  "checks": 70,
+  "created": "2026-11-20T02:51:42.856472+00:00",
   "failures": [],
   "five_build_diversity": {
     "bank_counts": [
@@ -130,8 +130,8 @@
       "failures": [],
       "harness_stderr": "",
       "level": "light",
-      "output_bytes": 147885,
-      "output_sha256": "c87e286723e697bc849f876c8b8c01b2aaf655534c604500a63d793f92a25d26",
+      "output_bytes": 147922,
+      "output_sha256": "86e11fb4b90b000b8cfc30e4d1c9e1231d4847adc67ae43e461d41da2e502bf0",
       "preset": "light",
       "runtime_diagnostics": {
         "all_source_hits": "0",
@@ -195,8 +195,8 @@
       "failures": [],
       "harness_stderr": "",
       "level": "balanced",
-      "output_bytes": 209355,
-      "output_sha256": "964272649c5f079263c37e809d5657e9b4863e5bfad2398220c5ae55684f4573",
+      "output_bytes": 209392,
+      "output_sha256": "30e7b2f0f547103bbdeb5f3ba3b69217f94e5a5842a2b3b29f8afa5b59785769",
       "preset": "medium",
       "runtime_diagnostics": {
         "all_source_hits": "0",
@@ -260,8 +260,8 @@
       "failures": [],
       "harness_stderr": "",
       "level": "aggressive",
-      "output_bytes": 657239,
-      "output_sha256": "b9a0008c2244a198fc5694c1b8b4bad0feb464f719737b017380488802e14a3a",
+      "output_bytes": 657276,
+      "output_sha256": "6d1a4491809da512f9dca36f9981b648c2df50d2870c80fd97c1f2711d973f5a",
       "preset": "heavy",
       "runtime_diagnostics": {
         "all_source_hits": "0",
@@ -321,43 +321,43 @@
   ],
   "production_files": [
     {
-      "bytes": 147885,
-      "comments": 0,
-      "file": "/home/user/luau-obf/examples/protected_hello_light.luau",
+      "bytes": 147922,
+      "comments": 1,
+      "file": "C:\\Users\\user\\luau-obf-update\\examples\\protected_hello_light.luau",
       "first_token": "return",
-      "keys": "/home/user/luau-obf/examples/keys_hello_light.json",
+      "keys": "C:\\Users\\user\\luau-obf-update\\examples\\keys_hello_light.json",
       "level": "light",
-      "newlines": 1,
+      "newlines": 2,
       "preset": "light",
       "scanner_findings": [],
-      "sha256": "c87e286723e697bc849f876c8b8c01b2aaf655534c604500a63d793f92a25d26",
-      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_light.json"
+      "sha256": "86e11fb4b90b000b8cfc30e4d1c9e1231d4847adc67ae43e461d41da2e502bf0",
+      "source_map_sidecar": "C:\\Users\\user\\luau-obf-update\\examples\\hello_source_map_light.json"
     },
     {
-      "bytes": 209355,
-      "comments": 0,
-      "file": "/home/user/luau-obf/examples/protected_hello_balanced.luau",
+      "bytes": 209392,
+      "comments": 1,
+      "file": "C:\\Users\\user\\luau-obf-update\\examples\\protected_hello_balanced.luau",
       "first_token": "return",
-      "keys": "/home/user/luau-obf/examples/keys_hello_balanced.json",
+      "keys": "C:\\Users\\user\\luau-obf-update\\examples\\keys_hello_balanced.json",
       "level": "balanced",
-      "newlines": 1,
+      "newlines": 2,
       "preset": "medium",
       "scanner_findings": [],
-      "sha256": "964272649c5f079263c37e809d5657e9b4863e5bfad2398220c5ae55684f4573",
-      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_balanced.json"
+      "sha256": "30e7b2f0f547103bbdeb5f3ba3b69217f94e5a5842a2b3b29f8afa5b59785769",
+      "source_map_sidecar": "C:\\Users\\user\\luau-obf-update\\examples\\hello_source_map_balanced.json"
     },
     {
-      "bytes": 657239,
-      "comments": 0,
-      "file": "/home/user/luau-obf/examples/protected_hello_aggressive.luau",
+      "bytes": 657276,
+      "comments": 1,
+      "file": "C:\\Users\\user\\luau-obf-update\\examples\\protected_hello_aggressive.luau",
       "first_token": "return",
-      "keys": "/home/user/luau-obf/examples/keys_hello_aggressive.json",
+      "keys": "C:\\Users\\user\\luau-obf-update\\examples\\keys_hello_aggressive.json",
       "level": "aggressive",
-      "newlines": 1,
+      "newlines": 2,
       "preset": "heavy",
       "scanner_findings": [],
-      "sha256": "b9a0008c2244a198fc5694c1b8b4bad0feb464f719737b017380488802e14a3a",
-      "source_map_sidecar": "/home/user/luau-obf/examples/hello_source_map_aggressive.json"
+      "sha256": "6d1a4491809da512f9dca36f9981b648c2df50d2870c80fd97c1f2711d973f5a",
+      "source_map_sidecar": "C:\\Users\\user\\luau-obf-update\\examples\\hello_source_map_aggressive.json"
     }
   ],
   "seed": 20261118,

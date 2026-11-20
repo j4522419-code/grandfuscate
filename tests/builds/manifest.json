@@ -5,13 +5,13 @@
         "rc": 0,
         "same_as_original": true,
         "stderr": "",
-        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+        "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
       },
-      "bytes": 211729,
+      "bytes": 211766,
       "control_flow": {
         "node_order_shuffled": true
       },
-      "file": "tests/builds/build_01.luau",
+      "file": "tests\\builds\\build_01.luau",
       "layout": {
         "bank_count": 3,
         "boot_layout": 0,
@@ -203,7 +203,7 @@
       "protection_level": "balanced",
       "scanner_findings": [],
       "seed": 1,
-      "sha256": "2d1230c29314841ef0db0b1de59ec85153bdb0119f22cfa445e10b68f3b2539f",
+      "sha256": "a9f548d1f9cfa11cb61863704d0810cd42b5a05314ade9b8112577ce901ab60d",
       "structural_digest": "f0844b9aa6a3a0277edc3d1f4b0da02d5a4c2d36f7d2f2992c651b0cd5802f7d",
       "syntax": true,
       "token_stats": {
@@ -433,13 +433,13 @@
         "rc": 0,
         "same_as_original": true,
         "stderr": "",
-        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+        "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
       },
-      "bytes": 211725,
+      "bytes": 211762,
       "control_flow": {
         "node_order_shuffled": true
       },
-      "file": "tests/builds/build_02.luau",
+      "file": "tests\\builds\\build_02.luau",
       "layout": {
         "bank_count": 2,
         "boot_layout": 2,
@@ -637,7 +637,7 @@
       "protection_level": "balanced",
       "scanner_findings": [],
       "seed": 6,
-      "sha256": "747282406959fa937bb2fe3ad558b7167d2ce5003264b9804e3034b4b3f619d5",
+      "sha256": "f8268357d7fe6b8831b55b4c528cf53469f9f3be871c6e13dfd5f9dbd0ed79df",
       "structural_digest": "af54e72620e39edd50220a9b098cbbcecb00c01964ad4537795aa0dd3ef59bfe",
       "syntax": true,
       "token_stats": {
@@ -864,13 +864,13 @@
         "rc": 0,
         "same_as_original": true,
         "stderr": "",
-        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+        "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
       },
-      "bytes": 238492,
+      "bytes": 238529,
       "control_flow": {
         "node_order_shuffled": true
       },
-      "file": "tests/builds/build_03.luau",
+      "file": "tests\\builds\\build_03.luau",
       "layout": {
         "bank_count": 4,
         "boot_layout": 3,
@@ -1065,7 +1065,7 @@
       "protection_level": "balanced",
       "scanner_findings": [],
       "seed": 34,
-      "sha256": "0480e9eb767b01d3e028dfa8a20b0a5cdf1fc9244ddca2cc9c5a9fe2b26b2e55",
+      "sha256": "ecb836acbc3597e5bee9f86c5c1628cbf7d10645201571fb4e0790734ccfb576",
       "structural_digest": "80b2761c92b6c346b2b8bce6ff4d13e964c45ba3d4c74f7312bb9d854ae035f5",
       "syntax": true,
       "token_stats": {
@@ -1292,13 +1292,13 @@
         "rc": 0,
         "same_as_original": true,
         "stderr": "",
-        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+        "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
       },
-      "bytes": 228017,
+      "bytes": 228054,
       "control_flow": {
         "node_order_shuffled": true
       },
-      "file": "tests/builds/build_04.luau",
+      "file": "tests\\builds\\build_04.luau",
       "layout": {
         "bank_count": 3,
         "boot_layout": 1,
@@ -1484,7 +1484,7 @@
       "protection_level": "balanced",
       "scanner_findings": [],
       "seed": 12,
-      "sha256": "28d085d5b308c69449c39bed8ebd6bc7bf7b7cae95dccaf2efc5050a51db3442",
+      "sha256": "926d815f34598c1db3266d6110a6759ff9088eddce6eeea036d777fe90df2cd4",
       "structural_digest": "6ee263980f5a0fd201ac97a2b2a3f8e9a6c35000dae4d48abec1a8545d06ea8d",
       "syntax": true,
       "token_stats": {
@@ -1714,13 +1714,13 @@
         "rc": 0,
         "same_as_original": true,
         "stderr": "",
-        "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+        "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
       },
-      "bytes": 211716,
+      "bytes": 211753,
       "control_flow": {
         "node_order_shuffled": true
       },
-      "file": "tests/builds/build_05.luau",
+      "file": "tests\\builds\\build_05.luau",
       "layout": {
         "bank_count": 2,
         "boot_layout": 2,
@@ -1909,7 +1909,7 @@
       "protection_level": "balanced",
       "scanner_findings": [],
       "seed": 35,
-      "sha256": "7cc116d754a25c863d51f6453456187e8e3d6b80d7cb5e2ddb2a0091601a1f8e",
+      "sha256": "56734425031c9165b0ed97de5b87a2ed6899ca055134e2fecdaaeadf1e04d030",
       "structural_digest": "0d555c4fa65414ecfbc34521521a84387e9d1937c3c5fa75168b1f4e0803728b",
       "syntax": true,
       "token_stats": {
@@ -2132,7 +2132,7 @@
       ]
     }
   ],
-  "created": "2026-11-19T18:50:59.557394+00:00",
+  "created": "2026-11-20T02:51:18.062126+00:00",
   "diversity": {
     "bank_counts": [
       2,
@@ -2217,7 +2217,7 @@
   "original_behaviour": {
     "rc": 0,
     "stderr": "",
-    "stdout_sha256": "2d97d90861a977d77009e69dd7668082d01ac367fe243475d94d3282406597f5"
+    "stdout_sha256": "e25cda87d1e9e77ddbee207477f54354904972149aa1574e5bf5cd2a2982dd02"
   },
   "preset": "medium",
   "seeds": [
@@ -2227,6 +2227,6 @@
     12,
     35
   ],
-  "source": "tests/cases/print67.luau",
+  "source": "tests\\cases\\print67.luau",
   "source_sha256": "b36ac94b2d172e2d76b71b0cf044b5575f22ec278c667a9eec4f24f2dff99ef5"
 }

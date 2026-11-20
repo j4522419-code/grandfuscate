@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import minify, pipeline  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from tests import anti_analysis as AA  # noqa: E402
 from tests.return_probe import run as run_with_returns  # noqa: E402
 
@@ -217,12 +218,15 @@ def verify() -> tuple[bool, list[str]]:
             bad.append(f"missing build file {b['file']}")
             continue
         data = open(path, "rb").read()
+        body = strip_banner(data)
         if hashlib.sha256(data).hexdigest() != b["sha256"]:
             bad.append(f"build hash mismatch {b['file']}")
-        if not data.startswith(b"return"):
-            bad.append(f"build does not start with return: {b['file']}")
-        if any(t.kind == "comment" for t in minify.tokenize(data)):
-            bad.append(f"build contains a comment: {b['file']}")
+        if not data.startswith(BANNER_BYTES):
+            bad.append(f"build is missing the required top banner: {b['file']}")
+        if not body.startswith(b"return"):
+            bad.append(f"protected body does not start with return: {b['file']}")
+        if any(t.kind == "comment" for t in minify.tokenize(body)):
+            bad.append(f"protected body contains an extra comment: {b['file']}")
         ok, msg = pipeline.validate_syntax(data)
         if not ok:
             bad.append(f"build syntax failed: {b['file']}: {msg[:100]}")

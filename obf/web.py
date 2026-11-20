@@ -12,15 +12,19 @@ held in memory, temp files are deleted, nothing is persisted, and there are
 request-size, concurrency and rate limits.
 
 Normal builds use one VM runtime, exactly three presets (light, medium and
-heavy), and one opaque ID-numbered `return`-based entry layout with zero
-comments and no top-level locals. The VM uses sharded encoded streams,
+heavy), and one opaque ID-numbered `return`-based entry layout. The first line
+is the required `--protected by grand6_7 (on discord)` Luau comment; the
+protected chunk itself has no other comments and no top-level locals. The VM
+uses sharded encoded streams,
 split handler tables and distributed late-decoded constant slices; a private
 source map is kept out of the production chunk. Nested dispatch,
 anti-environment poisoning and oversized padding are disabled so ordinary
 Luau/Roblox environments do not poison the constant decoder. No `loadstring`
-is emitted by any build. The optional web publisher wraps a finished build in
-a separate `loadstring(game:HttpGet(...))()` loader; that wrapper is not part
-of the protected chunk.
+is emitted by any build. The local hosted website forces V7 crypto on with
+seed-only derivation; the CLI/library default remains off. The optional web
+publisher wraps a finished build in a separate
+`loadstring(game:HttpGet(...))()` loader; that wrapper is not part of the
+protected chunk.
 
 Deployment is paused: see DEPLOY.md. No Git remote, push, GitHub repo or
 Render service has been created here. The service keeps no local persistent
@@ -67,6 +71,8 @@ OBF_TIMEOUT = int(os.environ.get("OBF_TIMEOUT", "60"))
 os.environ.setdefault("OBF_TIMEOUT", str(OBF_TIMEOUT))
 RATE_LIMIT = int(os.environ.get("OBF_RATE_LIMIT", "24"))
 ALLOWED_ORIGIN = os.environ.get("OBF_ALLOWED_ORIGIN", "*")
+# The local hosted website runs V7 always-on, seed-only. Browser/API clients
+# cannot supply key text; CLI callers can still use local key files.
 # Optional shared secret. Leave unset for a private/local instance; set it on a
 # public Render deployment so random visitors cannot burn your CPU.
 API_KEY = os.environ.get("OBF_API_KEY", "")
@@ -85,8 +91,8 @@ STATIC = {
     "/LOADSTRINGS.md": ("../LOADSTRINGS.md", "text/markdown; charset=utf-8"),
 }
 
-# Only harmless per-request tweaks are accepted. The single-VM policy is
-# enforced below and cannot be switched back on through the API.
+# Only harmless per-request tweaks are accepted. The single-VM and always-on
+# V7 policies are enforced below and cannot be toggled through the API.
 BOOL_KEYS = frozenset(
     {"flatten", "virtualize_globals", "virtualize_properties", "integrity",
      "stealth"}
@@ -198,6 +204,9 @@ def build_request(payload: dict) -> tuple[object, bool, bytes]:
         lo, hi = RANGES[k]
         overrides[k] = max(lo, min(hi, fv))
 
+    # Local hosted website policy: V7 crypto is always on and seed-only.
+    # Any client-supplied crypto/key_text/key_file is ignored. The CLI can
+    # still opt into passphrase-derived material outside the web API.
     # Re-assert the single-VM policy after all user keys are processed.
     overrides.update(
         {
@@ -206,6 +215,9 @@ def build_request(payload: dict) -> tuple[object, bool, bytes]:
             "anti_env": False,
             "anti_tamper": False,
             "one_line": True,
+            "crypto": True,
+            "key_text": None,
+            "key_file": None,
         }
     )
     verify = payload.get("verify", True)
@@ -248,6 +260,11 @@ def do_obfuscate(payload: dict) -> dict:
         warnings.append("Compile check failed: " + syntax["message"])
     if result.stats.get("vm"):
         warnings.append("Single VM output: encoded IR, no source syntax shipped.")
+    if result.stats.get("crypto"):
+        warnings.append(
+            "V7 crypto is always on with seed-only convenience whitening; "
+            "obfuscation/tamper detection, not confidentiality."
+        )
 
     return {
         "ok": True,
@@ -351,6 +368,7 @@ def meta() -> dict:
             "anti_env": False,
             "anti_tamper": False,
             "stealth": False,
+            "crypto": True,
             "blob_pad": 4096,
             "verify": True,
             "junk": 2,
@@ -362,7 +380,7 @@ def meta() -> dict:
             "backend": "github",
             "requires_api_key": bool(API_KEY),
             "max_publish_bytes": MAX_PUBLISH,
-            "wrapper": "loadstring(game:HttpGet(<pinned raw url>))()",
+            "wrapper": "--protected by grand6_7 (on discord)\nloadstring(game:HttpGet(<pinned raw url>))()",
         },
         "requires_api_key": bool(API_KEY),
         "policy": "Your source is parsed/compiled, never executed. Obfuscated output is returned to you; the optional loadstring publisher stores only the public raw file in an external GitHub repo.",

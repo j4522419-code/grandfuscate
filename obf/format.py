@@ -1,6 +1,7 @@
 """Randomised return-based entrypoint and token-level global alias rewrite.
 
-Normal builds emit no comments and no top-level `local` declarations. The
+Normal builds emit only the required top banner comment and no other comments,
+and no top-level `local` declarations. The
 generated chunk is one `return` expression whose value is one of five opaque
 ID-numbered entry layouts. Inside that entry, a per-build handler table
 replaces fixed global member chains with opaque numeric/string keys. Four

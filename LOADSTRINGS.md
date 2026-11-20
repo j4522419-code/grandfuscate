@@ -4,13 +4,14 @@ This is the setup guide for the **make it a loadstring!** button in the web UI.
 
 The button does **not** paste the whole obfuscated script into a giant Lua string.
 It uploads the finished obfuscated output to a public GitHub raw file, then shows
-a one-line executor-style loader:
+a two-line executor-style loader, starting with the same required Luau banner:
 
 ```lua
+--protected by grand6_7 (on discord)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/YOU/REPO/<commit-sha>/loadstrings/<id>.luau"))()
 ```
 
-**Copy loadstring** copies only that line.
+**Copy loadstring** copies the banner plus loader.
 
 > `loadstring` and `game:HttpGet` are executor-style APIs. They are not standard
 > Roblox Studio / vanilla Luau features. Nothing here is a live-executor
@@ -43,9 +44,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YOU/REPO/<commit-sha>
 - `tests/test_publish.py`
   - mocked GitHub tests; no real network calls or secrets.
 
-The obfuscated production chunk itself still starts with `return`, contains zero
-comments and does **not** call `loadstring`, `load` or `require`. The loader is a
-separate wrapper generated only after you click the new button.
+The obfuscated production chunk itself starts with the required top banner,
+then a `return`-first body with no other comments, and does **not** call
+`loadstring`, `load` or `require`. The separate loader wrapper generated after
+you click the button also starts with the same banner.
 
 ---
 

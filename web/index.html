@@ -121,7 +121,6 @@
       <label for="apiKey">API key</label>
       <input type="text" id="apiKey">
     </div>
-
     <div class="checks">
       <label><input type="checkbox" id="verify" checked>Verify</label>
     </div>
@@ -206,7 +205,8 @@ function collect() {
     seed: num("seed"),
     place_id: num("placeId"),
     game_id: num("gameId"),
-    verify: $("verify").checked
+    verify: $("verify").checked,
+    crypto: true
   };
 }
 

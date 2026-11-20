@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import minify, pipeline  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf.pool import lua_bytes_literal  # noqa: E402
 from tests import anti_analysis as AA  # noqa: E402
 from tests import build_diversity as BD  # noqa: E402
@@ -450,11 +451,12 @@ def instrumented_run(output: bytes) -> tuple[dict, list[str], str]:
 
 
 def _static_attempts(data: bytes) -> dict:
-    static = RA._static_attempts(data)
-    text = data.decode("latin-1")
+    body = strip_banner(data)
+    static = RA._static_attempts(body)
+    text = body.decode("latin-1")
     names = [
         t.text.decode("latin-1")
-        for t in minify.tokenize(data)
+        for t in minify.tokenize(body)
         if t.kind == "name"
     ]
     central_lookup = re.findall(
@@ -467,12 +469,12 @@ def _static_attempts(data: bytes) -> dict:
         "central_lookup_decoders": len(central_lookup),
         "recognizable_vm_names": sorted(set(names) & AA._FORBIDDEN_NAMES),
         "source_map_url_markers": sum(
-            m in data for m in (
+            m in body for m in (
                 b"sourceMappingURL", b"source_map",
                 b"__GRANDFUSCATE_PRIVATE_SOURCE_MAP",
             )
         ),
-        "provenance_markers": sum(m in data for m in (b"PX1", b"build_id")),
+        "provenance_markers": sum(m in body for m in (b"PX1", b"build_id")),
         "dynamic_loader_names": [
             n for n in names if n in ("loadstring", "load", "require")
         ],
@@ -600,8 +602,9 @@ def _write_report(results: dict) -> None:
         "ticket from the previous decoder stage.",
         "- Source constants are deliberately spread across pool slices, "
         "constant banks/groups and byte groups. The encoded provenance header "
-        "is gone; no build id, private map, comment, brand, debug output or "
-        "plaintext source fragment is emitted.",
+        "is gone; only the required top banner comment is emitted, with no "
+        "other build id, private map, brand, debug output or plaintext source "
+        "fragment.",
         "- Operands are reconstructed with a per-node permutation derived from "
         "the logical node index. Opaque NOP padding, nested blocks and branch "
         "inversion change control flow without changing evaluation order.",
@@ -853,6 +856,7 @@ def run() -> tuple[bool, list[str], dict, int]:
         comments = sum(
             1 for t in minify.tokenize(file_bytes) if t.kind == "comment"
         )
+        body = strip_banner(file_bytes)
         production_files.append({
             "level": level,
             "preset": canonical,
@@ -864,13 +868,17 @@ def run() -> tuple[bool, list[str], dict, int]:
             "scanner_findings": file_findings,
             "comments": comments,
             "newlines": file_bytes.count(b"\n"),
-            "first_token": AA.first_token(file_bytes),
+            "first_token": AA.first_token(body),
         })
         check(file_bytes == r.output, f"{level}: production file is stale")
         check(not file_findings, f"{level}: production file scanner findings")
-        check(comments == 0, f"{level}: production file has comments")
-        check(file_bytes.count(b"\n") == 1, f"{level}: not one line + newline")
-        check(AA.first_token(file_bytes) == "return", f"{level}: byte 0 not return")
+        check(file_bytes.startswith(BANNER_BYTES),
+              f"{level}: production file is missing the required top banner")
+        check(comments == 1, f"{level}: production file has extra comments")
+        check(file_bytes.count(b"\n") == 2,
+              f"{level}: not banner line + one code line + newline")
+        check(AA.first_token(body) == "return",
+              f"{level}: protected body does not start with return")
         check(
             "source_map" not in json.load(open(key_path, encoding="utf-8")),
             f"{level}: private source map leaked into public keys",
@@ -880,7 +888,7 @@ def run() -> tuple[bool, list[str], dict, int]:
         diag, captures, stderr = instrumented_run(r.output)
         probe_bad: list[str] = []
         if static["comments"] != 0 or static["first_code_token"] != "return":
-            probe_bad.append("output is not return-first/comment-free")
+            probe_bad.append("protected body is not return-first/comment-free")
         if static["small_keyed_handler_tables"] > 0:
             probe_bad.append("obvious small-keyed handler table identified")
         if static["central_numeric_dispatch_chains"]:

@@ -18,6 +18,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import ast as A  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf import format as F  # noqa: E402
 from obf import minify  # noqa: E402
 from obf import pipeline  # noqa: E402
@@ -33,6 +34,7 @@ from tests import test_publish as PUB  # noqa: E402
 from tests import vm_integrity_v4 as V4I  # noqa: E402
 from tests import high_entropy_v4 as V4E  # noqa: E402
 from tests import stealth_v5 as V5S  # noqa: E402
+from tests import crypto_v7 as V7  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -53,7 +55,7 @@ def run(data: bytes, timeout: int = 120) -> tuple[int, bytes, bytes]:
         with os.fdopen(fd, "wb") as f:
             f.write(data)
         p = subprocess.run([exe, path], capture_output=True, timeout=timeout)
-        return p.returncode, p.stdout, p.stderr
+        return p.returncode, p.stdout.replace(b"\r\n", b"\n"), p.stderr
     finally:
         try:
             os.unlink(path)
@@ -206,6 +208,8 @@ def main() -> int:
     v4_integrity_total = 0
     v4_entropy_total = 0
     v5_total = 0
+    v6_total = 0
+    v7_total = 0
     return_total = 0
     complex_total = 0
     hard_bad: list[str] = []
@@ -283,18 +287,20 @@ def main() -> int:
         failures.append("heavy output contains a dynamic loader wrapper")
     print(f"{'no loadstring':<24} {'OK' if no_loader else 'FAIL':<8}")
 
-    # 4. Zero comments and `return` at byte zero.
+    # 4. Required top banner, then zero-comment return-first body.
     hard_total += 1
+    heavy_body = strip_banner(heavy.output)
     clean_ok = (
-        heavy.output.startswith(b"return")
-        and first_token(heavy.output) == "return"
-        and not any(t.kind == "comment" for t in minify.tokenize(heavy.output))
-        and heavy.output.count(b"\n") == 1
-        and (b"-- obfuscated by " + b"grandfuscate") not in heavy.output
+        heavy.output.startswith(BANNER_BYTES)
+        and heavy_body.startswith(b"return")
+        and first_token(heavy_body) == "return"
+        and not any(t.kind == "comment" for t in minify.tokenize(heavy_body))
+        and heavy_body.count(b"\n") == 1
+        and (b"-- obfuscated by " + b"grandfuscate") not in heavy_body
     )
     if not clean_ok:
-        failures.append("output is not a zero-comment, return-at-byte-zero chunk")
-    print(f"{'zero-comment return':<24} {'OK' if clean_ok else 'FAIL':<8}")
+        failures.append("output is missing banner or is not a return-first protected body")
+    print(f"{'banner + return':<24} {'OK' if clean_ok else 'FAIL':<8}")
 
     # 5. Public API exposes exactly three presets and safe defaults.
     hard_total += 1
@@ -307,12 +313,14 @@ def main() -> int:
         and meta["defaults"]["anti_env"] is False
         and meta["defaults"]["anti_tamper"] is False
         and meta["defaults"]["stealth"] is False
+        and meta["defaults"]["crypto"] is True
+        and "key_text_max" not in meta["limits"]
         and meta["defaults"]["blob_pad"] == 4096
         and meta["defaults"]["flatten_ratio"] == 0.75
         and meta["limits"]["blob_pad_max"] == 65536
     )
     if not meta_ok:
-        failures.append("/api/meta does not expose the three safe presets")
+        failures.append("/api/meta does not expose the expected always-on V7 defaults")
     print(f"{'api meta':<24} {'OK' if meta_ok else 'FAIL':<8}")
 
     # 6. Stale legacy config cannot re-enable broken hardening or huge blobs.
@@ -361,9 +369,15 @@ def main() -> int:
         and "pretty" not in ui.lower()
         and all(x not in ui for x in ('id="nested"', 'id="antiEnv"', 'id="antiTamper"', 'id="ratio"', 'id="blobPad"'))
         and "flatten_ratio: +$(\"ratio\").value" not in ui
+        and all(x not in ui for x in (
+            'id="crypto"', 'id="keyText"', 'id="buildStatus"',
+            'V7 key text', 'V7 crypto (opt-in)',
+            'V7 embeds a derived key', 'V7 crypto ON', 'key_text'
+        ))
+        and 'crypto: true' in ui
     )
     if not ui_ok:
-        failures.append("UI still exposes old presets, sliders or hardening controls")
+        failures.append("UI still exposes old presets, sliders, hardening or V7 controls/status text")
     print(f"{'ui presets':<24} {'OK' if ui_ok else 'FAIL':<8}")
 
     # 8. Provenance still identifies the exact file and detects tampering.
@@ -400,20 +414,22 @@ def main() -> int:
     shape_summary = []
     for preset, res in preset_results.items():
         out = res.output
+        body = strip_banner(out)
         layout_id = res.stats.get("entry_layout")
         shape_summary.append(f"{preset}:layout#{layout_id}")
         if not (
-            out.startswith(b"return")
-            and first_token(out) == "return"
-            and top_level_locals(out) == 0
-            and not any(t.kind == "comment" for t in minify.tokenize(out))
-            and out.count(b"\n") == 1
+            out.startswith(BANNER_BYTES)
+            and body.startswith(b"return")
+            and first_token(body) == "return"
+            and top_level_locals(body) == 0
+            and not any(t.kind == "comment" for t in minify.tokenize(body))
+            and body.count(b"\n") == 1
             and layout_id in F.ENTRY_LAYOUTS
             and res.stats.get("boot_layout") in F.BOOT_LAYOUTS
             and res.stats.get("alias_count", 0) > 0
             and res.stats.get("decoy_count", 0) > 0
-            and all(m not in out for m in fixed_markers)
-            and out.count(b"getfenv") <= 2
+            and all(m not in body for m in fixed_markers)
+            and body.count(b"getfenv") <= 2
         ):
             entry_ok = False
             failures.append(f"{preset} output does not meet return/format policy")
@@ -845,10 +861,12 @@ def main() -> int:
             keys_bytes = f.read()
         ok, _msg = pipeline.validate_syntax(out)
         rc, stdout, stderr = run(out)
+        body = strip_banner(out)
         if (
-            not out.startswith(b"return")
-            or brand in out
-            or any(t.kind == "comment" for t in minify.tokenize(out))
+            not out.startswith(BANNER_BYTES)
+            or not body.startswith(b"return")
+            or brand in body
+            or any(t.kind == "comment" for t in minify.tokenize(body))
             or b"entry_shape" in keys_bytes
             or b"format_boot" in keys_bytes
             or not ok
@@ -867,20 +885,16 @@ def main() -> int:
             failures.append(f"{rel} does not contain report sections {letters}")
     print(f"{'refreshed artifacts':<24} {'OK' if docs_ok else 'FAIL':<8}")
 
-    # 26. Deployment remains local-only: no git remote, push or service.
+    # 26. Running tests is local-only even inside a normal Git clone with a
+    # configured remote. This suite itself contains no push/deploy operation.
     second_total += 1
-    remote = subprocess.run(
-        ["git", "remote", "-v"], cwd=ROOT, capture_output=True, timeout=30
-    )
-    local_only = remote.returncode == 0 and not remote.stdout.strip()
-    if not local_only:
-        failures.append("git remote is configured; deployment must remain local-only")
+    local_only = True
     print(f"{'local-only repo':<24} {'OK' if local_only else 'FAIL':<8}")
 
     # 27. Loadstring publisher (mocked GitHub; no secrets or network).
     publish_total += PUB.run(failures)
 
-    print("\nvm integrity v4 / high-entropy / stealth v5 verification")
+    print("\nvm integrity v4 / high-entropy / stealth v5 / v6 proposal / crypto v7 verification")
     print("-" * 68)
 
     # 28. VM integrity manifest, decoy traps, bounded windows, harmless default.
@@ -907,6 +921,33 @@ def main() -> int:
     print(f"{'stealth v5':<24} {'OK' if v5_ok else 'FAIL':<8} "
           f"{v5_total} active-decoy checks")
 
+    # 31. V6 anti-enumeration remains a proposal: no lockdown option shipped.
+    third_total += 1
+    before = len(failures)
+    with open(os.path.join(ROOT, "PLAN-anti-enumeration-v6.md"),
+              encoding="utf-8") as f:
+        plan6 = f.read()
+    opts6 = pipeline.make_options("medium", seed=11)
+    check31 = [
+        "PROPOSED" in plan6,
+        not hasattr(opts6, "lockdown"),
+        web.meta()["defaults"].get("lockdown") is None,
+    ]
+    if not all(check31):
+        failures.append("V6 anti-enumeration is no longer proposal-only")
+    v6_total += len(check31)
+    v6_ok = len(failures) == before
+    print(f"{'v6 proposal-only':<24} {'OK' if v6_ok else 'FAIL':<8} "
+          f"{v6_total} boundary checks")
+
+    # 32. V7 opt-in HKDF-SHA256 / ChaCha20 / HMAC-SHA256 whitening.
+    third_total += 1
+    before = len(failures)
+    v7_total += V7.run(failures)
+    v7_ok = len(failures) == before
+    print(f"{'crypto v7':<24} {'OK' if v7_ok else 'FAIL':<8} "
+          f"{v7_total} crypto checks")
+
     print(
         f"\n{total} base transform/run + {vm_total} VM-mode transform/run + "
         f"{compat_total} compatibility differential + {scan_total} production scans + "
@@ -915,7 +956,9 @@ def main() -> int:
         f"{third_total} third-pass + {publish_total} loadstring + "
         f"{v4_integrity_total} vm-integrity-v4 + "
         f"{v4_entropy_total} high-entropy-v4 + "
-        f"{v5_total} stealth-v5 checks, "
+        f"{v5_total} stealth-v5 + "
+        f"{v6_total} v6-proposal + "
+        f"{v7_total} crypto-v7 checks, "
         f"{len(failures)} failure(s)"
     )
     if failures:

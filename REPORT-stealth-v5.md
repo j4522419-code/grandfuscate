@@ -1,10 +1,10 @@
 # Report: V5 stealth / fail-closed active decoys
 
-Status: **implemented locally, verified, V5 bundles/links prepared, NOT
-deployed.** The live Render service is still the V4 build (`97d767a`). V5 is an
-opt-in flag. V5 ZIPs, checksums, public links and `DEPLOY-V5-TO-RENDER.md`
-have been rebuilt and byte-verified, but no commit, push, remote, token or
-deploy was performed for V5.
+Status: **implemented, verified, and DEPLOYED by the user.** V5 was pushed as
+`a567ed0` on 2026-11-19 and is live; see `DEPLOY-V5-STATUS.md` and
+`TEST-RESULTS-v5-live-smoke.txt`. This report was written before that push and
+remains part of the deployed bundle. V5 is an opt-in flag; default builds are
+unchanged. No agent commit, push, remote, token or deploy was performed.
 
 ## What changed
 
@@ -70,7 +70,8 @@ Canonical seed `20261118`, source `print("Hello World!")`:
 | heavy | 128 | 32 / 32 / 32 / 32 | 659,694 B | 702,493 | yes |
 
 All three stealth builds:
-- parse with `luau-compile`, start with byte-0 `return`, contain no comments;
+- parse with `luau-compile`, start with the required top banner, then a
+  `return`-first body with no other comments;
 - run unchanged (`Hello World!`, rc 0, empty stderr);
 - stay under the existing `<=15%` size gate;
 - produce **0** production-scanner findings;
@@ -101,11 +102,10 @@ Normal builds (`stealth=False`) are unaffected: no active-decoy plan,
   artifacts. V5 ZIPs, `SHA256SUMS.txt`, `PUBLIC-DOWNLOAD-LINKS.md` and
   `DEPLOY-V5-TO-RENDER.md` were rebuilt and byte-verified.
 
-## To deploy (manual step remains)
+## Deployment completed
 
-V5 bundles/links are prepared, but the live service is still V4. Follow
-`DEPLOY-V5-TO-RENDER.md`: download the V5 ZIP, verify its SHA-256, copy into
-your existing clone, commit + push `main`, let `autoDeployTrigger: commit`
-deploy, then verify `/api/meta` has `defaults.stealth=false` and an
-authenticated `/api/obfuscate` call with `"stealth": true` returns V5 output.
-No agent commit/push/deploy was performed.
+The user followed `DEPLOY-V5-TO-RENDER.md`, pushed `a567ed0` to `main`, and
+Render deployed it. Live `/api/meta` now has `defaults.stealth=false`; the
+authenticated `stealth:true` call returns 48 active decoys and the default
+call returns 0. Full verified status: `DEPLOY-V5-STATUS.md`. Rollback reference:
+`DEPLOY-V4-TO-RENDER.md` / known-good V4 `97d767a`.

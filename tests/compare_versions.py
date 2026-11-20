@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import minify, pipeline  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from tests import anti_analysis as AA  # noqa: E402
 from tests import runtime_analysis as RA  # noqa: E402
 
@@ -123,18 +124,19 @@ def _stable_fields(data: bytes) -> list[str]:
 
 
 def _signature(output: bytes, source: bytes, needles: list[bytes]) -> dict:
-    static = RA._static_attempts(output)
+    body = strip_banner(output)
+    static = RA._static_attempts(body)
     diag, captures, stderr = RA.instrumented_run(output, needles)
     rc0, out0, err0 = AA.run_luau(source)
     rc, out, err = AA.run_luau(output)
     return {
         "output_bytes": len(output),
         "output_sha256": hashlib.sha256(output).hexdigest()[:16],
-        "starts_with_return": output.startswith(b"return"),
-        "comments": _comments(output),
-        "brand_bytes": b'-- obfuscated by grandfuscate' in output,
+        "starts_with_return": body.startswith(b"return"),
+        "comments": _comments(body),
+        "brand_bytes": b'-- obfuscated by grandfuscate' in body,
         "fixed_checksum_constants": static["fixed_checksum_constants"],
-        "stable_fields": _stable_fields(output),
+        "stable_fields": _stable_fields(body),
         "stable_field_count": static["small_handler_groups"],
         "small_handler_tables": static["small_keyed_handler_tables"],
         "central_dispatch_chains": static["central_numeric_dispatch_chains"],
@@ -267,7 +269,8 @@ def _write(results: dict) -> None:
         f"Measured {results['created']} with {results['toolchain']}, seed "
         f"{results['seed']}. Old = `{results['baseline']}`. Three fresh Luau "
         "process launches per timing; min/median wall time and peak RSS "
-        "(`ru_maxrss`) are local engineering numbers, not a red-team result.",
+        "(`ru_maxrss` on POSIX; unavailable/0 on Windows) are local engineering "
+        "numbers, not a red-team result.",
         "",
         "## Output size",
         "",
@@ -298,9 +301,10 @@ def _write(results: dict) -> None:
         "",
         "The old `print(67)` build exposed the identifying byte-0 comment, "
         "fixed checksum constants and stable frame fields; the restricted "
-        "runtime dump recovered source needles. The new build has zero "
-        "comments, starts with `return`, uses randomized checksums and field "
-        "keys, and the same restricted probes recover no source needles.",
+        "runtime dump recovered source needles. The new build has one required "
+        "top banner comment, then a `return`-first protected body with no "
+        "other comments, randomized checksums and field keys; the same "
+        "restricted probes recover no source needles.",
         "",
         "## Performance",
         "",
@@ -369,7 +373,7 @@ def verify() -> tuple[bool, list[str]]:
         if not new["behaviour"]["matches_original"]:
             bad.append(f"new {label} behaviour differs from original")
         if not new["starts_with_return"] or new["comments"] != 0:
-            bad.append(f"new {label} is not comment-free return-first")
+            bad.append(f"new {label} protected body is not comment-free return-first")
         if new["brand_bytes"]:
             bad.append(f"new {label} contains identifying brand bytes")
         if new["fixed_checksum_constants"]:

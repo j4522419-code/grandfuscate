@@ -1,0 +1,60 @@
+CRYPTO-V7: ALL GREEN (248 checks)
+Standalone command: PYTHONPATH=. python3 tests/crypto_v7.py (after banner change)
+Full suite: TEST-RESULTS-v7-full-suite.txt -> ALL GREEN, 0 failure(s), RC=0
+  (rerun after the required top-banner change)
+  crypto v7                OK       248 crypto checks
+  v6 proposal-only         OK       3 boundary checks
+  stealth v5               OK       92 active-decoy checks
+
+Scope: local workspace only. V7 is NOT committed, pushed, bundled, uploaded or
+deployed. Live service remains V5 at a567ed0. V6 remains proposal-only.
+
+Known-answer vectors verified:
+  RFC 8439 section 2.4.2 ChaCha20 ciphertext
+  RFC 5869 test case 1 HKDF-SHA256
+  HMAC-SHA256("key", "The quick brown fox jumps over the lazy dog")
+  SHA-256("abc")
+  Pure-Luau SHA-256 / HMAC-SHA256 / ChaCha20 / DECRYPT probe
+
+Round-trip / tamper:
+  all byte values 0..255, lengths 0/1/63/64/65/127/128/129/256/771
+  seeds 1, 2, 3, 42
+  ciphertext / nonce / tag / AAD / salt / wrong passphrase all rejected
+  CLI/library crypto=false protected body byte-identical to deployed V5 for 9
+  preset/seed combinations after stripping the required top banner
+
+Measured sizes with synthetic test passphrase, seed 20261118,
+source print("Hello World!"). Sizes are protected-body bytes; every full
+output file is exactly +37 bytes for the required top banner:
+
+  preset  default V5  crypto V7  overhead  fixed <=15% gate  within gate
+  light      147,851     155,867    +8,016            179,903          yes
+  medium     209,285     211,690    +2,405            225,877          yes
+  heavy      657,312     659,710    +2,398            702,493          yes
+
+All nine preset/seed measurements stayed under the fixed gate
+(TEST-RESULTS-v7-full-suite.txt and REPORT-crypto-v7.md).
+
+Local web preview (port 8000, restarted after banner change):
+  UI has no keyText/crypto controls, no "V7 embeds a derived key" note,
+    no "V7 crypto ON" status line; collect() still sends crypto: true
+  /api/meta defaults.crypto=true, no key_text_max, requires_api_key=false
+  forced API smoke with crypto=false + stray key_text/key_file:
+    ok=true, syntax.ok=true, stats.crypto=true, crypto_key_source=seed,
+    crypto_bytes=13005, crypto_tag_ok=true, output_len=211779,
+    first line exactly --protected by grand6_7 (on discord),
+    return-first protected body, no other comments, no loadstring,
+    no raw key text
+  returned output runs Hello World! with official Luau (rc 0)
+  no-crypto-field API smoke: stats.crypto=true, crypto_key_source=seed,
+    output_len=211779, same banner
+  separate loadstring wrapper also starts with the same banner
+  V7 standalone 248 checks and full suite ALL GREEN RC=0 after banner change
+
+Honesty boundary: the derived key is embedded in the emitted chunk. V7 is
+obfuscation / tamper detection, not confidentiality. It does not stop dumps,
+crash external loggers, erase running code, or certify any executor. SHA-256 is
+a hash, not a cipher; HKDF-SHA256 derives the key, HMAC-SHA256 authenticates,
+and ChaCha20 is the stream cipher. No loadstring, no comments beyond the
+required top banner, no raw
+punctuation outside literals, no bare forbidden globals.

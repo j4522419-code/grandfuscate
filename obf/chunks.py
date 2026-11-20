@@ -6,7 +6,9 @@ contiguous instruction/pool blob: each blob is split into small literals held
 by separately generated closures in a table with randomised numeric keys.
 The original blob is assembled only when that blob's getter is first used.
 
-This is an obfuscation transform, not cryptography.
+Normal builds are an obfuscation transform. With opt-in V7, the chunked bytes
+are encrypted at build time using an embedded derived key; that is obfuscation,
+not confidentiality.
 """
 from __future__ import annotations
 

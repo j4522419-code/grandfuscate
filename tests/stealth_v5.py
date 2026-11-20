@@ -5,7 +5,8 @@ Imported by ``tests/run_tests.py`` (section 30) and runnable standalone:
 
 Checks:
 * default builds have stealth off and no active-decoy plan;
-* ``stealth=True`` builds parse, run, keep ``return`` entry, no comments;
+* ``stealth=True`` builds parse, run, start with the required banner and keep a
+  ``return``-first protected body with no extra comments;
 * decoys are embedded in real handler tables and referenced from guard lines;
 * all four reaction classes exist and the bounded Luau probe exercises them;
 * no bare forbidden globals / member chains, no dynamic loader, no raw soup;
@@ -29,6 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from obf import ast as A  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf import minify, pipeline, web  # noqa: E402
 from obf.cli import build_parser  # noqa: E402
 from obf.layout import make_layout  # noqa: E402
@@ -70,7 +72,7 @@ def _run_output(data: bytes, timeout: int = 60) -> tuple[int, bytes, bytes]:
         with os.fdopen(fd, "wb") as f:
             f.write(data)
         p = subprocess.run([exe, path], capture_output=True, timeout=timeout)
-        return p.returncode, p.stdout, p.stderr
+        return p.returncode, p.stdout.replace(b"\r\n", b"\n"), p.stderr
     finally:
         try:
             os.unlink(path)
@@ -198,12 +200,14 @@ def run(failures: list[str]) -> int:
         check(failures, (rc, out, err) == (0, EXPECTED, b""),
               f"{tag}: stealth build changed runtime behaviour "
               f"(rc={rc} out={out[:60]!r} err={err[:120]!r})"); checks += 1
-        check(failures, res.output.startswith(b"return"),
-              f"{tag}: output does not start with return"); checks += 1
+        body = strip_banner(res.output)
+        check(failures, res.output.startswith(BANNER_BYTES)
+              and body.startswith(b"return"),
+              f"{tag}: output is missing banner or return body"); checks += 1
         check(failures, not any(t.kind == "comment"
-                                for t in minify.tokenize(res.output)),
-              f"{tag}: output contains a comment"); checks += 1
-        check(failures, res.v4.budget.within_gate(len(res.output)),
+                                for t in minify.tokenize(body)),
+              f"{tag}: protected body contains an extra comment"); checks += 1
+        check(failures, res.v4.budget.within_gate(len(body)),
               f"{tag}: stealth build exceeds the <=15% size gate "
               f"({len(res.output)} > {res.v4.budget.gate_bytes})"); checks += 1
         findings = AA.scan_output(SRC, res.output, res.keys, res.source_map)
@@ -214,7 +218,8 @@ def run(failures: list[str]) -> int:
               f"{tag}: raw symbol soup outside a string literal"); checks += 1
         names = _name_tokens(res.output)
         forbidden = {"error", "coroutine", "yield", "setmetatable", "tostring",
-                     "pcall", "rawset", "pairs", "loadstring"}
+                     "pcall", "rawset", "pairs", "loadstring",
+                     "bit32", "string", "table", "math"}
         check(failures, not (names & forbidden),
               f"{tag}: bare forbidden globals remain: {sorted(names & forbidden)}")
         checks += 1

@@ -1,3 +1,5 @@
+> **Post-deploy note:** V4 was deployed by the user at `97d767a`; V5 was later deployed at `a567ed0`. See `DEPLOY-V5-STATUS.md` for the current live status. This report retains its original pre-deploy wording below.
+
 # Report: V4 VM integrity verification + opaque decoy traps
 
 Generated 2026-11-19T07:53:19.786964+00:00. Status: **implemented locally, full suite ALL GREEN, not deployed**.

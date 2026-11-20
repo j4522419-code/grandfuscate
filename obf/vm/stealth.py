@@ -19,7 +19,8 @@ security boundary. No 100% dumper/env-logger defeat claim is made.
 
 All emitted globals are rewritten through the opaque alias table by
 ``obf/format.py``; the standalone probe script is test-only and uses plain
-globals. No dynamic loader, no ``loadstring``, no comments, no raw symbol soup
+globals. No dynamic loader, no ``loadstring``, no comments beyond the required
+top banner, and no raw symbol soup
 outside string literals.
 """
 from __future__ import annotations

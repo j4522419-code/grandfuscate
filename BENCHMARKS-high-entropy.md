@@ -25,4 +25,4 @@ heavy  99991        684457   610864   702493   684457       0   60.87%    70.14%
 
 - The 90–95% encoded-literal-share target is **not** reached: heavy peaks at 84.00%, light/medium are 28–61%. Raw `!@^&#%...` outside string literals is a Luau parse error, so all entropy must live inside literals; reaching 90% would require padding that breaks the <=15% size gate. Per the plan, the gate wins and the achieved maximum is recorded — no 99% claim and no multi-megabyte padding.
 - padding is clamped to the exact zero-padding base of each build. For seeds whose third-pass VM base already exceeds the fixed gate (e.g. light/99991), v4 adds **zero** padding.
-- All outputs parse, run with identical behaviour, stay < 1 MiB, start with `return` at byte 0, contain no comments, and contain no `loadstring`/`HttpGet` self-decoding wrapper.
+- All outputs parse, run with identical behaviour, stay < 1 MiB, start with the required top banner, then a `return`-first body with no other comments, and contain no `loadstring`/`HttpGet` self-decoding wrapper.

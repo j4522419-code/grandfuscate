@@ -1,53 +1,53 @@
 {
   "baseline": "tests/baseline (frozen pre-second-pass engine)",
-  "created": "2026-11-19T02:58:39.331915+00:00",
+  "created": "2026-11-20T02:51:40.704625+00:00",
   "performance": {
     "measures": {
       "new_runtime": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 1.2390867930007516,
-        "seconds_min": 1.2358204550037044
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 1.0300167999812402,
+        "seconds_min": 1.0137692999560386
       },
       "new_startup": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 0.01671861100476235,
-        "seconds_min": 0.016266233003989328
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 0.02094099996611476,
+        "seconds_min": 0.020186099980492145
       },
       "old_runtime": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 0.4193060520046856,
-        "seconds_min": 0.41222457100229803
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 0.3734866000013426,
+        "seconds_min": 0.36606819997541606
       },
       "old_startup": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 0.009623147998354398,
-        "seconds_min": 0.006715124996844679
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 0.011386299971491098,
+        "seconds_min": 0.010830799990799278
       },
       "original_runtime": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 0.0023092419942258857,
-        "seconds_min": 0.0022247119995881803
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 0.00671169999986887,
+        "seconds_min": 0.006121600046753883
       },
       "original_startup": {
-        "rss_kib_max": 113428,
-        "rss_kib_median": 113428,
-        "seconds_median": 0.0029064600021229126,
-        "seconds_min": 0.0027786669961642474
+        "rss_kib_max": 0,
+        "rss_kib_median": 0,
+        "seconds_median": 0.0069491000031121075,
+        "seconds_min": 0.006092700001318008
       }
     },
     "overhead_median": {
-      "new": 536.5772821120568,
-      "old": 181.57735441029308
+      "new": 153.4658581285463,
+      "old": 55.647093882122206
     },
     "startup_median_ms": {
-      "new": 16.71861100476235,
-      "old": 9.623147998354398,
-      "original": 2.9064600021229126
+      "new": 20.94099996611476,
+      "old": 11.386299971491098,
+      "original": 6.9491000031121075
     },
     "startup_source": "local x = 1",
     "workload": "tests/bench_runtime.luau (5,000 loop iterations)"
@@ -69,8 +69,8 @@
         "central_dispatch_chains": {},
         "comments": 0,
         "fixed_checksum_constants": [],
-        "output_bytes": 198717,
-        "output_sha256": "37e6f092ec28feb9",
+        "output_bytes": 209299,
+        "output_sha256": "4d68617515219de6",
         "runtime_probe": {
           "all_source_hits": 0,
           "captured_stdout": [
@@ -79,7 +79,7 @@
           "char_calls": 10,
           "chunk_ok": "true",
           "clean_ir": "false",
-          "distinct_blobs": 15,
+          "distinct_blobs": 22,
           "global_dispatcher_candidates": 0,
           "harness_stderr": "",
           "startup_source_hits": 0
@@ -156,8 +156,8 @@
         "central_dispatch_chains": {},
         "comments": 0,
         "fixed_checksum_constants": [],
-        "output_bytes": 196415,
-        "output_sha256": "9fc51b17e537f92c",
+        "output_bytes": 211758,
+        "output_sha256": "e743067ecb142bc2",
         "runtime_probe": {
           "all_source_hits": 0,
           "captured_stdout": [
@@ -166,7 +166,7 @@
           "char_calls": 95,
           "chunk_ok": "true",
           "clean_ir": "false",
-          "distinct_blobs": 12,
+          "distinct_blobs": 19,
           "global_dispatcher_candidates": 0,
           "harness_stderr": "",
           "startup_source_hits": 0
@@ -231,15 +231,15 @@
   },
   "sizes": {
     "fixture_medium": {
-      "new": 196415,
+      "new": 211758,
       "old": 70471
     },
     "startup_medium": {
-      "new": 195196,
+      "new": 209269,
       "old": 66926
     },
     "workload_heavy": {
-      "new": 609425,
+      "new": 658931,
       "old": 452152
     }
   },

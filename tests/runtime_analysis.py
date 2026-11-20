@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from obf import minify, pipeline  # noqa: E402
+from obf.banner import BANNER_BYTES, BANNER_TEXT, strip_banner  # noqa: E402
 from obf.pool import lua_bytes_literal  # noqa: E402
 from tests import anti_analysis as AA  # noqa: E402
 
@@ -283,8 +284,9 @@ def _bool(v: str) -> bool:
 
 
 def _static_attempts(data: bytes) -> dict:
-    tokens = [t for t in minify.tokenize(data) if t.kind not in ("ws", "comment")]
-    text = data.decode("latin-1")
+    body = strip_banner(data)
+    tokens = [t for t in minify.tokenize(body) if t.kind not in ("ws", "comment")]
+    text = body.decode("latin-1")
     # A readable opcode table means several *small* contiguous numeric handler
     # keys on one table. Randomised 32-bit keys and per-build slot bases are
     # not instruction tables; count groups, not isolated small literals.
@@ -325,9 +327,9 @@ def _static_attempts(data: bytes) -> dict:
         "fixed_checksum_constants": [
             c.decode("ascii") for c in
             (b"2166136261", b"16777619", b"4294967295", b"811C9DC5")
-            if c in data
+            if c in body
         ],
-        "comments": sum(1 for t in minify.tokenize(data) if t.kind == "comment"),
+        "comments": sum(1 for t in minify.tokenize(body) if t.kind == "comment"),
         "first_code_token": next(
             (t.text.decode("latin-1") for t in tokens if t.kind == "name"), ""
         ),
@@ -376,7 +378,7 @@ def _probe(
     if findings:
         bad.append(f"{label}: production scanner findings: {findings[:4]}")
     if scanned["comments"] != 0 or scanned["first_code_token"] != "return":
-        bad.append(f"{label}: output is not comment-free return-first code")
+        bad.append(f"{label}: protected body is not comment-free return-first code")
     if scanned["small_keyed_handler_tables"] > 0:
         bad.append(f"{label}: small numbered instruction-table handlers identified")
     if scanned["central_numeric_dispatch_chains"]:

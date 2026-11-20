@@ -1,3 +1,5 @@
+> **Post-deploy note:** V4 was deployed by the user at `97d767a`; V5 was later deployed at `a567ed0`. See `DEPLOY-V5-STATUS.md` for the current live status. This report retains its original pre-deploy wording below.
+
 # Report: V4 high-entropy emitted-byte surface
 
 Generated 2026-11-19T07:53:19.786964+00:00. Status: **implemented locally, full suite ALL GREEN, not deployed**. Metric chosen by the user: `bytes_in_literals` — emitted-source bytes inside encoded string/byte/number literal regions.
@@ -25,7 +27,7 @@ Encoded-literal share (canonical seed): light 53.74%, medium 61.38%, heavy 84.00
 
 ## D. Verification
 
-`tests/high_entropy_v4.py`: **124 checks, 0 failures**. All outputs parse, run with identical behaviour, start with `return` at byte 0, have zero comments, contain no `while true do` added by v4, no `loadstring`/`HttpGet`, stay < 1 MiB, and keep symbol soup strictly inside string tokens. Standalone long-bracket (512 B) and mixed-escape (all 256 byte values) decode probes pass.
+`tests/high_entropy_v4.py`: **124 checks, 0 failures**. All outputs parse, run with identical behaviour, start with the required top banner, then a `return`-first body with no other comments, contain no `while true do` added by v4, no `loadstring`/`HttpGet`, stay < 1 MiB, and keep symbol soup strictly inside string tokens. Standalone long-bracket (512 B) and mixed-escape (all 256 byte values) decode probes pass.
 
 ## E. Delivery state
 

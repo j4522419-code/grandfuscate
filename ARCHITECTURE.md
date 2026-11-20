@@ -11,7 +11,7 @@ source.luau
   -> ticketed group matrices + distributed VM interpreter
   -> token-level field/alias rewrite
   -> opaque ID-numbered return entry
-  -> one-line Luau, zero comments, `return` at byte 0
+  -> required top Luau banner + one-line comment-free `return` body
 ```
 
 ## Modules
