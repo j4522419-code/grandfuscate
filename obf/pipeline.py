@@ -212,15 +212,78 @@ def _build_source_map(
     }
 
 
+def _obfuscate_loom_original(data: bytes, opts: Options) -> Result:
+    """Alternative Loom Original register-VM backend (explicit opt-in).
+
+    The output is a single-file chunk: banner line first, then the Loom
+    Original loader. The input must fit Loom's small Luau subset; the
+    compiler raises ``LoomOriginalUnsupported`` (a ``ValueError``) otherwise,
+    and no partial/unprotected output is produced. The V7 single VM remains
+    the default for general scripts.
+    """
+    from .vm.loom_original import compile_source
+
+    if opts.place_id is not None or opts.game_id is not None:
+        raise ValueError("loom_original backend does not support place/game locks")
+
+    text = compile_source(data, seed=opts.seed)
+    output = BANNER_BYTES + b"\n" + text.encode("utf-8")
+    build_id = hashlib.sha256(
+        f"loom-original|{opts.seed}|{hashlib.sha256(data).hexdigest()}".encode("ascii")
+    ).hexdigest()[:16]
+    mini = ConstantPool(random.Random(opts.seed), build_id=build_id)
+    built = mini.build(slices=2)
+    stats = {
+        "input_bytes": len(data),
+        "output_bytes": len(output),
+        "expansion": round(len(output) / max(1, len(data)), 2),
+        "backend": "loom-original",
+        "vm": True,
+        "vm_nodes": 0,
+        "vm_stream_bytes": 0,
+        "vm_fallback": None,
+        "nested_vm": False,
+        "crypto": False,
+        "anti_env": False,
+        "anti_tamper": False,
+        "stealth": False,
+        "protection_level": PROTECTION_LEVELS.get(opts.preset, opts.preset),
+        "source_map_nodes": 0,
+        "source_map_constants": 0,
+        "loom_original": True,
+    }
+    keys = {
+        "backend": "loom-original",
+        "seed": opts.seed,
+        "build_id": build_id,
+        "sha256": hashlib.sha256(output).hexdigest(),
+    }
+    return Result(
+        output=output,
+        build=built,
+        keys=keys,
+        stats=stats,
+        source_map={"nodes": [], "constants": []},
+        v4=None,
+        stealth=None,
+        crypto=None,
+    )
+
+
 def obfuscate(data: bytes, opts: Options, *, _v4_base_bytes: int | None = None) -> Result:
     """Obfuscate ``data``.
 
-    ``_v4_base_bytes`` is an internal measurement hook: when ``None`` (normal
-    builds) the exact size of the same build with zero entropy padding is
-    measured first, so the v4 ``<=15%`` size gate is enforced against the real
-    per-seed/per-input base instead of a hardcoded estimate. The measurement
-    build passes ``0`` to terminate the one-level recursion.
+    ``loom_original`` builds short-circuit the V7 pipeline entirely; they are
+    reproducible from the seed and never parse as V7 ciphertext. All other
+    behaviour is unchanged.
     """
+    if getattr(opts, "loom_original", False):
+        return _obfuscate_loom_original(data, opts)
+    # ``_v4_base_bytes`` is an internal measurement hook: when ``None``
+    # (normal builds) the exact size of the same build with zero entropy
+    # padding is measured first, so the v4 ``<=15%`` size gate is enforced
+    # against the real per-seed/per-input base instead of a hardcoded
+    # estimate. The measurement build passes ``0`` to terminate recursion.
     tree, source = A.parse(data)
     A.tag_tree(tree)
 

@@ -1,6 +1,6 @@
 # Anti-analysis hardening, third pass
 
-Generated 2026-11-20T02:51:42.856472+00:00 from the exact fixture `tests/cases/hello_world.luau`. Protected program, output, return values, Roblox behavior and single-VM execution model are unchanged.
+Generated 2026-11-20T21:36:55.564640+00:00 from the exact fixture `tests/cases/hello_world.luau`. Protected program, output, return values, Roblox behavior and single-VM execution model are unchanged.
 
 ## A. Why the previous build was recoverable
 
@@ -38,7 +38,7 @@ Differential fixtures cover closures, upvalues, varargs, multiple returns, nil, 
 | balanced/medium | 211,758 B |
 | aggressive/heavy | 659,729 B |
 
-Median heavy workload overhead: **117.74x**. Startup time, peak RSS and per-build memory are in `BENCHMARKS-anti-analysis.md`; the old-vs-improved comparison is in `BENCHMARKS-old-vs-improved.md`. Startup medians were 8.89 / 29.30 / 28.86 / 45.35 ms (original / light / medium / heavy). The 5,000-loop workload medians were 12.39 / 1458.95 ms (original / heavy).
+Median heavy workload overhead: **120.39x**. Startup time, peak RSS and per-build memory are in `BENCHMARKS-anti-analysis.md`; the old-vs-improved comparison is in `BENCHMARKS-old-vs-improved.md`. Startup medians were 10.15 / 25.80 / 30.63 / 40.00 ms (original / light / medium / heavy). The 5,000-loop workload medians were 10.01 / 1205.24 ms (original / heavy).
 
 ## E. Scanner results on actual generated production output
 

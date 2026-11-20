@@ -123,6 +123,20 @@ until `OBF_GITHUB_TOKEN`, `OBF_GITHUB_OWNER` and `OBF_GITHUB_REPO` are set.
 See `LOADSTRINGS.md`. The generated chunk itself still contains no dynamic
 loader.
 
+## Loom Original backend (opt-in)
+
+`--loom-original` (CLI) or `"loom_original": true` (web API) switches the
+backend from the default V7 single VM to the vendored Loom Original
+register-VM core (`vendor/loom-original/`). Output is a banner line followed
+by a single-file VM chunk reproducible from the build seed. The Original
+edition accepts only a small Luau subset (globals `workspace`, `game`,
+`print`, `type`, `tostring`, `tonumber`, `assert`, `select`; no
+`string.*`/`table.*`/`ipairs`/`pairs`); out-of-subset input fails with an
+explicit `LoomOriginalUnsupported` error, never a silent downgrade, and never
+emits unprotected source. The default backend is unchanged. The Loom Original
+core is vendored unmodified; third-party license texts for the other Loom
+editions are not altered or removed.
+
 ## Limitations
 
 This is obfuscation, not encryption or real security. A client-side Roblox

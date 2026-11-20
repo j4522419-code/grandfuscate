@@ -1,53 +1,53 @@
 {
   "baseline": "tests/baseline (frozen pre-second-pass engine)",
-  "created": "2026-11-20T02:51:40.704625+00:00",
+  "created": "2026-11-20T21:36:50.876864+00:00",
   "performance": {
     "measures": {
       "new_runtime": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 1.0300167999812402,
-        "seconds_min": 1.0137692999560386
+        "seconds_median": 1.9014135000179522,
+        "seconds_min": 1.8515843999921344
       },
       "new_startup": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 0.02094099996611476,
-        "seconds_min": 0.020186099980492145
+        "seconds_median": 0.040666399989277124,
+        "seconds_min": 0.03787820000434294
       },
       "old_runtime": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 0.3734866000013426,
-        "seconds_min": 0.36606819997541606
+        "seconds_median": 0.6152800000272691,
+        "seconds_min": 0.6129164000158198
       },
       "old_startup": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 0.011386299971491098,
-        "seconds_min": 0.010830799990799278
+        "seconds_median": 0.019908900023438036,
+        "seconds_min": 0.01857190002920106
       },
       "original_runtime": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 0.00671169999986887,
-        "seconds_min": 0.006121600046753883
+        "seconds_median": 0.01464720000512898,
+        "seconds_min": 0.013177599990740418
       },
       "original_startup": {
         "rss_kib_max": 0,
         "rss_kib_median": 0,
-        "seconds_median": 0.0069491000031121075,
-        "seconds_min": 0.006092700001318008
+        "seconds_median": 0.013848999980837107,
+        "seconds_min": 0.013547500013373792
       }
     },
     "overhead_median": {
-      "new": 153.4658581285463,
-      "old": 55.647093882122206
+      "new": 129.81412825332748,
+      "old": 42.00666337674216
     },
     "startup_median_ms": {
-      "new": 20.94099996611476,
-      "old": 11.386299971491098,
-      "original": 6.9491000031121075
+      "new": 40.666399989277124,
+      "old": 19.908900023438036,
+      "original": 13.848999980837107
     },
     "startup_source": "local x = 1",
     "workload": "tests/bench_runtime.luau (5,000 loop iterations)"

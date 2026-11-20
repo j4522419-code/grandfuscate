@@ -33,6 +33,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--game-id", type=int, help="lock output to a Roblox GameId / UniverseId")
     p.add_argument("--verify", action="store_true", help="compile-check output with luau-compile")
     p.add_argument(
+        "--loom-original", dest="loom_original", action="store_true",
+        help="opt-in Loom Original backend (register VM, small Luau subset; "
+             "unsupported input fails with an explicit error, never a silent downgrade)",
+    )
+    p.add_argument(
         "--stealth", "--fail-closed", dest="stealth", action="store_true",
         help="opt-in V5 active decoys: fail-closed / poison reactions (off by default)",
     )
@@ -90,6 +95,7 @@ def main(argv: list[str] | None = None) -> int:
         "crypto": bool(a.crypto),
         "key_text": a.key_text if a.crypto else None,
         "key_file": a.key_file if a.crypto else None,
+        "loom_original": bool(a.loom_original),
     }
     if a.crypto and a.key_text and a.key_file:
         print("error: use either --key-text or --key-file, not both", file=sys.stderr)

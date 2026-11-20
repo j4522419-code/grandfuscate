@@ -1,0 +1,41 @@
+local function decode(s)
+    local i=1
+    local function word()
+        local n,k=0,1
+        repeat
+            local b=tonumber(string.sub(s,i,i+1),16)
+            i+=2; n+=(b%128)*k; k*=128
+            if b<128 then return n end
+        until false
+    end
+    local code={}
+    while i<=#s do
+        local row={}
+        for j=1,word() do row[j]=word() end
+        code[#code+1]=row
+    end
+    return code
+end
+local F=@FUNCTIONS@
+local G={game=game,workspace=workspace,print=print,type=type,tostring=tostring,tonumber=tonumber,assert=assert,select=select}
+local function args(R,I,p)
+    local spread,n=I[p],I[p+1]
+    local out={n=n}
+    for j=1,n do
+        local x=R[I[p+1+j]]
+        if spread==1 and j==n then
+            out.n=n-1+x.n
+            for k=1,x.n do out[n+k-1]=x[k] end
+        else out[j]=x end
+    end
+    return out
+end
+local function run(id,U,...)
+    local P,R,L,pc=F[id],{...},{},1
+    while true do
+        local I=P[3][pc]; pc+=1
+        local op,a,b,c=I[1],I[2],I[3],I[4]
+        @DISPATCH@
+    end
+end
+return run(1,{})

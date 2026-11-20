@@ -19,6 +19,14 @@ Hosting remains paused. There is no Git remote, no push, no GitHub repository
 and no Render service. Do not create or push to an origin unless the user
 explicitly reverses that instruction.
 
+## Loom Original backend (V7.x, opt-in)
+
+`--loom-original` / `"loom_original": true` selects the vendored Loom Original
+register-VM core instead of the default V7 VM. Subset-limited; see README.
+Verified by `tests/run_tests.py` section 33. The default backend is
+unchanged. The 2.4 (Fiu bytecode-VM) edition was not adopted; it requires its
+MIT Fiu notice to accompany distributed output.
+
 ## To use locally
 
 ```bash

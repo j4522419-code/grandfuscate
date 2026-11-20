@@ -71,6 +71,12 @@ class Options:
     key_file: str | None = None
     """Local V7 passphrase file, never emitted verbatim. CLI-only; the web API
     does not read server paths."""
+    loom_original: bool = False
+    """Opt-in alternative backend: compile the input with the vendored Loom
+    Original register-VM core (vendor/loom-original) instead of the V7 VM
+    pipeline. Limited to a small Luau subset (no string/table libraries,
+    ipairs/pairs, or variadic/self methods); out-of-subset input raises an
+    explicit error, and the V7 single VM remains the default."""
 
 
 @dataclass

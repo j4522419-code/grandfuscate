@@ -1,6 +1,6 @@
 # Runtime-analysis probe
 
-Measured 2026-11-20T02:42:52.079871+00:00 with official Luau 0.747, medium preset and seed 20261118.
+Measured 2026-11-20T21:20:16.519042+00:00 with official Luau 0.747, medium preset and seed 20261118.
 
 The protected scripts still produce their original output. This probe attempts the restricted-runtime shortcuts that recovered `print(67)` from the previous build. A capable executor-specific debugger can observe more; this is not a security proof or a commercial comparison.
 

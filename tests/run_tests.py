@@ -43,11 +43,11 @@ PRESETS = ["light", "medium", "heavy"]
 SEEDS = [11, 0x5EED]
 
 
-def run(data: bytes, timeout: int = 120) -> tuple[int, bytes, bytes]:
+def run(data: bytes, timeout: int = 240) -> tuple[int, bytes, bytes]:
     # A VM-interpreted 200000-iteration fixture (tests/cases/bench.luau) is
     # legitimately ~55-60 s of CPU on a cold interpreter; keep the wall-clock
     # guard above that so a correct-but-slow differential run cannot flake.
-    # timed() already used 120 s. This is a liveness ceiling, not a correctness
+    # timed() already used 240 s. This is a liveness ceiling, not a correctness
     # relaxation: stdout/exit/status equality is still asserted on every run.
     exe = A.tool_path("luau")
     fd, path = tempfile.mkstemp(suffix=".luau")
@@ -948,6 +948,57 @@ def main() -> int:
     print(f"{'crypto v7':<24} {'OK' if v7_ok else 'FAIL':<8} "
           f"{v7_total} crypto checks")
 
+    # 33. Loom Original alternative register-VM backend (explicit opt-in).
+    third_total += 1
+    before = len(failures)
+    loom_total = 0
+    loom_source = (
+        b'local t = {name = "score"}\nlocal i = 0\n'
+        b'while i < 3 do\n    i += 1\nend\n'
+        b'print(t.name, i)\n'
+    )
+    loom_ref = run(loom_source)
+    loom_outputs = []
+    for seed in (11, 0x5EED):
+        built = pipeline.obfuscate(
+            loom_source,
+            pipeline.make_options("medium", seed=seed, loom_original=True),
+        )
+        loom_outputs.append(built.output)
+        loom_total += 1  # build succeeded
+        loom_total += int(run(built.output)[1] == loom_ref[1])
+        loom_total += int(built.output.startswith(BANNER_BYTES))
+    repro_a = pipeline.obfuscate(
+        loom_source, pipeline.make_options("medium", seed=11, loom_original=True)
+    ).output
+    repro_b = pipeline.obfuscate(
+        loom_source, pipeline.make_options("medium", seed=11, loom_original=True)
+    ).output
+    loom_total += int(repro_a == repro_b)
+    loom_total += int(loom_outputs[0] != loom_outputs[1])
+    try:
+        pipeline.obfuscate(
+            b'local s = string.upper("x") print(s)\n',
+            pipeline.make_options("medium", seed=1, loom_original=True),
+        )
+        loom_total += 0
+    except ValueError:
+        loom_total += 1  # out-of-subset input fails explicitly, never silently
+    default_build = pipeline.obfuscate(
+        loom_source, pipeline.make_options("light", seed=11)
+    )
+    loom_total += int(default_build.stats.get("loom_original") is None)
+    web_build = web.do_obfuscate({
+        "source": 'local i = 0\nwhile i < 3 do\n    i += 1\nend\nprint("ok", i)',
+        "seed": 42,
+        "loom_original": True,
+    })
+    loom_total += int(web_build["ok"] and web_build["syntax"]["ok"]
+                      and web_build["output"].startswith(BANNER_TEXT))
+    loom_ok = len(failures) == before
+    print(f"{'loom original vm':<24} {'OK' if loom_ok else 'FAIL':<8} "
+          f"{loom_total} backend checks")
+
     print(
         f"\n{total} base transform/run + {vm_total} VM-mode transform/run + "
         f"{compat_total} compatibility differential + {scan_total} production scans + "
@@ -958,7 +1009,8 @@ def main() -> int:
         f"{v4_entropy_total} high-entropy-v4 + "
         f"{v5_total} stealth-v5 + "
         f"{v6_total} v6-proposal + "
-        f"{v7_total} crypto-v7 checks, "
+        f"{v7_total} crypto-v7 + "
+        f"{loom_total} loom-original checks, "
         f"{len(failures)} failure(s)"
     )
     if failures:

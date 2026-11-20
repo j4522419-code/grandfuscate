@@ -95,7 +95,7 @@ STATIC = {
 # V7 policies are enforced below and cannot be toggled through the API.
 BOOL_KEYS = frozenset(
     {"flatten", "virtualize_globals", "virtualize_properties", "integrity",
-     "stealth"}
+     "stealth", "loom_original"}
 )
 INT_KEYS = frozenset({"junk", "min_stmts", "place_id", "game_id", "blob_pad"})
 FLOAT_KEYS = frozenset({"flatten_ratio"})
@@ -364,6 +364,7 @@ def meta() -> dict:
         "defaults": {
             "preset": "medium",
             "vm": True,
+            "loom_original": False,
             "nested_vm": False,
             "anti_env": False,
             "anti_tamper": False,

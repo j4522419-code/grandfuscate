@@ -1,6 +1,6 @@
 # Runtime-analysis probe, third pass
 
-Measured 2026-11-20T02:51:42.856472+00:00 with official Luau 0.747, seed 20261118, exact fixture `print("Hello World!")`.
+Measured 2026-11-20T21:36:55.564640+00:00 with official Luau 0.747, seed 20261118, exact fixture `print("Hello World!")`.
 
 Runtime observation of `Hello World!` is expected; the program must execute. This probe checks that one obvious decoder function, one captured instruction table, or one global dispatcher does not expose the whole payload, and that simple dumps do not reconstruct a clean IR.
 
